@@ -2,12 +2,17 @@
 #define PATHFINDING_UTIL_C
 
 #include "PathfindingUtil.h"
+
+#include "stdio.h"
+#include "PathfindingAlgorithm.h"
 #include "NodeData/NodeDataOps.h"
 
 // 'Private' variables
-static int PosXCheckedArray[MAP_SIZE_X];
-static int PosYCheckedArray[MAP_SIZE_Y];
-static struct SLList NodeQueue;
+static int PosXCheckedArray[MAP_SIZE_X] = { 0 };
+static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };
+static struct SLList NodeQueue = { .tail = NULL };	// initialise .data to {0}
+static struct SLList ProcessedNodeQueue = { .tail = NULL };	// initialise .data to {0}
+static int GoalReached = FALSE;
 
 
 /* IsPosChecked */
@@ -23,7 +28,7 @@ void SetPosXChecked(int posx, int is_checked)
 {
 	PosXCheckedArray[posx] = is_checked;
 }
-void SetPoxYChecked(int posy, int is_checked)
+void SetPosYChecked(int posy, int is_checked)
 {
 	PosYCheckedArray[posy] = is_checked;
 }
@@ -46,15 +51,17 @@ int GetGoalPosY()
 {
 	return 0; // return pos_y of target cell
 }
-// @TODO
-void ReachedGoal()
+
+int IsGoalReached()
 {
-	return;
-	/*
-		Once the goal cell is reached, stop searching and evaluate the
-		shortest path.
-	*/
+	return GoalReached;
 }
+
+void SetGoalReached(int is_reached)
+{
+	GoalReached = is_reached;
+}
+
 
 
 /* Pathfinding Algorithm Functions */
@@ -86,7 +93,7 @@ void EvaluateCell(int posx, int posy)
 	
 	switch (cell_type) {
 		case PATH:			EvaluatePathNode(posx, posy);
-		case GOAL:			ReachedGoal();
+		case GOAL:			SetGoalReached(TRUE);
 		default:			return;
 	}
 }
@@ -94,26 +101,33 @@ void EvaluateCell(int posx, int posy)
 void EvaluatePathNode(int posx, int posy)
 {
 	if (IsCheckedNode(posx, posy)) { return; }
+	SetPosXChecked(posx, TRUE);
+	SetPosYChecked(posy, TRUE);
+
 	AddToNodeQueue(posx, posy);
 }
 
-struct SLListElement* GetNextInNodeQueue()
+struct SLListElement* ExtractNextInNodeQueue()
 {
-	return GetHeadInSLList(&NodeQueue);
+	struct SLListElement* node = RemoveHeadInSLList(&NodeQueue);
+	AppendToSLList(&ProcessedNodeQueue, node);
+	return node;
+}
+
+int IsNodeQueueEmpty()
+{
+	return IsSLListElementValid(GetHeadInSLList(&NodeQueue));
 }
 
 void AddToNodeQueue(int posx, int posy)
 {
-	// create node list element and add to queue (depending on list element)
-	// requires fields for NodeData. Use NodeDataOps API, and sllist!
-
-	// InsertInNodeQueue(&NodeQueue, posx, posy); // <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
-	// e.g. {
 	struct SLListElement* node = NewSLListElement();
 	SetNodeDataPosX(node->data, posx);
 	SetNodeDataPosY(node->data, posy);
-	PrependToSLList(&NodeQueue, node);	// breadth-first (as adding each new node to top)
-	// }
+	SetNodeDataWeight(node->data, CalculateNodeWeight(node));	// must come after posx and posy added to node
+	//SetNodeDataAdjacentPaths(node->data, ...);
+
+	InsertInNodeQueue(&NodeQueue, posx, posy); // <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
 }
 
 

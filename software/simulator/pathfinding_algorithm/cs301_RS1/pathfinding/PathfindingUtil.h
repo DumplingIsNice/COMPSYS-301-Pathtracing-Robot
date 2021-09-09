@@ -8,6 +8,25 @@
 
 	Pathfinding functions with functionality independent from the
 	current algorithm.
+
+
+	Pseudo code:
+		EvaluateCell(start_posx, start_posy);			// create the starting node
+
+		while(!IsNodeQueueEmpty())
+		{
+			current_node = ExtractNextInNodeQueue();
+			EvaluateAdjacentCells(..current_node posx and posy...);
+			
+			if (IsGoalReached()) {
+				break;
+			}
+		}
+
+		CompileShortestPath();
+		// Last processed node (tail of ProcessedNodeQueue) is the cell that reached the goal cell.
+		// Work backwards from there, through ProcessedNodeQueue, until there is a path from start
+		// to goal.
 */
 
 #ifndef MAP_SIZE_X
@@ -30,35 +49,48 @@ enum CellType {EMPTY, PATH, GOAL};
 
 
 /* IsPosChecked */
+
 int IsPosXChecked(int posx);
 int IsPosYChecked(int posy);
 void SetPosXChecked(int posx, int is_checked);
-void SetPoxYChecked(int posy, int is_checked);
+void SetPosYChecked(int posy, int is_checked);
 
 int IsCheckedNode(int posx, int posy);
 
 
 /* Goal Cell */
+
 int GetGoalPosX();
 int GetGoalPosY();
-//
-void ReachedGoal();
+int IsGoalReached();
+void SetGoalReached(int is_reached);
 
 
 /* Pathfinding Algorithm Functions */
-//
+
+// Call EvaluateCell() on all orthogonally adjacent cells within bounds.
 void EvaluateAdjacentCells(int posx, int posy);
+
 // Return the cell type, using the map and goal cell.
 enum CellType GetCellType(int posx, int posy);
 
-// Evaluate 
+// Assign the cell to be further evaluated depending on the cell type.
 // Call this on each new cell.
 void EvaluateCell(int posx, int posy);
 
+// Check if the node has been checked before, and if it hasn't add it to
+// the NodeQueue (to be processed).
 void EvaluatePathNode(int posx, int posy);
 
+// Remove the head node from NodeQueue, append it to ProcessedNodeQueue,
+// and return the node, ready to process.
+struct SLListElement* ExtractNextInNodeQueue();
+
+// Returns true if there are no elements in the NodeQueue.
+int IsNodeQueueEmpty();
+
 // Wrapper for algorithm-specific functionality in Pathfinding.h 
-void AddToNodeQueue(int posx, int posy)
+void AddToNodeQueue(int posx, int posy);
 
 
 #endif // !PATHFINDING_UTIL_H

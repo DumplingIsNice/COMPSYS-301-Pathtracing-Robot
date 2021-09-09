@@ -42,10 +42,10 @@ struct SLList* NewSLList();
 struct SLListElement* NewSLListElement();
 
 
-// Return 1 if valid (not NULL) 
+// Return 1 if valid (list != NULL) 
 int IsSLListValid(struct SLList* list);
 
-// Return 1 if valid (not NULL) 
+// Return 1 if valid (element != NULL) 
 int IsSLListElementValid(struct SLListElement* element);
 
 
@@ -73,6 +73,9 @@ struct SLListElement* RemoveTailInSLList(struct SLList* list);
 
 // Returns the head (first element) of the list.
 struct SLListElement* GetHeadInSLList(struct SLList* list);
+
+// Returns the tail (last element) of the list.
+struct SLListElement* GetTailInSLList(struct SLList* list);
 
 
 

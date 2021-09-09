@@ -2,6 +2,7 @@
 #define SLLIST_C
 
 #include "sllist.h"
+
 #include "stdio.h"	// import NULL
 
 
@@ -107,6 +108,11 @@ struct SLListElement* RemoveTailInSLList(struct SLList* list)
 struct SLListElement* GetHeadInSLList(struct SLList* list)
 {
 	return list->head;
+}
+
+struct SLListElement* GetTailInSLList(struct SLList* list)
+{
+	return list->tail;
 }
 
 
