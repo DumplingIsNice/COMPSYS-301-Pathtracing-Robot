@@ -1,7 +1,8 @@
-#ifndef PATHFINDING_C
-#define PATHFINDING_C
+#ifndef PATHFINDING_UTIL_C
+#define PATHFINDING_UTIL_C
 
-#include "pathfinding.h"
+#include "PathfindingUtil.h"
+#include "NodeData/NodeDataOps.h"
 
 // 'Private' variables
 static int PosXCheckedArray[MAP_SIZE_X];
@@ -96,12 +97,24 @@ void EvaluatePathNode(int posx, int posy)
 	AddToNodeQueue(posx, posy);
 }
 
+struct SLListElement* GetNextInNodeQueue()
+{
+	return GetHeadInSLList(&NodeQueue);
+}
+
 void AddToNodeQueue(int posx, int posy)
 {
-	; // create node list element and add to queue (depending on list element)
+	// create node list element and add to queue (depending on list element)
 	// requires fields for NodeData. Use NodeDataOps API, and sllist!
 
+	// InsertInNodeQueue(&NodeQueue, posx, posy); // <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
+	// e.g. {
+	struct SLListElement* node = NewSLListElement();
+	SetNodeDataPosX(node->data, posx);
+	SetNodeDataPosY(node->data, posy);
+	PrependToSLList(&NodeQueue, node);	// breadth-first (as adding each new node to top)
+	// }
 }
 
 
-#endif // !PATHFINDING_C
+#endif // !PATHFINDING_UTIL_C
