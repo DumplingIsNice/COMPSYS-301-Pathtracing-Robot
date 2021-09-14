@@ -7,10 +7,12 @@
 int GetNodeDataPosX(struct NodeData* data)
 {
 	return data->posx;
+	//return (data->pos) >> 16;
 }
 int GetNodeDataPosY(struct NodeData* data)
 {
 	return data->posy;
+	//return (data->pos) & 0x00FF;
 }
 int GetNodeDataAdjacentPaths(struct NodeData* data)
 {
@@ -25,10 +27,14 @@ int GetNodeDataWeight(struct NodeData* data)
 void SetNodeDataPosX(struct NodeData* data, int pos_x)
 {
 	data->posx = pos_x;
+	//data->pos = data->pos & 0x00FF;
+	//data->pos = data->pos | (pos_x << 16);
 }
 void SetNodeDataPosY(struct NodeData* data, int pos_y)
 {
 	data->posy = pos_y;
+	//data->pos = data->pos & 0xFF00;
+	//data->pos = data->pos | pos_y;
 }
 void SetNodeDataAdjacentPaths(struct NodeData* data, int adj_paths)
 {
