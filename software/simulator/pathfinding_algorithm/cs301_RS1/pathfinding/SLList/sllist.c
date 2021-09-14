@@ -4,37 +4,29 @@
 #include "sllist.h"
 
 #include "stdio.h"	// import NULL
+#include "stdlib.h"	// import malloc() etc.
 
 
 struct SLList* NewSLList()
 {
-	struct SLList* list = malloc(sizeof list);
+	struct SLList* list = (struct SLList*)malloc(sizeof list);
 	return list;
 }
 
 struct SLListElement* NewSLListElement()
 {
-	struct SLListElement* element = malloc(sizeof element);
+	struct SLListElement* element = (struct SLListElement*)malloc(sizeof element);
 	return element;
 }
 
 int IsSLListValid(struct SLList* list)
 {
-	if (list != NULL) {
-		return TRUE;
-	} else {
-		return FALSE;
-	}
+	return (list != NULL);
 }
 
 int IsSLListElementValid(struct SLListElement* element)
 {
-	if (element != NULL) {
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+	return (element != NULL);
 }
 
 void InsertSLListElement(struct SLListElement* list_element, struct SLListElement* element)

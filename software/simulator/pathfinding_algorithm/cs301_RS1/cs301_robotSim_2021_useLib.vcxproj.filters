@@ -33,7 +33,13 @@
     <ClInclude Include="pathfinding\SLList\sllist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pathfinding\pathfinding.h">
+    <ClInclude Include="pathfinding\PathfindingUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\PathfindingAlgorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,7 +56,13 @@
     <ClCompile Include="pathfinding\SLList\sllist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pathfinding\pathfinding.c">
+    <ClCompile Include="pathfinding\PathfindingUtil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\PathfindingAlgorithm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\NodeData\NodeList.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
