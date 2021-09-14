@@ -1,6 +1,8 @@
 #ifndef NODEDATA_H
 #define NODEDATA_H
 
+#include "NodeList.h"
+
 /*
 	Node Data
 
@@ -21,6 +23,8 @@ struct NodeData {
 	int posy;
 	int num_adjacent_paths;
 	int weight;
+	//struct SLListElement* 
+	struct NodeListElement* adjacent_node_list;
 };
 
 #endif // !NODEDATA_H

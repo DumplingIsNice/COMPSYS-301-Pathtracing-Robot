@@ -22,6 +22,7 @@ void SetNodeDataPosX(struct NodeData* data, int pos_x);
 void SetNodeDataPosY(struct NodeData* data, int pos_y);
 void SetNodeDataAdjacentPaths(struct NodeData* data, int adj_paths);
 void SetNodeDataWeight(struct NodeData* data, int weight);
+void AddToNodeDataAdjacentNodeList(struct NodeData* data, struct SLListElement* node_to_add);
 
 
 

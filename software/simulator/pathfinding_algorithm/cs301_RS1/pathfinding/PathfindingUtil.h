@@ -69,18 +69,21 @@ void SetGoalReached(int is_reached);
 /* Pathfinding Algorithm Functions */
 
 // Call EvaluateCell() on all orthogonally adjacent cells within bounds.
-void EvaluateAdjacentCells(int posx, int posy);
+void EvaluateAdjacentCells(int posx, int posy, struct SLListElement* instigating_node);
 
 // Return the cell type, using the map and goal cell.
 enum CellType GetCellType(int posx, int posy);
 
 // Assign the cell to be further evaluated depending on the cell type.
 // Call this on each new cell.
-void EvaluateCell(int posx, int posy);
+void EvaluateCell(int posx, int posy, struct SLListElement* instigating_node);
 
 // Check if the node has been checked before, and if it hasn't add it to
 // the NodeQueue (to be processed).
-void EvaluatePathNode(int posx, int posy);
+void EvaluatePathNode(int posx, int posy, struct SLListElement* instigating_node);
+
+// Wrapper for algorithm-specific functionality in Pathfinding.h 
+void AddToNodeQueue(int posx, int posy, struct SLListElement* instigating_node);
 
 // Remove the head node from NodeQueue, append it to ProcessedNodeQueue,
 // and return the node, ready to process.
@@ -88,9 +91,6 @@ struct SLListElement* ExtractNextInNodeQueue();
 
 // Returns true if there are no elements in the NodeQueue.
 int IsNodeQueueEmpty();
-
-// Wrapper for algorithm-specific functionality in Pathfinding.h 
-void AddToNodeQueue(int posx, int posy);
 
 
 #endif // !PATHFINDING_UTIL_H

@@ -65,13 +65,15 @@ void SetGoalReached(int is_reached)
 
 
 /* Pathfinding Algorithm Functions */
-void EvaluateAdjacentCells(int posx, int posy)
+void EvaluateAdjacentCells(struct SLListElement* instigating_node)
 {
+	int posx = GetNodeDataPosX(instigating_node->data);
+	int posy = GetNodeDataPosY(instigating_node->data);
 	// (x+-1,y) and (x,y+-1)
-	if (posx + 1 <= MAP_SIZE_X) {	EvaluateCell(posx + 1, posy); }
-	if (posx - 1 >= 0) {			EvaluateCell(posx - 1, posy); }
-	if (posy + 1 <= MAP_SIZE_Y) {	EvaluateCell(posx, posy + 1); }
-	if (posy - 1 >= 0) {			EvaluateCell(posx, posy - 1); }
+	if (posx + 1 <= MAP_SIZE_X) {	EvaluateCell(posx + 1, posy, instigating_node); }
+	if (posx - 1 >= 0) {			EvaluateCell(posx - 1, posy, instigating_node); }
+	if (posy + 1 <= MAP_SIZE_Y) {	EvaluateCell(posx, posy + 1, instigating_node); }
+	if (posy - 1 >= 0) {			EvaluateCell(posx, posy - 1, instigating_node); }
 }
 // @TODO
 enum CellType GetCellType(int posx, int posy)
@@ -87,24 +89,42 @@ enum CellType GetCellType(int posx, int posy)
 	}
 }
 
-void EvaluateCell(int posx, int posy)
+void EvaluateCell(int posx, int posy, struct SLListElement* instigating_node)
 {
 	enum CellType cell_type = GetCellType(posx, posy);
 	
 	switch (cell_type) {
-		case PATH:			EvaluatePathNode(posx, posy);
+		case PATH:			EvaluatePathNode(posx, posy, instigating_node);
 		case GOAL:			SetGoalReached(TRUE);
 		default:			return;
 	}
 }
 
-void EvaluatePathNode(int posx, int posy)
+void EvaluatePathNode(int posx, int posy, struct SLListElement* instigating_node)
 {
-	if (IsCheckedNode(posx, posy)) { return; }
+	if (IsCheckedNode(posx, posy)) {
+		// In the case of adjacent path nodes:
+		// struct SLListElement* existing_node = FindSLListElementFromNodeDataCoordinates(posx, posy);
+		// AddToNodeDataAdjacentNodeList(existing_node, instigating_node);
+		return;
+	}
 	SetPosXChecked(posx, TRUE);
 	SetPosYChecked(posy, TRUE);
 
-	AddToNodeQueue(posx, posy);
+	AddToNodeQueue(posx, posy, instigating_node);
+}
+
+void AddToNodeQueue(int posx, int posy, struct SLListElement* instigating_node)
+{
+	struct SLListElement* node = NewSLListElement();
+
+	SetNodeDataPosX(node->data, posx);
+	SetNodeDataPosY(node->data, posy);
+	SetNodeDataWeight(node->data, CalculateNodeWeight(node));	// must come after posx and posy added to node
+	//SetNodeDataAdjacentPaths(node->data, );
+	AddToNodeDataAdjacentNodeList(node->data, instigating_node);
+
+	InsertInNodeQueue(&NodeQueue, posx, posy);					// <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
 }
 
 struct SLListElement* ExtractNextInNodeQueue()
@@ -116,18 +136,7 @@ struct SLListElement* ExtractNextInNodeQueue()
 
 int IsNodeQueueEmpty()
 {
-	return IsSLListElementValid(GetHeadInSLList(&NodeQueue));
-}
-
-void AddToNodeQueue(int posx, int posy)
-{
-	struct SLListElement* node = NewSLListElement();
-	SetNodeDataPosX(node->data, posx);
-	SetNodeDataPosY(node->data, posy);
-	SetNodeDataWeight(node->data, CalculateNodeWeight(node));	// must come after posx and posy added to node
-	//SetNodeDataAdjacentPaths(node->data, ...);
-
-	InsertInNodeQueue(&NodeQueue, posx, posy); // <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
+	return !IsSLListElementValid(GetHeadInSLList(&NodeQueue));
 }
 
 
