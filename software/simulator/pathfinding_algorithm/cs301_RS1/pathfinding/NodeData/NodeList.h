@@ -22,7 +22,7 @@ struct NodeListElement {
 
 
 // Create and allocate memory for a new blank SLListElement.
-struct NodeListElement* NewNodeListElement(struct SLListElement* node);
+struct NodeListElement* NewNodeListElement();
 
 // Return 1 if valid (element != NULL) 
 int IsNodeListElementValid(struct NodeListElement* element);

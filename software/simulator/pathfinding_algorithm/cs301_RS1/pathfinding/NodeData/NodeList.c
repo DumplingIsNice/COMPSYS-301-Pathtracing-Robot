@@ -5,10 +5,9 @@
 
 #include "stdlib.h"		// malloc()
 
-struct NodeListElement* NewNodeListElement(struct SLListElement* node)
+struct NodeListElement* NewNodeListElement()
 {
 	struct NodeListElement* element = (struct NodeListElement*)malloc(sizeof element);
-	element->node = node;
 	return element;
 }
 

@@ -48,7 +48,7 @@ void AddToNodeDataAdjacentNodeList(struct NodeData* data, struct SLListElement* 
 {
 	// If the list is empty...
 	if (!IsNodeListElementValid(data->adjacent_node_list)) {
-		data->adjacent_node_list = NewNodeListElement(node_to_add);
+		data->adjacent_node_list = NewNodeListElementAndAssign(node_to_add);
 		return;
 	}
 
@@ -61,7 +61,14 @@ void AddToNodeDataAdjacentNodeList(struct NodeData* data, struct SLListElement* 
 		current_node_list = current_node_list->tail;
 	}
 
-	AppendToNodeListElement(current_node_list, NewNodeListElement(node_to_add));
+	AppendToNodeListElement(current_node_list, NewNodeListElementAndAssign(node_to_add));
+}
+
+struct NodeListElement* NewNodeListElementAndAssign(struct SLListElement* node)
+{
+	struct NodeListElement* element = NewNodeListElement();
+	element->node = node;
+	return element;
 }
 
 

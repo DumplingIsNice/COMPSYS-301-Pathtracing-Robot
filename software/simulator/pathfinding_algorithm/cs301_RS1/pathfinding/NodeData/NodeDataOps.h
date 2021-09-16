@@ -3,6 +3,8 @@
 
 #include "NodeData.h"
 
+#include "NodeList.h"
+
 /*
 	Node Data Operations
 
@@ -23,6 +25,9 @@ void SetNodeDataPosY(struct NodeData* data, int pos_y);
 void SetNodeDataAdjacentPaths(struct NodeData* data, int adj_paths);
 void SetNodeDataWeight(struct NodeData* data, int weight);
 void AddToNodeDataAdjacentNodeList(struct NodeData* data, struct SLListElement* node_to_add);
+
+// Should probably be shifted to NodeList, but folder hierarchy means we can't easily '#include "sllist."' there.
+struct NodeListElement* NewNodeListElementAndAssign(struct SLListElement* node);
 
 
 

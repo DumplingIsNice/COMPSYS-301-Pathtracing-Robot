@@ -23,7 +23,6 @@ struct NodeData {
 	int posy;
 	int num_adjacent_paths;
 	int weight;
-	//struct SLListElement* 
 	struct NodeListElement* adjacent_node_list;
 };
 
