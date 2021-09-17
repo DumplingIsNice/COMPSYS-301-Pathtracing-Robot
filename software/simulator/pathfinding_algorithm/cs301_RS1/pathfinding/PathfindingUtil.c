@@ -6,11 +6,19 @@
 #include "stdio.h"
 #include "PathfindingAlgorithm.h"
 #include "NodeData/NodeDataOps.h"
+#include "FileUtility/ReadMap.h"
+
+#ifndef MAP_SIZE_X				// This should be overridden by ReadMap.h!
+	#define MAP_SIZE_X	0
+#endif
+#ifndef MAP_SIZE_Y
+	#define MAP_SIZE_Y	0
+#endif
 
 // 'Private' variables
-static int PosXCheckedArray[MAP_SIZE_X] = { 0 };
-static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };
-static NodeList NodeQueue = { .tail = NULL };	// initialise .data to {0}
+static int PosXCheckedArray[MAP_SIZE_X] = { 0 };	// @TO REMOVE
+static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };	// @TO REMOVE
+static NodeList NodeQueue = { .tail = NULL };		// initialise .data to {0}
 static int GoalReached = FALSE;
 
 
@@ -73,7 +81,7 @@ CellType GetCellType(int posx, int posy)
 			return GOAL;
 		}
 	}
-	if (1 == 1) {	// if map[posx][poxy] == 1
+	if (GetMapValue(posy, posx) == 1) {
 		return PATH;
 	}
 	// Else...

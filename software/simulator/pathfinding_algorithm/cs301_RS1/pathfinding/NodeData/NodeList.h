@@ -12,12 +12,12 @@
 	IF YOU INCORRECTLY PASS NULL TO FUNCTIONS YOU WILL CORRUPT YOUR DATA
 	AND/OR CRASH THE SYSTEM.
 
-	The field 'data' is handled very loosely to support easily changing
-	struct types. SLList operations should never interact with 'data'
+	The field 'node' is handled very loosely to support easily changing
+	struct types. NodeList operations should never interact with 'node'
 	beyond exposing it for external operations.
-	e.g.	... element->data ...			// okay
-			... element->data->value ...	// wrong; inherent assumption
-	Operations on 'data' should be handled with the NodeDataOps file.
+	e.g.	... element->node ...			// okay
+			... element->node->value ...	// wrong; inherent assumption
+	Operations on 'node' should be handled with the NodeDataOps file.
 */
 
 #ifndef TRUE
@@ -30,7 +30,7 @@
 
 typedef struct NodeListElement {
 	struct NodeListElement* tail;
-	struct NodeData* node;
+	struct NodeData*		node;
 } NodeListElement;
 
 typedef struct NodeList {

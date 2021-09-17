@@ -31,13 +31,6 @@
 		// to goal.
 */
 
-#ifndef MAP_SIZE_X
-	#define MAP_SIZE_X	10	// This should be overridden by the actual map size!
-#endif
-#ifndef MAP_SIZE_Y
-	#define MAP_SIZE_Y	10
-#endif
-
 #ifndef TRUE
 	#define TRUE	1
 #endif
