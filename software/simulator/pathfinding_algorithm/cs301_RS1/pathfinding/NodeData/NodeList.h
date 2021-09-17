@@ -81,4 +81,13 @@ NodeListElement* GetListHead(NodeList* list);
 NodeListElement* GetListTail(NodeList* list);
 
 
+// Free() the NodeListElement structs, but not the NodeData structs.
+void DestroyListElements(NodeList* list);
+
+// Free() the NodeListElement structs, and their valid NodeData structs.
+void DestroyListElementsAndContents(NodeList* list);
+
+// Free() a NodeList. This does not affect its NodeListElements.
+void DestroyList(NodeList* list);
+
 #endif // !NODELIST_H

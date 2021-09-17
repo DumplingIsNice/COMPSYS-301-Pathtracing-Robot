@@ -28,4 +28,7 @@ typedef struct NodeData {
 // Create and allocate memory for a blank NodeData.
 NodeData* NewNodeData();
 
+// Free() NodeData struct
+void DestroyNodeData(NodeData* node);
+
 #endif // !NODEDATA_H

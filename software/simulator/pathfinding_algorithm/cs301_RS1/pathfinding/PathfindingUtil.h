@@ -3,7 +3,7 @@
 
 #include "NodeData/NodeList.h"
 
-#include "NodeData/NodeData.h"	// only required in .c, but added for convenience of the typedef
+#include "NodeData/NodeData.h"	// only required in PathfindingUtil.c, but added for convenience of the typedef
 
 /*
 	Pathfinding Util

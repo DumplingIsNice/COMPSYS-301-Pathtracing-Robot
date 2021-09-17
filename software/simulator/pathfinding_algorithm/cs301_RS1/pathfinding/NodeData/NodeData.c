@@ -12,5 +12,10 @@ NodeData* NewNodeData()
 	return node;
 }
 
+void DestroyNodeData(NodeData* node)
+{
+	if (node != NULL) { free(node); }
+}
+
 
 #endif // !NODEDATA_C

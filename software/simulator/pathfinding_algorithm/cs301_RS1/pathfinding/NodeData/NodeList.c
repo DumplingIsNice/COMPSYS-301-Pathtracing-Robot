@@ -105,4 +105,36 @@ NodeListElement* GetListTail(NodeList* list)
 	return list->tail;
 }
 
+
+void DestroyListElements(NodeList* list)
+{
+	NodeListElement* element = GetListHead(list);
+	NodeListElement* prev_element;
+
+	while (IsElementValid(element)) {
+		prev_element = element;
+		element = element->tail;
+		free(prev_element);
+	}
+}
+
+void DestroyListElementsAndContents(NodeList* list)
+{
+	NodeListElement* element = GetListHead(list);
+	NodeListElement* prev_element;
+
+	while (IsElementValid(element)) {
+		// DestroyNodeData() could be used here, but would increase coupling (as it requires #include "NodeData.h").
+		if (element->node != NULL) { free(element->node); }
+		prev_element = element;
+		element = element->tail;
+		free(prev_element);
+	}
+}
+
+void DestroyList(NodeList* list)
+{
+	if (IsListValid(list)) { free(list); }
+}
+
 #endif // !NODELIST_C
