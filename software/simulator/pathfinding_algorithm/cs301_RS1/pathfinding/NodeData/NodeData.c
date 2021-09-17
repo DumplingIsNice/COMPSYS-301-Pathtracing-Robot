@@ -8,7 +8,7 @@
 
 NodeData* NewNodeData()
 {
-	NodeData* node = (NodeData*)malloc(sizeof node);
+	NodeData* node = (NodeData*)malloc(sizeof(*node));
 	return node;
 }
 
