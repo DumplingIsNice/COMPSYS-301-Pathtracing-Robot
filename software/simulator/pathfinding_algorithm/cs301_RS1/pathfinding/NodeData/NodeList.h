@@ -27,14 +27,15 @@
 	#define FALSE	0
 #endif
 
+
 typedef struct NodeListElement {
-	NodeListElement*	tail;
-	struct NodeData*	node;
+	struct NodeListElement* tail;
+	struct NodeData* node;
 } NodeListElement;
 
 typedef struct NodeList {
-	NodeListElement*	head;
-	NodeListElement*	tail;
+	NodeListElement* head;
+	NodeListElement* tail;
 } NodeList;
 
 
@@ -63,6 +64,9 @@ NodeListElement* DetachNext(NodeListElement* preceding_node);
 
 // Append an element to a NodeList (add to end).
 void AppendToList(NodeList* list, NodeListElement* element);
+
+// Prepend an element to a NodeList (add to start).
+void PrependToList(NodeList* list, NodeListElement* element);
 
 // Remove the head NodeListElement from a NodeList, and return it.
 NodeListElement* RemoveListHead(NodeList* list);

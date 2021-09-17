@@ -1,7 +1,9 @@
 #ifndef PATHFINDING_UTIL_H
 #define PATHFINDING_UTIL_H
 
-#include "SLList/sllist.h"
+#include "NodeData/NodeList.h"
+
+#include "NodeData/NodeData.h"	// only required in .c, but added for convenience of the typedef
 
 /*
 	Pathfinding Util
@@ -44,8 +46,7 @@
 #endif
 
 
-enum CellType {EMPTY, PATH, GOAL};
-
+typedef enum CellType {EMPTY, PATH, GOAL} CellType;
 
 
 /* IsPosChecked */
@@ -68,28 +69,39 @@ void SetGoalReached(int is_reached);
 
 /* Pathfinding Algorithm Functions */
 
-// Call EvaluateCell() on all orthogonally adjacent cells within bounds.
-void EvaluateAdjacentCells(int posx, int posy, struct SLListElement* instigating_node);
+// Classify and return the CellType of the cell at the given coords.
+CellType GetCellType(int posx, int posy);
 
-// Return the cell type, using the map and goal cell.
-enum CellType GetCellType(int posx, int posy);
+// Used to discover and evaluate new cells.
+// Called on a node to evaluate all orthogonally adjacent cells (within map bounds).
+void EvaluateAdjacentCells(NodeData* instigating_node);
 
-// Assign the cell to be further evaluated depending on the cell type.
-// Call this on each new cell.
-void EvaluateCell(int posx, int posy, struct SLListElement* instigating_node);
+// Evaluate a newly discovered cell at the given coordinates.
+// Controls the flow of evaluation depending on the CellType (empty, path, goal).
+void EvaluateCell(NodeData* instigating_node, int posx, int posy);
 
-// Check if the node has been checked before, and if it hasn't add it to
-// the NodeQueue (to be processed).
-void EvaluatePathNode(int posx, int posy, struct SLListElement* instigating_node);
+// Called by EvaluateCell() if the newly discovered cell has the CellType PATH.
+// If the path cell is new a node should be created to represent it, and sent to
+// the NodeQueue for the pathfinding algorithm to handle.
+// If the path cell is preexisting then we have found an alternate path to it, and
+// should link the preexisting node to the instigating node that was adjacent to it.
+void EvaluatePathCell(NodeData* instigating_node, int posx, int posy);
 
-// Wrapper for algorithm-specific functionality in Pathfinding.h 
-void AddToNodeQueue(int posx, int posy, struct SLListElement* instigating_node);
+// Populate NodeData contextually. Uses PathfindingAlgorithm functions for calculating
+// weight.
+NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy);
 
-// Remove the head node from NodeQueue, append it to ProcessedNodeQueue,
-// and return the node, ready to process.
-struct SLListElement* ExtractNextInNodeQueue();
 
-// Returns true if there are no elements in the NodeQueue.
+
+/* Pathfinding Algorithm Functions */
+
+// Insert a node in the NodeQueue. Wrapper for functionality in PathfindingAlgorithm.
+void AddToNodeQueue(NodeData* node);
+
+// Detach the NodeListElement from the top of the NodeQueue, and return it.
+NodeListElement* ExtractNextInNodeQueue();
+
+// Returns true if no NodeListElements left in NodeQueue.
 int IsNodeQueueEmpty();
 
 

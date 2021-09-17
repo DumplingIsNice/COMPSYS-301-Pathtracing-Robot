@@ -59,7 +59,7 @@ void AppendToList(NodeList* list, NodeListElement* element)
 	}
 }
 
-void PrependToNodeList(NodeList* list, NodeListElement* element)
+void PrependToList(NodeList* list, NodeListElement* element)
 {
 	if (IsElementValid(list->head)) {
 		// If NodeList is not empty then add as normal...

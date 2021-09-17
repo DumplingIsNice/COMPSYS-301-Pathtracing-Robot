@@ -10,7 +10,6 @@
 
 	TODO:
 	- handle alternate paths
-		- pass instigating node to other function calls? prevents checking the instigating node.
 		- how can we correlate two nodes without causing circular dependencies? can weights prevent this?
 	- weighting calculations and InsertInNodeQueue() sorting
 		- needed for A* etc
@@ -22,14 +21,12 @@
 	- optimise NodeData by splitting words and minimising memory use
 */
 
-#include "SLList/sllist.h"
-
-// Create and add a node to a NodeQueue.
+// Add a NodeListElement to the NodeQueue.
 // The insertion position in the NodeQueue depends on the algorithm.
-void InsertInNodeQueue(struct SLList* NodeQueue, struct SLListElement* node);
+void InsertInNodeQueue(struct NodeList* NodeQueue, struct NodeListElement* element);
 
-// Used for weight-based algorithms (A*, Dijkstra)
-int CalculateNodeWeight(struct SLListElement* node);
+// Used for weight-based algorithms (A*, Dijkstra).
+int CalculateNodeWeight(struct NodeData* instigating_node);
 
 // Calculate the shortest path given the start and goal cells, and
 // a list of all searched nodes containing the path(s) between them.

@@ -150,7 +150,6 @@
     <ClInclude Include="pathfinding\NodeData\NodeList.h" />
     <ClInclude Include="pathfinding\PathfindingAlgorithm.h" />
     <ClInclude Include="pathfinding\PathfindingUtil.h" />
-    <ClInclude Include="pathfinding\SLList\sllist.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -159,7 +158,6 @@
     <ClCompile Include="pathfinding\NodeData\NodeList.c" />
     <ClCompile Include="pathfinding\PathfindingAlgorithm.c" />
     <ClCompile Include="pathfinding\PathfindingUtil.c" />
-    <ClCompile Include="pathfinding\SLList\sllist.c" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="cs301_robotSim_lib_2021.lib" />

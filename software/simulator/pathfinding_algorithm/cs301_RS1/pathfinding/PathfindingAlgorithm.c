@@ -3,17 +3,24 @@
 
 #include "PathfindingAlgorithm.h"
 
+#include "NodeData/NodeList.h"
 #include "NodeData/NodeDataOps.h"
 
 
-void InsertInNodeQueue(struct SLList* NodeQueue, struct SLListElement* node)
+void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 {
-	// Breadth-first (as adding each new node to top)
-	PrependToSLList(&NodeQueue, node);
+	// Depth-first:
+	PrependToList(NodeQueue, element);
+
+	// Breadth-first:
+	//AppendToList(NodeQueue, element);
+
+	// A*/Dijkstra:
+	// Insert in list, sorted from lowest weight to highest weight.
 }
 
 // @TODO!
-int CalculateNodeWeight(struct SLListElement* node)
+int CalculateNodeWeight(NodeData* instigating_node)
 {
 	return 0;
 }
