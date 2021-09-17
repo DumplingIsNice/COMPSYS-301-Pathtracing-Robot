@@ -1,8 +1,6 @@
 #ifndef NODEDATA_H
 #define NODEDATA_H
 
-#include "NodeList.h"
-
 /*
 	Node Data
 
@@ -18,12 +16,16 @@
 	GETTER/SETTER FUNCTIONS TO MODIFY OR READ.
 */
 
-struct NodeData {
+typedef struct NodeData {
 	int	posx;
 	int posy;
 	int num_adjacent_paths;
 	int weight;
-	struct NodeListElement* adjacent_node_list;
-};
+	struct NodeListElement* adjacent_nodes;
+} NodeData;
+
+
+// Create and allocate memory for a blank NodeData.
+NodeData* NewNodeData();
 
 #endif // !NODEDATA_H
