@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ReadMap.h"
+#include "../FileUtility/ReadMap.h"
 #include "NodeData.h"
 
 #ifndef NODEMAP_H
@@ -57,5 +57,8 @@ void NodeMapLogAll(const NodeMap* h, int* key, NodeData** val);
 
 // Displays all avaliable keys
 void PrintAllKeys();
+
+// Example of SOME of NodeMap Functionality
+void TestNodeMap();
 
 #endif // NODEMAP_H

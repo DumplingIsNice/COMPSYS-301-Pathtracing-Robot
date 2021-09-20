@@ -14,11 +14,14 @@
 	MUST DEFINE THE DIMENSIONS OF THE MAP, AND THE NAME OF THE MAP FILE!
 */
 
-#define MAP_SIZE_Y 15
-#define MAP_SIZE_X 19
+#define MAP_SIZE_Y	15
+#define MAP_SIZE_X	19
+#define GOAL_Y		14
+#define GOAL_X		18
+#define START_Y		1
+#define START_X		1
 
 #define MAP_NAME "map.txt"
-
 
 // Return the integer value at the given indices in the map array.
 int GetMapValue(int row, int col);

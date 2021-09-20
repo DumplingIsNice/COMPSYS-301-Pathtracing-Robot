@@ -16,6 +16,10 @@ int GetNodeDataPosY(NodeData* node)
 	return node->posy;
 	//return (node->pos) & 0x00FF;
 }
+int GetNodeDataIsChecked(NodeData* node)
+{
+	return node->isChecked;
+}
 int GetNodeDataAdjacentPaths(NodeData* node)
 {
 	return node->num_adjacent_paths;
@@ -37,6 +41,10 @@ void SetNodeDataPosY(NodeData* node, int pos_y)
 	node->posy = pos_y;
 	//node->pos = node->pos & 0xFF00;
 	//node->pos = node->pos | pos_y;
+}
+void SetNodeDataIsChecked(NodeData* node, int isChecked)
+{
+	node->isChecked = isChecked;
 }
 void SetNodeDataAdjacentPaths(NodeData* node, int adj_paths)
 {
