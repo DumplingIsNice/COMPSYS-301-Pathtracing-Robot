@@ -81,7 +81,7 @@ CellType GetCellType(int posx, int posy)
 			return GOAL;
 		}
 	}
-	if (GetMapValue(posy, posx) == 1) {
+	if (GetMapValue(posy, posx) == 0) {
 		return PATH;
 	}
 	// Else...
