@@ -19,6 +19,7 @@
 typedef struct NodeData {
 	int	posx;
 	int posy;
+	int isChecked;
 	int num_adjacent_paths;
 	int weight;
 	struct NodeListElement* adjacent_nodes;

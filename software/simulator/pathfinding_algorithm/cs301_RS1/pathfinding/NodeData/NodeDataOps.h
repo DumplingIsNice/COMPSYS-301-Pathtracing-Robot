@@ -16,11 +16,13 @@
 
 int GetNodeDataPosX(NodeData* node);
 int GetNodeDataPosY(NodeData* node);
+int GetNodeDataIsChecked(NodeData* node);
 int GetNodeDataAdjacentPaths(NodeData* node);
 int GetNodeDataWeight(NodeData* node);
 
 void SetNodeDataPosX(NodeData* node, int pos_x);
 void SetNodeDataPosY(NodeData* node, int pos_y);
+void SetNodeDataIsChecked(NodeData* node, int isChecked);
 void SetNodeDataAdjacentPaths(NodeData* node, int adj_paths);
 void SetNodeDataWeight(NodeData* node, int weight);
 void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add);

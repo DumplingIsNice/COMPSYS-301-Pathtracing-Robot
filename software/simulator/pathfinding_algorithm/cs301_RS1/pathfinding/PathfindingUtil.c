@@ -16,47 +16,42 @@
 #endif
 
 // 'Private' variables
-static int PosXCheckedArray[MAP_SIZE_X] = { 0 };	// @TO REMOVE
-static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };	// @TO REMOVE
+//static int PosXCheckedArray[MAP_SIZE_X] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
+//static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
 static NodeList NodeQueue = { .tail = NULL };		// initialise .data to {0}
 static int GoalReached = FALSE;
 
 
 /* IsPosChecked */
-int IsPosXChecked(int posx)
+int IsPosXChecked(NodeData* nodeData, int posx)
 {
-	return PosXCheckedArray[posx];
+	return nodeData->isChecked;
 }
-int IsPosYChecked(int posy)
+void SetNodeChecked(NodeData* nodeData, int is_checked)
 {
-	return PosYCheckedArray[posy];
-}
-void SetPosXChecked(int posx, int is_checked)
-{
-	PosXCheckedArray[posx] = is_checked;
-}
-void SetPosYChecked(int posy, int is_checked)
-{
-	PosYCheckedArray[posy] = is_checked;
+	nodeData->isChecked = is_checked;
 }
 
 int IsCheckedNode(int posx, int posy)
 {
-	if (IsPosXChecked(posx) && IsPosYChecked(posy)) { return TRUE; }
-	return FALSE;
+	NodeData* nodeData = NodeMapGet(NodeMapGenKey(posx, posy));
+	if (nodeData == NULL) { return FALSE; }
+	else {
+		if (GetNodeDataIsChecked(nodeData)) { return TRUE; }
+		return FALSE;
+	}
 }
-
 
 /* Goal Cell */
-// @TODO
+// @For now, keep every input value as defined in ReadMap.h
 int GetGoalPosX()
 {
-	return 0; // return pos_x of target cell
+	return GOAL_X; // return pos_x of target cell
 }
-// @TODO
+// @For now, keep every input value as defined in ReadMap.h
 int GetGoalPosY()
 {
-	return 0; // return pos_y of target cell
+	return GOAL_Y; // return pos_y of target cell
 }
 
 int IsGoalReached()
@@ -84,6 +79,7 @@ CellType GetCellType(int posx, int posy)
 	if (GetMapValue(posy, posx) == 0) {
 		return PATH;
 	}
+	
 	// Else...
 	return EMPTY;
 }
@@ -105,7 +101,9 @@ void EvaluateCell(NodeData* instigating_node, int posx, int posy)
 	switch (cell_type)
 	{
 	case PATH:	EvaluatePathCell(instigating_node, posx, posy);
+		return;
 	case GOAL:	SetGoalReached(TRUE);
+		return;
 	default:	return;
 	}
 }
@@ -118,19 +116,19 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		// We have discovered a new node...
 		// Create and populate the node, set its coords as checked, and
 		// send it to the NodeQueue.
-		SetPosXChecked(posx, TRUE);
-		SetPosYChecked(posy, TRUE);
-
 		NodeData* new_node = NewNodeData();
-		PopulateNodeData(instigating_node, new_node, posx, posy);
+		PopulateNodeData(instigating_node, new_node, posx, posy, TRUE);
 		AddToNodeQueue(new_node);
+		NodeMapSet(NodeMapGenKey(posx, posy), new_node);
 		return;
 	} else {
-		// We have found a new path to an already discovered node...
+		// We have found a new path to an already discovered node... 
+			// # Hao: Not necessarily, currently we evaluate all directions 
+			// which will evaluate a checked cell from where we came from
 		// Link the preexisting node to the instigating node.
 		// 
-		//NodeData* preexisting = GetNodeFromCoords(posx, posy);
-		//AddToNodeDataAdjacentNode(preexisting, instigating_node);
+		// NodeData* preexisting = GetNodeFromCoords(posx, posy);
+		// AddToNodeDataAdjacentNode(preexisting, instigating_node);
 		// DESIGN CHOICE: singly or doubly linked? Currently only singly.
 		// 
 		// todo: when changing if statement, save lookup result for reuse here ^	
@@ -138,15 +136,15 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 	}
 }
 
-NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy)
+NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked)
 {
 	SetNodeDataPosX(node, posx);
 	SetNodeDataPosY(node, posy);
+	SetNodeChecked(node, isChecked);
 	SetNodeDataWeight(node, CalculateNodeWeight(instigating_node));
 	AddToNodeDataAdjacentNode(node, instigating_node);
 	return node;
 }
-
 
 void AddToNodeQueue(NodeData* node)
 {

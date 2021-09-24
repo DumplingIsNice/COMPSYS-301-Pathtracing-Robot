@@ -5,6 +5,8 @@
 
 #include "NodeData/NodeData.h"	// only required in PathfindingUtil.c, but added for convenience of the typedef
 
+#include "NodeData/NodeMap.h"
+
 /*
 	Pathfinding Util
 
@@ -41,16 +43,9 @@
 
 typedef enum CellType {EMPTY, PATH, GOAL} CellType;
 
-
 /* IsPosChecked */
-
-int IsPosXChecked(int posx);
-int IsPosYChecked(int posy);
-void SetPosXChecked(int posx, int is_checked);
-void SetPosYChecked(int posy, int is_checked);
-
+void SetNodeChecked(NodeData* nodeData, int is_checked);
 int IsCheckedNode(int posx, int posy);
-
 
 /* Goal Cell */
 
@@ -82,7 +77,7 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy);
 
 // Populate NodeData contextually. Uses PathfindingAlgorithm functions for calculating
 // weight.
-NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy);
+NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked);
 
 
 
