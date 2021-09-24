@@ -20,7 +20,7 @@ int ASCIIToInt(char c)
     return (int)c - 48;
 }
 
-int ReadMapFile(const char* file_name, int map[MAP_SIZE_Y][MAP_SIZE_X])
+int ReadMapFile(const char* file_name)
 {
     FILE* file;
     char c = 0;
@@ -54,7 +54,7 @@ int ReadMapFile(const char* file_name, int map[MAP_SIZE_Y][MAP_SIZE_X])
     return 1;
 }
 
-void PrintMap(int map[MAP_SIZE_Y][MAP_SIZE_X])
+void PrintMap(const int map[MAP_SIZE_Y][MAP_SIZE_X])
 {
     for (int i = 0; i < MAP_SIZE_Y; i++) {
         for (int j = 0; j < MAP_SIZE_X; j++) {
@@ -64,11 +64,14 @@ void PrintMap(int map[MAP_SIZE_Y][MAP_SIZE_X])
     }
 }
 
+void PrintSystemMap()
+{
+    PrintMap(map);
+}
+
 void TestPrintMap()
 {
-    int map[MAP_SIZE_Y][MAP_SIZE_X] = { 0 };
-
-    if (!ReadMapFile(MAP_NAME, map))
+    if (!ReadMapFile(MAP_NAME))
     {
         printf("Failed to open map file.\n");
     }

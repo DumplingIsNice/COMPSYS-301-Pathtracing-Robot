@@ -14,11 +14,14 @@
 	MUST DEFINE THE DIMENSIONS OF THE MAP, AND THE NAME OF THE MAP FILE!
 */
 
-#define MAP_SIZE_Y 15
-#define MAP_SIZE_X 19
+#define MAP_SIZE_Y	15
+#define MAP_SIZE_X	19
+#define GOAL_Y		14
+#define GOAL_X		18
+#define START_Y		1
+#define START_X		1
 
 #define MAP_NAME "map.txt"
-
 
 // Return the integer value at the given indices in the map array.
 int GetMapValue(int row, int col);
@@ -27,11 +30,15 @@ int GetMapValue(int row, int col);
 int ASCIIToInt(char c);
 
 // Read a gridded .txt file of a map, treating each character as an int.
+// Reads data to 'private' system map in ReadMap.c
 // Map data must be arranged in rows with no separation or delimiters.
-int ReadMapFile(const char* file_name, int map[MAP_SIZE_Y][MAP_SIZE_X]);
+int ReadMapFile(const char* file_name);
 
 // Print the map in grid as 1s and 0s via standard output.
-void PrintMap(int map[MAP_SIZE_Y][MAP_SIZE_X]);
+void PrintMap(const int map[MAP_SIZE_Y][MAP_SIZE_X]);
+
+// Prints the 'private' system map in ReadMap.c
+void PrintSystemMap();
 
 // Read the map file and print it to console.
 void TestPrintMap();
