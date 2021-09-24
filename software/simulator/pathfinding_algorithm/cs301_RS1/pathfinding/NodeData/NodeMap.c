@@ -1,37 +1,18 @@
 #include "NodeMap.h"
 
-NodeMap* NodeMapNew()
+void NodeMapSet(const int key, const void* val)
 {
-    NodeMap* h = malloc(sizeof(*h) * (HASH_SIZE));
-    if (h == NULL)
-    {
-        return NULL;
-    }
-    for (int i=0;i<(HASH_SIZE);i++)
-    {
-        h[i] = NULL;
-    }
-    return h;
+    nodeMap[key] = (void*)val;
 }
 
-void NodeMapFree(NodeMap* h)
+NodeData* NodeMapGet(const int key)
 {
-    if (h != NULL) { free(h); };
+    return nodeMap[key];
 }
 
-void NodeMapSet(NodeMap* h, const int key, const void* val)
+void NodeMapDel(const int key)
 {
-    h[key] = (void*)val;
-}
-
-NodeData* NodeMapGet(const NodeMap* h, const int key)
-{
-    return (NodeData*)h[key];
-}
-
-void NodeMapDel(NodeMap* h, const int key)
-{
-    h[key] = NULL;
+    nodeMap[key] = NULL;
 }
 
 int NodeMapGenKey(const int posx, const int posy) 
@@ -57,13 +38,13 @@ void NodeMapClear()
 
 /* Debug Functions */ 
 
-void NodeMapLogAll(const NodeMap* h, int* key, NodeData** val)
+void NodeMapLogAll(int* key, NodeData** val)
 {
     printf("## Logging NodeMap: ##\n");
     for (int i=0;i<(HASH_SIZE);i++)
     {
         key[i] = i;
-        val[i] = NodeMapGet(h, i);
+        val[i] = NodeMapGet(i);
     }
 }
 
@@ -84,15 +65,13 @@ void TestNodeMap()
     // Displays all avaliable keys
     PrintAllKeys();
 
-    NodeMap* h = NodeMapNew();
     NodeData* nodeA = NewNodeData();
+    NodeData* val = nodeA;
 
     int x, y;
-    x = 15;
-    y = 19;
+    x = 18;
+    y = 14;
 
-    int key = NodeMapGenKey(x, y);
-    NodeData* val = nodeA;
     nodeA->posx = x;
     nodeA->posy = y;
     nodeA->num_adjacent_paths = 0;
@@ -100,24 +79,14 @@ void TestNodeMap()
     nodeA->adjacent_nodes = NULL;
 
     // This section tests the indivisual getter and setter functions
-    printf("## Setting and fetching at (x,y): ##\n");
-    NodeMapSet(h, key, val);
-
-    key = NodeMapGenKey(x, y);
-
-    val = NodeMapGet(h, key);
-
-    if (IsPtrValid(val))
-    {
-        printf("Data posx:%d, posy:%d\n", val->posx, val->posy);
-    }
+    TestNodeMapSet(x, y, nodeA);
 
     // This section views the entire NodeMap
     int key_a[HASH_SIZE] = { 0 };
     NodeData* val_a[HASH_SIZE] = { NULL };
     int desx, desy;
 
-    NodeMapLogAll(h, key_a, val_a);
+    NodeMapLogAll(key_a, val_a);
 
     // Prints the entire NodeMap
     printf("## Printing the NodeMap: ##\n");
@@ -135,6 +104,21 @@ void TestNodeMap()
         printf("Key: %3d, val: %d, val->posx: %d, val->posy: %d\n", key_a[i], (int)val_a[i], desx, desy);
     }
 
-    NodeMapFree(h);
     DestroyNodeData(nodeA);
+}
+
+void TestNodeMapSet(const int posx, const int posy, const NodeData* node)
+{
+    printf("## Setting and fetching at (%d, %d): ##\n", posx, posy);
+    NodeData* val = NULL;
+    int key = NodeMapGenKey(posx, posy);
+
+    NodeMapSet(key, node);
+    val = NodeMapGet(key);
+
+    if (IsPtrValid(val))
+    {
+        printf("Key: %d\n", key);
+        printf("Data posx:%d, posy:%d\n", val->posx, val->posy);
+    }
 }

@@ -3,46 +3,48 @@
 
         A statically allocated pseudo - hash map.
         Each element(val) holds a references to a NodeData struct,
-        and is indexed with a key generates from coordinate (x,y) values.
+        and is indexed with a key generates from coordinate (x,y) values (0-(MAX-1)).
 
         keys: are intergers. Literially, they are implemented no different to array indexes.
         vals: are NodeData pointers.
 
-    Note:
-        This library relies on the MAP_SIZE definition in READMAP.h
+        24/09/2021:
+            - Refactored NodeMap to allocate a static hashmap.
+            - Removed dynamic allocation.
+            
+        (CAUTION: ONLY FUNCTIONAL FOR MAP_SIZE_ FIXED AT COMPILE TIME)
 
-        To use, see TestNodeMape() for examples.
+    Note:
+        This library relies on the MAP_SIZE_ definition in READMAP.h
+
+        To use, see TestNodeMap() for examples.
 
 */
+
+#ifndef NODEMAP_H
+#define NODEMAP_H
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ReadMap.h"
+#include "../FileUtility/ReadMap.h"
 #include "NodeData.h"
-
-#ifndef NODEMAP_H
-#define NODEMAP_H
 
 #define HASH_SIZE   MAP_SIZE_X * MAP_SIZE_Y + MAP_SIZE_Y
 
 typedef void* NodeMap;
 
-// Returns NULL if failed.
-NodeMap* NodeMapNew();
-
-// Frees NodeMap if it is valid.
-void NodeMapFree(NodeMap* h);
+static NodeMap* nodeMap[HASH_SIZE] = {0};
 
 // Setter, key-val pair
-void NodeMapSet(NodeMap* h, const int key, const void* val);
+void NodeMapSet(const int key, const void* val);
 
 // Getter, val by key
-NodeData* NodeMapGet(const NodeMap* h, const int key);
+NodeData* NodeMapGet(const int key);
 
 /*  Note: del does not delete the pointer or the NodeData it points too.
     CAUTION! The NodeData could be lost if not already logged in NodeQueue */
-void NodeMapDel(NodeMap* h, const int key);
+void NodeMapDel(const int key);
 
 // Encodes coordinates into key
 int NodeMapGenKey(const int posx, const int posy);
@@ -53,9 +55,13 @@ int NodeMapGenKey(const int posx, const int posy);
 int IsPtrValid(void* ptr);
 
 // Logas all key and val of NodeMap into arrays
-void NodeMapLogAll(const NodeMap* h, int* key, NodeData** val);
+void NodeMapLogAll(int* key, NodeData** val);
 
 // Displays all avaliable keys
 void PrintAllKeys();
+
+// Example of SOME of NodeMap Functionality
+void TestNodeMap();
+void TestNodeMapSet(const int posx, const int posy, const NodeData* node);
 
 #endif // NODEMAP_H
