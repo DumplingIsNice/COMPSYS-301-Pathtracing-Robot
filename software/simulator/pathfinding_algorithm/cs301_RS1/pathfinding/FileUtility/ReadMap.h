@@ -40,6 +40,12 @@ void PrintMap(const int map[MAP_SIZE_Y][MAP_SIZE_X]);
 // Prints the 'private' system map in ReadMap.c
 void PrintSystemMap();
 
+// Prints the 'private' output map in ReadMap.c (to track runtime position)
+void PrintOutputMap();
+
+// Writes the 'private' output map in ReadMap.c (to track runtime position)
+void WriteOutputMap(const int x, const int y, const int value);
+
 // Read the map file and print it to console.
 void TestPrintMap();
 

@@ -8,7 +8,7 @@
 
 // 'Private' variable
 static int map[MAP_SIZE_Y][MAP_SIZE_X];
-
+static int outputMap[MAP_SIZE_Y][MAP_SIZE_X];
 
 int GetMapValue(int row, int col)
 {
@@ -49,6 +49,7 @@ int ReadMapFile(const char* file_name)
         }
         printf("%d ", ASCIIToInt(c));
         map[j][i++] = ASCIIToInt(c);
+        outputMap[j][i-1] = ASCIIToInt(c);
     }
     fclose(file);
     return 1;
@@ -66,7 +67,19 @@ void PrintMap(const int map[MAP_SIZE_Y][MAP_SIZE_X])
 
 void PrintSystemMap()
 {
+    printf("## Printing System Map! ##\n");
     PrintMap(map);
+}
+
+void PrintOutputMap()
+{
+    printf("## Printing Output Map! ##\n");
+    PrintMap(outputMap);
+}
+
+void WriteOutputMap(const int x, const int y, const int value) {
+    //if (!outputMap[x][y]) { outputMap[x][y] = value; }
+    outputMap[y][x] = value;
 }
 
 void TestPrintMap()
@@ -79,7 +92,8 @@ void TestPrintMap()
         printf("Successfully read map!\n");
     }
 
-    PrintMap(map);
+    PrintSystemMap();
+    PrintOutputMap();
 }
 
 
