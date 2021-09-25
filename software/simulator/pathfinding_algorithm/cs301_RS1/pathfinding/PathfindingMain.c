@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include "FileUtility/ReadMap.h"
+#include "PathfindingAlgorithm.h"
 #include "PathfindingUtil.h"
 #include "NodeData/NodeDataOps.h"
 #include "NodeData/NodeMap.h"
@@ -55,11 +56,20 @@ void FindShortestPath()
 	// (i.e. at start).
 
 	// Trace back to start with goal and log in FinalQueue
+
+	// Artificially creates goal node and add to FinalQueue
+	EvaluatePathCell(NULL, GetGoalPosX(), GetGoalPosY());
+	AddToFinalQueue(NodeMapGet(NodeMapGenKey(GetGoalPosX(), GetGoalPosY())));
+
+	// Trace NextNodeInFinalPath
 	while (!IsStartReached(current_node))
 	{
 		AddToFinalQueue(current_node);
-		current_node = GetNodeDataAdjacentNode(current_node);
+		current_node = FindNextNodeInFinalPath(current_node);
 	}
+
+	// Artificially add start to FinalQueue
+	AddToFinalQueue(NodeMapGet(NodeMapGenKey(GetStartPosX(), GetStartPosY())));
 
 	#ifdef DEBUG
 		// Process final output from FinalQueue to FinalMap

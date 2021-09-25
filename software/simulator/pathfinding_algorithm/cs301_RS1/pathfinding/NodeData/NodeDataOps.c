@@ -41,10 +41,6 @@ int GetNodeDataWeight(NodeData* node)
 {
 	return node->weight;
 }
-NodeData* GetNodeDataAdjacentNode(NodeData* node)
-{
-	return node->adjacent_nodes->node;
-}
 NodeListElement* GetNodeDataAdjacentNodeListElement(NodeData* node)
 {
 	return node->adjacent_nodes;
