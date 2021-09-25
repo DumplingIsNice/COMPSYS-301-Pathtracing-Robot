@@ -86,6 +86,15 @@ void PrependToList(NodeList* list, NodeListElement* element)
 	}
 }
 
+void InsertInList(NodeList* list, NodeListElement* current, NodeListElement* add)
+{
+	if (current == list->tail) {
+		AppendToList(list, add);
+	} else {
+		Insert(current, add);
+	}
+}
+
 NodeListElement* RemoveListHead(NodeList* list)
 {
 	NodeListElement* to_remove = list->head;

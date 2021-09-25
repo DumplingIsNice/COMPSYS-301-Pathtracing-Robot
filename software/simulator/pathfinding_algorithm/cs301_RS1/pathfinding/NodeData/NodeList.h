@@ -68,6 +68,11 @@ void AppendToList(NodeList* list, NodeListElement* element);
 // Prepend an element to a NodeList (add to start).
 void PrependToList(NodeList* list, NodeListElement* element);
 
+// Append an element after a specific element in a list. Is NodeList head/tail safe.
+// Cannot prepend (i.e. replace the head of the list). No checks are performed to
+// ensure the given elements are part of the given list.
+void InsertInList(NodeList* list, NodeListElement* current, NodeListElement* add);
+
 // Remove the head NodeListElement from a NodeList, and return it.
 NodeListElement* RemoveListHead(NodeList* list);
 

@@ -7,20 +7,80 @@
 #include "NodeData/NodeList.h"
 #include "NodeData/NodeDataOps.h"
 
+#define DEPTHFIRST
+//#define BREADTHFIRST
+//#define ASTAR
 
+/*
+	DEPTH-FIRST
+*/
+#ifdef DEPTHFIRST
 void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 {
-	// Depth-first:
 	PrependToList(NodeQueue, element);
-
-	// Breadth-first:
-	//AppendToList(NodeQueue, element);
-
-	// A*/Dijkstra:
-	// Insert in list, sorted from lowest weight to highest weight.
 }
 
-// @TODO!
+int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+{
+	int g = 1;
+
+	// Analytic:
+	if (IsNodeDataValid(instigating_node)) {
+		g = GetNodeDataWeight(instigating_node) + 1;
+	} // else default to g = 1 (for starting node)
+
+	return g;
+}
+#endif	// DEPTHFIRST
+
+
+/*
+	BREADTH-FIRST
+*/
+#ifdef BREADTHFIRST
+void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
+{
+	AppendToList(NodeQueue, element);
+}
+
+int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+{
+	int g = 1;
+
+	// Analytic:
+	if (IsNodeDataValid(instigating_node)) {
+		g = GetNodeDataWeight(instigating_node) + 1;
+	} // else default to g = 1 (for starting node)
+
+	return g;
+}
+#endif // BREADTHFIRST
+
+
+/*
+	A*
+*/
+#ifdef ASTAR
+void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
+{
+	// A*/Dijkstra:
+	// Insert in list, sorted from lowest weight to highest weight.
+	NodeListElement* current_element = GetListHead(NodeQueue);
+	NodeListElement* prev_element = NULL;
+	while (GetNodeDataWeight(element->node) > GetNodeDataWeight(current_element->node))
+	{
+		prev_element = current_element;
+		current_element = current_element->tail;
+	}
+	
+	if (prev_element == NULL) {
+		PrependToList(NodeQueue, element);
+	} else {
+		InsertInList(NodeQueue, prev_element, element);
+	}
+
+}
+
 int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
 {
 	int h = 0;
@@ -31,17 +91,12 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 
 	// Analytic:
 	if (IsNodeDataValid(instigating_node)) {
-		g = GetNodeDataWeight(instigating_node);
+		g = GetNodeDataWeight(instigating_node) + 1;
 	} // else default to g = 1 (for starting node)
 
 	return h + g;
 }
-
-// @TODO!
-void CompileShortestPath()
-{
-	;
-}
+#endif // ASTAR
 
 
 #endif // !PATHFINDING_ALGORITHM_C
