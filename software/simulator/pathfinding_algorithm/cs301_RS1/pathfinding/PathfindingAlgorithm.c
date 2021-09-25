@@ -85,9 +85,18 @@ void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 	// Insert in list, sorted from lowest weight to highest weight.
 	NodeListElement* current_element = GetListHead(NodeQueue);
 	NodeListElement* prev_element = NULL;
+
+	// Protect start node case
+	if (!IsElementValid(current_element))
+	{
+		PrependToList(GetNodeQueue(), element);
+		return;
+	}
+
 	while (GetNodeDataWeight(element->node) > GetNodeDataWeight(current_element->node))
 	{
 		prev_element = current_element;
+		if (!IsElementValid(current_element->tail)) { break; }	// End Case
 		current_element = current_element->tail;
 	}
 	
