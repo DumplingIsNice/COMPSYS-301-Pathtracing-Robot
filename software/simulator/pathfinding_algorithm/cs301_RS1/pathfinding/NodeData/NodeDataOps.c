@@ -22,7 +22,8 @@ int GetNodeDataIsChecked(NodeData* node)
 }
 int GetNodeDataAdjacentPaths(NodeData* node)
 {
-	return node->num_adjacent_paths;
+	if (IsNodeDataValid(node)) { return node->num_adjacent_paths; }
+	return -1;
 }
 int GetNodeDataWeight(NodeData* node)
 {
@@ -55,7 +56,7 @@ void SetNodeDataIsChecked(NodeData* node, int isChecked)
 }
 void SetNodeDataAdjacentPaths(NodeData* node, int adj_paths)
 {
-	node->num_adjacent_paths = adj_paths;
+	if (IsNodeDataValid(node)) { node->num_adjacent_paths = adj_paths; }
 }
 void SetNodeDataWeight(NodeData* node, int weight)
 {

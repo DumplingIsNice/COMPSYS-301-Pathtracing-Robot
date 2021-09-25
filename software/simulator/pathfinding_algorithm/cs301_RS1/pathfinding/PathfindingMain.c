@@ -90,13 +90,12 @@ void DepthFirstSearch()
 		current_element = ExtractNextInNodeQueue();
 		current_node = current_element->node;
 
-		PrintNodeData(current_node);
 		WriteOutputMap(current_node->posx, current_node->posy, WALKED_PATH);
-
 		//PrintNodeMap();
 		PrintOutputMap();
 
 		EvaluateAdjacentCells(current_node);
+		PrintNodeData(current_node);
 
 		if (IsGoalReached()) { break; }
 		i++;
