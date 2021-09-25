@@ -14,6 +14,10 @@
 	DO NOT ACCESS EXPLICITLY!
 */
 
+
+// Destroy NodeData and the NodeListElements in adjacent_nodes (but NOT their contents)
+void DestroyNodeDataAndContents(NodeData* node);
+
 int GetNodeDataPosX(NodeData* node);
 int GetNodeDataPosY(NodeData* node);
 int GetNodeDataIsChecked(NodeData* node);

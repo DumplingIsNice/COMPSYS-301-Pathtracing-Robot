@@ -6,6 +6,20 @@
 #include "NodeList.h"
 
 
+void DestroyNodeDataAndContents(NodeData* node)
+{
+	NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+	NodeListElement* prev_element;
+
+	while (IsElementValid(current_element)) {
+		prev_element = current_element;
+		current_element = current_element->tail;
+		DestroyListElement(prev_element);
+	}
+	DestroyNodeData(node);
+}
+
+
 int GetNodeDataPosX(NodeData* node)
 {
 	return node->posx;

@@ -1,5 +1,7 @@
 #include "NodeMap.h"
 
+#include "NodeDataOps.h"
+
 void NodeMapSet(const int key, const void* val)
 {
     nodeMap[key] = (void*)val;
@@ -35,7 +37,7 @@ void NodeMapClear()
     for (int x = 0; x < (MAP_SIZE_X); x++) {
         for (int y = 0; y < (MAP_SIZE_Y); y++) {
             NodeData* node = NodeMapGet(NodeMapGenKey(x, y));
-            if (IsPtrValid(node)) { free(node); }
+            if (IsNodeDataValid(node)) { DestroyNodeDataAndContents(node); }
         }
     }
 }
