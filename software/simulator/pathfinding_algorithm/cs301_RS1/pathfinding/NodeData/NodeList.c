@@ -62,8 +62,13 @@ void AppendToList(NodeList* list, NodeListElement* element)
 void PrependToList(NodeList* list, NodeListElement* element)
 {
 	if (IsElementValid(list->head)) {
-		// If NodeList is not empty then add as normal...
-		Insert(list->head, element);
+		// If NodeList is not empty then link tail as normal...
+		
+		if (!IsElementValid(list->tail)) {
+			// If there is only one element in the list then update tail...
+			list->tail = list->head;
+		}
+		element->tail = list->head;
 	}
 	else {
 		element->tail = NULL;
@@ -71,7 +76,7 @@ void PrependToList(NodeList* list, NodeListElement* element)
 	list->head = element;
 
 	if (!IsElementValid(list->tail)) {
-		list->tail = element;	// If the only element in the list, assign as tail too.
+		list->tail = element;	// If this is the only element in the list, assign as tail too.
 	}
 }
 
