@@ -13,7 +13,15 @@ int IsNodeDataValid(NodeData* node)
 
 NodeData* NewNodeData()
 {
-	NodeData* node = (NodeData*)malloc(sizeof(*node));
+	NodeData* node = malloc(sizeof (struct NodeData));
+	if (node == NULL) { return NULL; }
+	// Initialise to non-garbage values:
+	node->posx = 0;
+	node->posy = 0;
+	node->isChecked = 0;
+	node->weight = 0;
+	node->num_adjacent_paths = 0;
+	node->adjacent_nodes = NULL;
 	return node;
 }
 

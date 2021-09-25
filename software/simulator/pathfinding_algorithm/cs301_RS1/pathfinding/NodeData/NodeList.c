@@ -8,13 +8,20 @@
 
 NodeList* NewNodeList()
 {
-	NodeList* list = (NodeList*)malloc(sizeof list);
+	NodeList* list = malloc(sizeof (struct NodeList));
+	if (list == NULL) { return NULL; }
+	// Initialise to non-garbage values:
+	list->head = NULL;
+	list->tail = NULL;
 	return list;
 }
 
 NodeListElement* NewNodeListElement(struct NodeData* node)
 {
-	NodeListElement* element = (NodeListElement*)malloc(sizeof element);
+	NodeListElement* element = malloc(sizeof (struct NodeListElement));
+	if (element == NULL) { return NULL; }
+	// Initialise to non-garbage values:
+	element->tail = NULL;
 	element->node = node;
 	return element;
 }
