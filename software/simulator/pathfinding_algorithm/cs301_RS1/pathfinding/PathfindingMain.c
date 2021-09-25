@@ -75,12 +75,18 @@ void CleanUpFindShortestPath()
 
 void DepthFirstSearch()
 {
+	// Read map and set up goal location:
 	SetGoalPos(GOAL_X, GOAL_Y);
+	SetStartPos(START_X, START_Y);
 	ReadMapFile(MAP_NAME);
+
+	// Create the starting node and add it to NodeQueue:
 	EvaluateCell(NULL, START_X, START_Y);
 
+	// Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells) 
+	// until goal is reached:
 	NodeListElement* current_element;
-	NodeData* current_node;
+	NodeData* current_node = NULL;
 
 	// Note: Remeber to log node and list element to free memory after processing
 	int i = 0;
@@ -100,6 +106,26 @@ void DepthFirstSearch()
 		if (IsGoalReached()) { break; }
 		i++;
 	}
+
+	// Trace back to start with goal and log in FinalQueue
+	while (!IsStartReached(current_node))
+	{
+		AddToFinalQueue(current_node);
+		current_node = GetNodeDataAdjacentNode(current_node);
+	}
+
+	// Process final output from FinalQueue to FinalMap
+	while (!IsFinalQueueEmpty())
+	{
+		current_element = ExtractNextInFinalQueue();
+		current_node = current_element->node;
+
+		WriteFinalMap(current_node->posx, current_node->posy, WALKED_PATH);
+	}
+	PrintFinalMap();
+
+	// This is the point that FinalQueue and/or FinalMap may be used/exported. 
+	// After this point, data is to be destoried.
 }
 
 

@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include "NodeList.h"
 
-
 void DestroyNodeDataAndContents(NodeData* node)
 {
 	NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
@@ -18,7 +17,6 @@ void DestroyNodeDataAndContents(NodeData* node)
 	}
 	DestroyNodeData(node);
 }
-
 
 int GetNodeDataPosX(NodeData* node)
 {
@@ -103,6 +101,5 @@ void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add)
 	}
 	Insert(current_node, NewNodeListElement(node_to_add));
 }
-
 
 #endif // !NODEDATAOPS_C

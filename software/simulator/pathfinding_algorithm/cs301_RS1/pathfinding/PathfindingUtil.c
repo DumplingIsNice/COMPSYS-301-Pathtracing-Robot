@@ -19,8 +19,9 @@
 //static int PosXCheckedArray[MAP_SIZE_X] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
 //static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
 static NodeList NodeQueue = { .tail = NULL };		// initialise .data to {0}
+static NodeList FinalQueue = { .tail = NULL };
 
-static int goal_x, goal_y;
+static int goal_x, goal_y, start_x, start_y;
 static int goal_reached = FALSE;
 
 
@@ -71,7 +72,30 @@ void SetGoalReached(int is_reached)
 	goal_reached = is_reached;
 }
 
+/* Start Cell */
+void SetStartPos(int posx, int posy)
+{
+	start_x = posx;
+	start_y = posy;
+}
+int GetStartPosX()
+{
+	return start_x; // return pos_x of target cell
+}
+// @For now, keep every input value as defined in ReadMap.h
+int GetStartPosY()
+{
+	return start_y; // return pos_y of target cell
+}
 
+int IsStartReached(NodeData* node)
+{
+	if ((GetNodeDataPosX(node) == GetStartPosX()) && (GetNodeDataPosY(node) == GetStartPosY()))
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
 
 /* Pathfinding Algorithm Functions */
 
@@ -174,6 +198,22 @@ NodeListElement* ExtractNextInNodeQueue()
 int IsNodeQueueEmpty()
 {
 	return !IsElementValid(GetListHead(&NodeQueue));
+}
+
+void AddToFinalQueue(NodeData* node)
+{
+	NodeListElement* element = NewNodeListElement(node);
+	PrependToList(&FinalQueue, element);
+}
+
+NodeListElement* ExtractNextInFinalQueue()
+{
+	return RemoveListHead(&FinalQueue);
+}
+
+int IsFinalQueueEmpty()
+{
+	return !IsElementValid(GetListHead(&FinalQueue));
 }
 
 void PrintNodeData(NodeData* n)

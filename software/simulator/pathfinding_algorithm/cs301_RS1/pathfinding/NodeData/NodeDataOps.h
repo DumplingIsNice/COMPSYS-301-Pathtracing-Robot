@@ -14,7 +14,6 @@
 	DO NOT ACCESS EXPLICITLY!
 */
 
-
 // Destroy NodeData and the NodeListElements in adjacent_nodes (but NOT their contents)
 void DestroyNodeDataAndContents(NodeData* node);
 
@@ -32,6 +31,5 @@ void SetNodeDataIsChecked(NodeData* node, int isChecked);
 void SetNodeDataAdjacentPaths(NodeData* node, int adj_paths);
 void SetNodeDataWeight(NodeData* node, int weight);
 void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add);
-
 
 #endif // !NODEDATA_H

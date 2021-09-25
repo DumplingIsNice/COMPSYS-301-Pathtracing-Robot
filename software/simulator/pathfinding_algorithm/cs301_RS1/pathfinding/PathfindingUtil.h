@@ -54,6 +54,11 @@ int GetGoalPosY();
 int IsGoalReached();
 void SetGoalReached(int is_reached);
 
+/* Start Cell */
+void SetStartPos(int posx, int posy);
+int GetStartPosX();
+int GetStartPosY();
+int IsStartReached(NodeData* node);
 
 /* Pathfinding Algorithm Functions */
 
@@ -94,6 +99,14 @@ NodeListElement* ExtractNextInNodeQueue();
 
 // Returns true if no NodeListElements left in NodeQueue.
 int IsNodeQueueEmpty();
+
+// Insert a node element in the final Queue.
+void AddToFinalQueue(NodeData* node);
+
+NodeListElement* ExtractNextInFinalQueue();
+
+// Returns true if no NodeListElements left in FinalQueue.
+int IsFinalQueueEmpty();
 
 // Debug function to visualize nodeData contents
 void PrintNodeData(NodeData* n);
