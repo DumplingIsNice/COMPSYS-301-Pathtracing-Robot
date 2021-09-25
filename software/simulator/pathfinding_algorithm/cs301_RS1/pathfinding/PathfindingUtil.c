@@ -101,10 +101,10 @@ void EvaluateAdjacentCells(NodeData* instigating_node)
 	int posx = GetNodeDataPosX(instigating_node);
 	int posy = GetNodeDataPosY(instigating_node);
 
-	if (posx - 1 >= 0)			{ EvaluateCell(instigating_node, posx - 1, posy); }	// up
-	if (posy + 1 < MAP_SIZE_Y)	{ EvaluateCell(instigating_node, posx, posy + 1); }	// right
-	if (posy - 1 >= 0)			{ EvaluateCell(instigating_node, posx, posy - 1); }	// left
-	if (posx + 1 < MAP_SIZE_X)	{ EvaluateCell(instigating_node, posx + 1, posy); }	// down
+	if (posx - 1 >= 0)			{ EvaluateCell(instigating_node, posx - 1, posy); }	// right
+	if (posy - 1 >= 0)			{ EvaluateCell(instigating_node, posx, posy - 1); }	// up
+	if (posy + 1 < MAP_SIZE_Y)	{ EvaluateCell(instigating_node, posx, posy + 1); }	// down
+	if (posx + 1 < MAP_SIZE_X)	{ EvaluateCell(instigating_node, posx + 1, posy); }	// left
 }
 
 void EvaluateCell(NodeData* instigating_node, int posx, int posy)
