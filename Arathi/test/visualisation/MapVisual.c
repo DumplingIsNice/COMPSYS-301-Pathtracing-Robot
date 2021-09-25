@@ -2,7 +2,7 @@
 #define VISUALISATION_C
 
 //#define _CRT_SECURE_NO_WARNINGS
-
+// code is not optimised
 
 #include "MapVisual.h"
 #include "ReadMap.h"
@@ -21,7 +21,14 @@
 static int width = MAP_SIZE_X * 10;
 static int height = MAP_SIZE_Y * 10;
 
-void createPathBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
+/*
+* Takes in an input array with the map locations. The 1 and 0 will be coded as wall and path and 
+* the chosen path should be added in as 2. The reason this file takes in an entire array is because 
+* when I tried over writing the exisisting bmp file with one position it didnt keep the old file
+* 
+* 
+*/
+void createMazeBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
     //xpos = xpos * 10;
     //ypos = ypos * 10;
 
@@ -51,18 +58,19 @@ void createPathBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
 
             for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 10; j++) {
+                        int num = MAP_SIZE_Y-1 - row;
                         int p = ((row*10 + i) * width + col*10 + j) * 4;
-                        if (array[row][col] == 0) {
+                        if (array[num][col] == 0) {
                             pixels[p + 0] = 0; //blue
                             pixels[p + 1] = 127;//green
                             pixels[p + 2] = 0;//red
                         }
-                        if (array[row][col] == 1) {
+                        if (array[num][col] == 1) {
                             pixels[p + 0] = 127; //blue
                             pixels[p + 1] = 0;//green
                             pixels[p + 2] = 0;//red
                         }
-                        if (array[row][col] == 2) {
+                        if (array[num][col] == 2) {
                             pixels[p + 0] = 0; //blue
                             pixels[p + 1] = 0;//green
                             pixels[p + 2] = 127;//red
@@ -74,9 +82,6 @@ void createPathBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
 
         }
     }
-
-    
-
 
     FILE* ft;
     char const* name = "maze.bmp";
@@ -95,6 +100,8 @@ void createPathBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
 
 }
 
+// currently not used as i didnt know how to modify an existing file instead of over writing it
+// but if that is solved then this fucntion can be used
 void initBMPFile() {
     int size = width * height * 4; //for 32-bit bitmap only
 
@@ -128,8 +135,6 @@ void initBMPFile() {
                 pixels[p + 2] = 181;//red
             }
         }
-         
-
         
         errno_t err = fopen_s(&fout,"maze.bmp", "a");
 
@@ -149,19 +154,21 @@ void initBMPFile() {
 
 int main(void)
 {
-    int map2[MAP_SIZE_Y][MAP_SIZE_X] = { 0 };
+    int map2[MAP_SIZE_Y][MAP_SIZE_X];
 
 
     ReadMapFile("map.txt");
+    printf("\n ");
 
     for (int row = 0; row < MAP_SIZE_Y; row++) {
         for (int col = 0; col < MAP_SIZE_X; col++) {
             map2[row][col] = GetMapValue(row, col);
             printf("%d ", map2[row][col]);
         }
+        printf("\n ");
     }
     
-    createPathBMP(map2);
+    createMazeBMP(map2);
 
 
     return 0;
