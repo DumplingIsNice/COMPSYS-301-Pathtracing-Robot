@@ -90,4 +90,7 @@ void DestroyListElementsAndContents(NodeList* list);
 // Free() a NodeList. This does not affect its NodeListElements.
 void DestroyList(NodeList* list);
 
+// Free() a NodeListElement. This does not affect its associated NodeData.
+void DestroyListElement(NodeListElement* element);
+
 #endif // !NODELIST_H

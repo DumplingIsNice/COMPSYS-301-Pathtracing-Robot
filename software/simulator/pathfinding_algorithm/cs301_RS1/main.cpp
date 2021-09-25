@@ -27,6 +27,8 @@
 #include <iostream>
 #include "highPerformanceTimer.h"//just to include if timer function is required by user.
 
+//#include "pathfinding/PathfindingMain.h"
+
 using namespace std;
 
 //{------------------------------
@@ -260,6 +262,8 @@ int virtualCarUpdate0()
 
 int main(int argc, char** argv)
 {
+	//FindShortestPath();
+
 	FungGlAppMainFuction(argc, argv);
 
 	return 0;

@@ -30,10 +30,14 @@ int IsPtrValid(void* ptr)
     }
 }
 
-// @To do, but likely unnecessary
 void NodeMapClear()
 {
-    ;
+    for (int x = 0; x < (MAP_SIZE_X); x++) {
+        for (int y = 0; y < (MAP_SIZE_Y); y++) {
+            NodeData* node = NodeMapGet(NodeMapGenKey(x, y));
+            if (IsPtrValid(node)) { free(node); }
+        }
+    }
 }
 
 /* Debug Functions */ 

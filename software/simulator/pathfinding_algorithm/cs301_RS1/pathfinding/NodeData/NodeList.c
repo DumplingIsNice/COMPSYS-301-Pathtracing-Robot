@@ -137,4 +137,9 @@ void DestroyList(NodeList* list)
 	if (IsListValid(list)) { free(list); }
 }
 
+void DestroyListElement(NodeListElement* element)
+{
+	if (IsElementValid(element)) { free(element); }
+}
+
 #endif // !NODELIST_C

@@ -149,7 +149,9 @@
     <ClInclude Include="pathfinding\NodeData\NodeData.h" />
     <ClInclude Include="pathfinding\NodeData\NodeDataOps.h" />
     <ClInclude Include="pathfinding\NodeData\NodeList.h" />
+    <ClInclude Include="pathfinding\NodeData\NodeMap.h" />
     <ClInclude Include="pathfinding\PathfindingAlgorithm.h" />
+    <ClInclude Include="pathfinding\PathfindingMain.h" />
     <ClInclude Include="pathfinding\PathfindingUtil.h" />
   </ItemGroup>
   <ItemGroup>
@@ -158,7 +160,9 @@
     <ClCompile Include="pathfinding\NodeData\NodeData.c" />
     <ClCompile Include="pathfinding\NodeData\NodeDataOps.c" />
     <ClCompile Include="pathfinding\NodeData\NodeList.c" />
+    <ClCompile Include="pathfinding\NodeData\NodeMap.c" />
     <ClCompile Include="pathfinding\PathfindingAlgorithm.c" />
+    <ClCompile Include="pathfinding\PathfindingMain.c" />
     <ClCompile Include="pathfinding\PathfindingUtil.c" />
   </ItemGroup>
   <ItemGroup>

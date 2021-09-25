@@ -26,6 +26,9 @@ typedef struct NodeData {
 } NodeData;
 
 
+// Returns true if != NULL.
+int IsNodeDataValid(NodeData* node);
+
 // Create and allocate memory for a blank NodeData.
 NodeData* NewNodeData();
 

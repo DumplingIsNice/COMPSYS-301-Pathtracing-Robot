@@ -46,6 +46,9 @@ NodeData* NodeMapGet(const int key);
     CAUTION! The NodeData could be lost if not already logged in NodeQueue */
 void NodeMapDel(const int key);
 
+// Free() all valid NodeData structs within the NodeMap.
+void NodeMapClear();
+
 // Encodes coordinates into key
 int NodeMapGenKey(const int posx, const int posy);
 

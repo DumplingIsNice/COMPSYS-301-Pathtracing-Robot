@@ -48,7 +48,7 @@ void SetNodeChecked(NodeData* nodeData, int is_checked);
 int IsCheckedNode(int posx, int posy);
 
 /* Goal Cell */
-
+void SetGoalPos(int posx, int posy);
 int GetGoalPosX();
 int GetGoalPosY();
 int IsGoalReached();
@@ -56,6 +56,9 @@ void SetGoalReached(int is_reached);
 
 
 /* Pathfinding Algorithm Functions */
+
+// Return a reference to the NodeQueue list.
+NodeList* GetNodeQueue();
 
 // Classify and return the CellType of the cell at the given coords.
 CellType GetCellType(int posx, int posy);

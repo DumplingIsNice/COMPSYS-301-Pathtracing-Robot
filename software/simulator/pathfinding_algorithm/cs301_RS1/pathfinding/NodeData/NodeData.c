@@ -6,6 +6,11 @@
 #include "stdlib.h"
 
 
+int IsNodeDataValid(NodeData* node)
+{
+	return (node != NULL);
+}
+
 NodeData* NewNodeData()
 {
 	NodeData* node = (NodeData*)malloc(sizeof(*node));
@@ -14,7 +19,7 @@ NodeData* NewNodeData()
 
 void DestroyNodeData(NodeData* node)
 {
-	if (node != NULL) { free(node); }
+	if (IsNodeDataValid(node)) { free(node); }
 }
 
 

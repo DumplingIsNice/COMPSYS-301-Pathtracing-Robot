@@ -28,6 +28,14 @@ int GetNodeDataWeight(NodeData* node)
 {
 	return node->weight;
 }
+NodeData* GetNodeDataAdjacentNode(NodeData* node)
+{
+	return node->adjacent_nodes->node;
+}
+NodeListElement* GetNodeDataAdjacentNodeListElement(NodeData* node)
+{
+	return node->adjacent_nodes;
+}
 
 
 void SetNodeDataPosX(NodeData* node, int pos_x)

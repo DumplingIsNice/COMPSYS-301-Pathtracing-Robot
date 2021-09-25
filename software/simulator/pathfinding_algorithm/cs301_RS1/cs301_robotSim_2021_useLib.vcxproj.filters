@@ -42,6 +42,12 @@
     <ClInclude Include="pathfinding\FileUtility\ReadMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pathfinding\PathfindingMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +69,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\FileUtility\ReadMap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\PathfindingMain.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\NodeData\NodeMap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

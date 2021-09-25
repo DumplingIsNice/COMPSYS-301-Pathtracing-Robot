@@ -26,7 +26,7 @@
 void InsertInNodeQueue(struct NodeList* NodeQueue, struct NodeListElement* element);
 
 // Used for weight-based algorithms (A*, Dijkstra).
-int CalculateNodeWeight(struct NodeData* instigating_node);
+int CalculateNodeWeight(struct NodeData* instigating_node, struct NodeData* node, int goal_x, int goal_y);
 
 // Calculate the shortest path given the start and goal cells, and
 // a list of all searched nodes containing the path(s) between them.

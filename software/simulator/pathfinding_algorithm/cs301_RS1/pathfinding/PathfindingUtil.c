@@ -19,7 +19,9 @@
 //static int PosXCheckedArray[MAP_SIZE_X] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
 //static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
 static NodeList NodeQueue = { .tail = NULL };		// initialise .data to {0}
-static int GoalReached = FALSE;
+
+static int goal_x, goal_y;
+static int goal_reached = FALSE;
 
 
 /* IsPosChecked */
@@ -44,29 +46,39 @@ int IsCheckedNode(int posx, int posy)
 
 /* Goal Cell */
 // @For now, keep every input value as defined in ReadMap.h
+void SetGoalPos(int posx, int posy)
+{
+	goal_x = posx;
+	goal_y = posy;
+}
 int GetGoalPosX()
 {
-	return GOAL_X; // return pos_x of target cell
+	return goal_x; // return pos_x of target cell
 }
 // @For now, keep every input value as defined in ReadMap.h
 int GetGoalPosY()
 {
-	return GOAL_Y; // return pos_y of target cell
+	return goal_y; // return pos_y of target cell
 }
 
 int IsGoalReached()
 {
-	return GoalReached;
+	return goal_reached;
 }
 
 void SetGoalReached(int is_reached)
 {
-	GoalReached = is_reached;
+	goal_reached = is_reached;
 }
 
 
 
 /* Pathfinding Algorithm Functions */
+
+NodeList* GetNodeQueue()
+{
+	return &NodeQueue;
+}
 
 // @TODO
 CellType GetCellType(int posx, int posy)
@@ -141,7 +153,7 @@ NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx,
 	SetNodeDataPosX(node, posx);
 	SetNodeDataPosY(node, posy);
 	SetNodeChecked(node, isChecked);
-	SetNodeDataWeight(node, CalculateNodeWeight(instigating_node));
+	SetNodeDataWeight(node, CalculateNodeWeight(instigating_node, node, GetGoalPosX(), GetGoalPosY()));
 	AddToNodeDataAdjacentNode(node, instigating_node);
 	return node;
 }

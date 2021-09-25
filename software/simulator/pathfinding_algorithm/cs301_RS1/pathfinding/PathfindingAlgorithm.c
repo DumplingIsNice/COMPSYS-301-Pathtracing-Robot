@@ -3,6 +3,7 @@
 
 #include "PathfindingAlgorithm.h"
 
+#include <stdlib.h>	// for abs()
 #include "NodeData/NodeList.h"
 #include "NodeData/NodeDataOps.h"
 
@@ -20,9 +21,20 @@ void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 }
 
 // @TODO!
-int CalculateNodeWeight(NodeData* instigating_node)
+int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
 {
-	return 0;
+	int h = 0;
+	int g = 1;
+
+	// Heuristic (A* only):
+	h = abs(goal_x - GetNodeDataPosX(node)) + abs(goal_y - GetNodeDataPosY(node));
+
+	// Analytic:
+	if (IsNodeDataValid(instigating_node)) {
+		g = GetNodeDataWeight(instigating_node);
+	} // else default to g = 1 (for starting node)
+
+	return h + g;
 }
 
 // @TODO!
