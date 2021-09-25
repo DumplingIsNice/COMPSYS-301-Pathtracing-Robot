@@ -123,7 +123,6 @@ void EvaluateCell(NodeData* instigating_node, int posx, int posy)
 // @TODO
 void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 {
-	// replace IsNodeChecked() with IsNodeValid(GetNodeFromCoords())
 	if (!IsCheckedNode(posx, posy)) {
 		// We have discovered a new node...
 		// Create and populate the node, set its coords as checked, and
@@ -135,17 +134,16 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		NodeMapSet(NodeMapGenKey(posx, posy), new_node);
 		return;
 	} else {
+		// We have discovered a path to an already discovered node...
+		// Link the preexisting (adjacent) node to the instigating node.
+		// AddToNodeDataAdjacentNode() will reject non-unique values, so
+		// calling this on the node that led to the instigating node is not
+		// optimised but will not break anything.
 		printf("Found Checked Node!\n");
-		// We have found a new path to an already discovered node... 
-			// # Hao: Not necessarly, currently we evaluate all directions which will evaluate a checked cell from where we came from
-			// Best would be IsCheckedNode && !GetOutputMapValue()
-		// Link the preexisting node to the instigating node.
-		// 
-		// NodeData* preexisting = GetNodeFromCoords(posx, posy);
-		// AddToNodeDataAdjacentNode(preexisting, instigating_node);
-		// DESIGN CHOICE: singly or doubly linked? Currently only singly.
-		// 
-		// todo: when changing if statement, save lookup result for reuse here ^	
+
+		NodeData* preexisting = NodeMapGet(NodeMapGenKey(posx, posy));
+		if (preexisting == NULL) { return; }
+		AddToNodeDataAdjacentNode(instigating_node, preexisting);
 		return;
 	}
 }
