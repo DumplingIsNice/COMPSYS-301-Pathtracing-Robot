@@ -15,7 +15,7 @@
 
 /* These values should overwrite placeholders in the other files. */
 #define MAP_NAME	"map.txt"
-#define MAP_SIZE_X	15
+#define MAP_SIZE_X	19
 #define MAP_SIZE_Y	15
 
 #define GOAL_X		17

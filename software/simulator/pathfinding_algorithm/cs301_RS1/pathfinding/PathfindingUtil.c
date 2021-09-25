@@ -135,7 +135,7 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		NodeMapSet(NodeMapGenKey(posx, posy), new_node);
 		return;
 	} else {
-		printf("Found Unchecked Node!\n");
+		printf("Found Checked Node!\n");
 		// We have found a new path to an already discovered node... 
 			// # Hao: Not necessarly, currently we evaluate all directions which will evaluate a checked cell from where we came from
 			// Best would be IsCheckedNode && !GetOutputMapValue()
