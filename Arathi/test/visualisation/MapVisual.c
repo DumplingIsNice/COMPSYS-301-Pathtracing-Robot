@@ -20,15 +20,27 @@
 
 static int width = MAP_SIZE_X * 10;
 static int height = MAP_SIZE_Y * 10;
+static int finalPathArray[MAP_SIZE_Y][MAP_SIZE_X];
+
+
+
+int GetArrayValue(int row, int col)
+{
+    return finalPathArray[row][col];
+}
+
+void SetArrayValue(int x, int y, int value)
+{
+    finalPathArray[y][x] = value;
+}
+
 
 /*
 * Takes in an input array with the map locations. The 1 and 0 will be coded as wall and path and 
-* the chosen path should be added in as 2. The reason this file takes in an entire array is because 
-* when I tried over writing the exisisting bmp file with one position it didnt keep the old file
-* 
+* the chosen path should be added in as 2. 
 * 
 */
-void createMazeBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
+void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
     //xpos = xpos * 10;
     //ypos = ypos * 10;
 
@@ -96,6 +108,84 @@ void createMazeBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
      fwrite(pixels, 1, size, ft);
      free(pixels);
     
+    fclose(ft);
+
+}
+
+
+/*
+* Takes in an input array with the map locations. The 1 and 0 will be coded as wall and path and
+* the chosen path should be added in as 2.
+*
+*/
+void createBMP() {
+    //xpos = xpos * 10;
+    //ypos = ypos * 10;
+
+    int size = width * height * 4; //for 32-bit bitmap only
+
+    char header[54] = { 0 };
+    strcpy(header, "BM");
+    memset(&header[2], (int)(54 + size), 1);
+    memset(&header[10], (int)54, 1);//always 54
+    memset(&header[14], (int)40, 1);//always 40
+    memset(&header[18], (int)width, 1);
+    memset(&header[22], (int)height, 1);
+    memset(&header[26], (short)1, 1);
+    memset(&header[28], (short)32, 1);//32bit
+    memset(&header[34], (int)size, 1);//pixel size
+
+    unsigned char* pixels = malloc(size);
+    // Check if the memory has been successfully
+    // allocated by malloc or not
+    if (pixels == NULL) {
+        printf("Memory not allocated.\n");
+        return;
+    }
+
+    for (int row = 0; row < MAP_SIZE_Y; row++) {
+        for (int col = 0; col < MAP_SIZE_X; col++) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    int num = MAP_SIZE_Y - 1 - row;
+                    int p = ((row * 10 + i) * width + col * 10 + j) * 4;
+                    if (finalPathArray[num][col] == 0) {
+                        pixels[p + 0] = 0; //blue
+                        pixels[p + 1] = 127;//green
+                        pixels[p + 2] = 0;//red
+                    }
+                    if (finalPathArray[num][col] == 1) {
+                        pixels[p + 0] = 127; //blue
+                        pixels[p + 1] = 0;//green
+                        pixels[p + 2] = 0;//red
+                    }
+                    if (finalPathArray[num][col] == 2) {
+                        pixels[p + 0] = 0; //blue
+                        pixels[p + 1] = 0;//green
+                        pixels[p + 2] = 127;//red
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
+    FILE* ft;
+    char const* name = "maze.bmp";
+    errno_t err = fopen_s(&ft, name, "w+");
+    if (ft == NULL)
+    {
+        fprintf(stderr, "cannot open target file %s\n", name);
+        exit(1);
+    }
+
+    fwrite(header, 1, 54, ft);
+    fwrite(pixels, 1, size, ft);
+    free(pixels);
+
     fclose(ft);
 
 }
@@ -168,7 +258,7 @@ int main(void)
         printf("\n ");
     }
     
-    createMazeBMP(map2);
+    createBMPFromArrayInput(map2);
 
 
     return 0;

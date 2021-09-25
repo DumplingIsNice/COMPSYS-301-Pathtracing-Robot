@@ -4,9 +4,10 @@
 #define MAP_SIZE_Y 15
 #define MAP_SIZE_X 15
 
-void writeMapArray(int x, int y, int value);
-void createMazeBMP(int array[MAP_SIZE_Y][MAP_SIZE_X]);
-
+int GetArrayValue(int row, int col);
+void SetArrayValue(int x, int y, int value);
+void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]);
+void createBMP();
 void initBMPFile();
 
 
