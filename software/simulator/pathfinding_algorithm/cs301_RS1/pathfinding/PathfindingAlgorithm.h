@@ -29,6 +29,6 @@ void InsertInNodeQueue(struct NodeList* NodeQueue, struct NodeListElement* eleme
 int CalculateNodeWeight(struct NodeData* instigating_node, struct NodeData* node, int goal_x, int goal_y);
 
 // Return the most suitable NodeData from adjacent_nodes list.
-NodeData* FindNextNodeInFinalPath(NodeData* node);
+struct NodeData* FindNextNodeInFinalPath(struct NodeData* node);
 
 #endif // !PATHFINDING_ALGORITHM_H
