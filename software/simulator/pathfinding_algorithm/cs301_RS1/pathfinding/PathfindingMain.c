@@ -10,7 +10,6 @@
 #include "NodeData/NodeMap.h"
 
 
-
 void FindShortestPath()
 {
 	// Read map and set up goal location:
@@ -72,6 +71,36 @@ void CleanUpFindShortestPath()
 	DestroyListElements(GetNodeQueue());
 	// Free all NodeData values:
 	NodeMapClear();
+}
+
+void DepthFirstSearch()
+{
+	SetGoalPos(GOAL_X, GOAL_Y);
+	ReadMapFile(MAP_NAME);
+	EvaluateCell(NULL, START_X, START_Y);
+
+	NodeListElement* current_element;
+	NodeData* current_node;
+
+	// Note: Remeber to log node and list element to free memory after processing
+	int i = 0;
+	while (!IsNodeQueueEmpty())
+	{
+		printf("### Iteration i: %d ###\n", i);
+		current_element = ExtractNextInNodeQueue();
+		current_node = current_element->node;
+
+		PrintNodeData(current_node);
+		WriteOutputMap(current_node->posx, current_node->posy, WALKED_PATH);
+
+		//PrintNodeMap();
+		PrintOutputMap();
+
+		EvaluateAdjacentCells(current_node);
+
+		if (IsGoalReached()) { break; }
+		i++;
+	}
 }
 
 

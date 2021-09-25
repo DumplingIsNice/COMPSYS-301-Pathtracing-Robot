@@ -5,7 +5,6 @@
 
 #include "stdlib.h"
 
-
 int IsNodeDataValid(NodeData* node)
 {
 	return (node != NULL);
@@ -13,7 +12,7 @@ int IsNodeDataValid(NodeData* node)
 
 NodeData* NewNodeData()
 {
-	NodeData* node = malloc(sizeof (struct NodeData));
+	NodeData* node = malloc(sizeof(struct NodeData));
 	if (node == NULL) { return NULL; }
 	// Initialise to non-garbage values:
 	node->posx = 0;

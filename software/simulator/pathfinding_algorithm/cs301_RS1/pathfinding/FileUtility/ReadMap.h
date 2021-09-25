@@ -24,7 +24,6 @@
 	#define MAP_NAME "map.txt"
 #endif
 
-
 // Return the integer value at the given indices in the map array.
 int GetMapValue(int row, int col);
 

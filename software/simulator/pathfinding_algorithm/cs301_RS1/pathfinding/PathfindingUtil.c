@@ -130,13 +130,15 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		// send it to the NodeQueue.
 		NodeData* new_node = NewNodeData();
 		PopulateNodeData(instigating_node, new_node, posx, posy, TRUE);
+		AddToNodeDataAdjacentNode(instigating_node, new_node);
 		AddToNodeQueue(new_node);
 		NodeMapSet(NodeMapGenKey(posx, posy), new_node);
 		return;
 	} else {
+		printf("Found Unchecked Node!\n");
 		// We have found a new path to an already discovered node... 
-			// # Hao: Not necessarily, currently we evaluate all directions 
-			// which will evaluate a checked cell from where we came from
+			// # Hao: Not necessarly, currently we evaluate all directions which will evaluate a checked cell from where we came from
+			// Best would be IsCheckedNode && !GetOutputMapValue()
 		// Link the preexisting node to the instigating node.
 		// 
 		// NodeData* preexisting = GetNodeFromCoords(posx, posy);
@@ -174,5 +176,25 @@ int IsNodeQueueEmpty()
 	return !IsElementValid(GetListHead(&NodeQueue));
 }
 
+void PrintNodeData(NodeData* n)
+{
+	printf("x: %d, y: %d, checked: %d, num_adjacent_paths: %d, weight: %d\n",
+		GetNodeDataPosX(n), GetNodeDataPosY(n), GetNodeDataIsChecked(n),
+		GetNodeDataAdjacentPaths(n), GetNodeDataWeight(n));
+}
+
+/* Unfinished */
+//void PrintNodeListElement(NodeListElement* e)
+//{
+//    NodeListElement* current_node = e;
+//    int i = 1;
+//    while (IsElementValid(current_node->tail))
+//    {
+//        printf("%i th adjacent node.\n", i);
+//        PrintNodeData(current_node->node);
+//        current_node = current_node->tail;
+//        i++;
+//    }
+//}
 
 #endif // !PATHFINDING_UTIL_C

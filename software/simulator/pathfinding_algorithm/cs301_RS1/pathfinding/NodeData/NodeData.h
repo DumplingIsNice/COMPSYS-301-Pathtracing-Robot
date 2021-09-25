@@ -25,7 +25,6 @@ typedef struct NodeData {
 	struct NodeListElement* adjacent_nodes;
 } NodeData;
 
-
 // Returns true if != NULL.
 int IsNodeDataValid(NodeData* node);
 

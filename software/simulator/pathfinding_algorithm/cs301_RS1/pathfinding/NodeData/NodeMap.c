@@ -64,6 +64,34 @@ void PrintAllKeys()
     }
 }
 
+void PrintNodeMap()
+{
+    int key_a[HASH_SIZE] = { 0 };
+    NodeData* val_a[HASH_SIZE] = { NULL };
+    int desx, desy;
+
+    NodeMapLogAll(key_a, val_a);
+
+    // Prints the entire NodeMap
+    printf("## Printing the NodeMap: ##\n");
+    for (int i = 0; i < (HASH_SIZE); i++)
+    {
+        if (IsPtrValid(val_a[i]))
+        {
+            desx = val_a[i]->posx;
+            desy = val_a[i]->posy;
+        }
+        else {
+            desx = -1;
+            desy = -1;
+        }
+        if ((int)val_a[i])
+        {
+            printf("Key: %3d, val: %d, val->posx: %d, val->posy: %d\n", key_a[i], (int)val_a[i], desx, desy);
+        }
+    }
+}
+
 void TestNodeMap()
 {
     // Displays all avaliable keys
@@ -86,27 +114,7 @@ void TestNodeMap()
     TestNodeMapSet(x, y, nodeA);
 
     // This section views the entire NodeMap
-    int key_a[HASH_SIZE] = { 0 };
-    NodeData* val_a[HASH_SIZE] = { NULL };
-    int desx, desy;
-
-    NodeMapLogAll(key_a, val_a);
-
-    // Prints the entire NodeMap
-    printf("## Printing the NodeMap: ##\n");
-    for (int i = 0; i < (HASH_SIZE); i++)
-    {
-        if (IsPtrValid(val_a[i]))
-        {
-            desx = val->posx;
-            desy = val->posy;
-        }
-        else {
-            desx = -1;
-            desy = -1;
-        }
-        printf("Key: %3d, val: %d, val->posx: %d, val->posy: %d\n", key_a[i], (int)val_a[i], desx, desy);
-    }
+    PrintNodeMap();
 
     DestroyNodeData(nodeA);
 }

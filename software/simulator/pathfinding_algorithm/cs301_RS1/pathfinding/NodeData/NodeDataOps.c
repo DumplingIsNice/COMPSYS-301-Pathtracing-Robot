@@ -2,7 +2,7 @@
 #define NODEDATAOPS_C
 
 #include "NodeDataOps.h"
-
+#include <stddef.h>
 #include "NodeList.h"
 
 
@@ -37,7 +37,6 @@ NodeListElement* GetNodeDataAdjacentNodeListElement(NodeData* node)
 	return node->adjacent_nodes;
 }
 
-
 void SetNodeDataPosX(NodeData* node, int pos_x)
 {
 	node->posx = pos_x;
@@ -66,6 +65,16 @@ void SetNodeDataWeight(NodeData* node, int weight)
 void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add)
 {
 	// If the list is empty...
+
+	// Start Node Logic
+	if (node_to_add == NULL)
+	{
+		node->adjacent_nodes = NULL;
+		return;
+	} else if (node == NULL) {
+		return;
+	}
+
 	if (!IsElementValid(node->adjacent_nodes)) {
 		node->adjacent_nodes = NewNodeListElement(node_to_add);
 		return;

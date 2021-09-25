@@ -95,5 +95,11 @@ NodeListElement* ExtractNextInNodeQueue();
 // Returns true if no NodeListElements left in NodeQueue.
 int IsNodeQueueEmpty();
 
+// Debug function to visualize nodeData contents
+void PrintNodeData(NodeData* n);
+
+// Debug function to visualize a node list element and its linked elements
+// Unfinished
+//void PrintNodeListElement(NodeListElement* e);
 
 #endif // !PATHFINDING_UTIL_H

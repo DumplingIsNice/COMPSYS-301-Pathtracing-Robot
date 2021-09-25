@@ -63,6 +63,9 @@ void NodeMapLogAll(int* key, NodeData** val);
 // Displays all avaliable keys
 void PrintAllKeys();
 
+// Prints the NodeMap
+void PrintNodeMap();
+
 // Example of SOME of NodeMap Functionality
 void TestNodeMap();
 void TestNodeMapSet(const int posx, const int posy, const NodeData* node);

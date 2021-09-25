@@ -5,10 +5,9 @@
 
 #include "stdlib.h"		// malloc(), NULL
 
-
 NodeList* NewNodeList()
 {
-	NodeList* list = malloc(sizeof (struct NodeList));
+	NodeList* list = malloc(sizeof(struct NodeList));
 	if (list == NULL) { return NULL; }
 	// Initialise to non-garbage values:
 	list->head = NULL;
@@ -18,7 +17,7 @@ NodeList* NewNodeList()
 
 NodeListElement* NewNodeListElement(struct NodeData* node)
 {
-	NodeListElement* element = malloc(sizeof (struct NodeListElement));
+	NodeListElement* element = malloc(sizeof(struct NodeListElement));
 	if (element == NULL) { return NULL; }
 	// Initialise to non-garbage values:
 	element->tail = NULL;
@@ -70,7 +69,7 @@ void PrependToList(NodeList* list, NodeListElement* element)
 {
 	if (IsElementValid(list->head)) {
 		// If NodeList is not empty then link tail as normal...
-		
+
 		if (!IsElementValid(list->tail)) {
 			// If there is only one element in the list then update tail...
 			list->tail = list->head;
