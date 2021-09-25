@@ -28,6 +28,16 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 
 	return g;
 }
+
+NodeData* FindNextNodeInFinalPath(NodeData* node)
+{
+	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+		// Return the first NodeData in the list (the instigating node):
+		return GetNodeDataAdjacentNodeListElement(node)->node;
+	} else {
+		return NULL;
+	}
+}
 #endif	// DEPTHFIRST
 
 
@@ -50,6 +60,17 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	} // else default to g = 1 (for starting node)
 
 	return g;
+}
+
+NodeData* FindNextNodeInFinalPath(NodeData* node)
+{
+	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+		// Return the first NodeData in the list (the instigating node):
+		return GetNodeDataAdjacentNodeListElement(node)->node;
+	}
+	else {
+		return NULL;
+	}
 }
 #endif // BREADTHFIRST
 
@@ -92,6 +113,26 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	} // else default to g = 1 (for starting node)
 
 	return h + g;
+}
+
+NodeData* FindNextNodeInFinalPath(NodeData* node)
+{
+	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+		// Return the NodeData with the lowest weight in the list:
+		NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+		NodeData* lowest_weight_node = current_element->node;
+
+		while (IsNodeDataValid(current_element->node)) {
+			if (GetNodeDataWeight(current_element->node) < GetNodeDataWeight(lowest_weight_node)) {
+				lowest_weight_node = current_element->node;
+			}
+			current_element = current_element->tail;
+		}
+
+		return lowest_weight_node;
+	} else {
+		return NULL;
+	}
 }
 #endif // ASTAR
 

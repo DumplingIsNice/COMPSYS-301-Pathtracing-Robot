@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include "FileUtility/ReadMap.h"
+#include "PathfindingAlgorithm.h"
 #include "PathfindingUtil.h"
 #include "NodeData/NodeDataOps.h"
 #include "NodeData/NodeMap.h"
@@ -58,7 +59,7 @@ void FindShortestPath()
 	while (!IsStartReached(current_node))
 	{
 		AddToFinalQueue(current_node);
-		current_node = GetNodeDataAdjacentNode(current_node);
+		current_node = FindNextNodeInFinalPath(current_node);
 	}
 
 	#ifdef DEBUG
