@@ -23,6 +23,12 @@
 #define START_X		1
 #define START_Y		1
 
+#define DEBUG
+
+#define DEPTHFIRST
+//#define BREADTHFIRST
+//#define ASTAR
+
 //
 void FindShortestPath();
 

@@ -6,10 +6,7 @@
 #include <stdlib.h>	// for abs()
 #include "NodeData/NodeList.h"
 #include "NodeData/NodeDataOps.h"
-
-#define DEPTHFIRST
-//#define BREADTHFIRST
-//#define ASTAR
+#include "PathfindingMain.h"
 
 /*
 	DEPTH-FIRST
