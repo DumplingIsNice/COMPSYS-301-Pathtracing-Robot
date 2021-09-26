@@ -48,6 +48,7 @@ void FindShortestPath()
 		#endif
 
 		#ifdef PRINT_WEIGHT
+			WriteOutputMap(current_node->posx, current_node->posy, current_node->weight);
 			WriteFinalMap(current_node->posx, current_node->posy, WeightToMapCode(current_node->weight));
 		#endif // PRINT_WEIGHT
 
@@ -102,6 +103,10 @@ void FindShortestPath()
 		current_node = current_node_element->node;
 
 		WriteFinalMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
+
+		#ifdef PRINT_WEIGHT
+				WriteOutputMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
+		#endif // PRINT_WEIGHT
 	}
 
 	/*
