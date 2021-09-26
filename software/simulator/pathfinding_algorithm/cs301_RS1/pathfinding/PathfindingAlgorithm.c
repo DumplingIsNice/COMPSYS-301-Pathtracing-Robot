@@ -29,15 +29,39 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	return g;
 }
 
-NodeData* FindNextNodeInFinalPath(NodeData* node)
-{
-	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
-		// Return the first NodeData in the list (the instigating node):
-		return GetNodeDataAdjacentNodeListElement(node)->node;
-	} else {
-		return NULL;
+	#ifdef ANALYTIC_VARIANT
+	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	{
+		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+			// Return the NodeData with the lowest weight in the list:
+			NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+			NodeData* lowest_weight_node = current_element->node;
+
+			while (IsElementValid(current_element)) {
+				// NodeData field in the adjacent_nodes list should never be NULL (unless we've screwed up in adding or deleting).
+				if (GetNodeDataWeight(current_element->node) < GetNodeDataWeight(lowest_weight_node)) {
+					lowest_weight_node = current_element->node;
+				}
+				current_element = current_element->tail;
+			}
+			return lowest_weight_node;
+		}
+		else {
+			return NULL;
+		}
 	}
-}
+	#else
+	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	{
+		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+			// Return the first NodeData in the list (the instigating node):
+			return GetNodeDataAdjacentNodeListElement(node)->node;
+		}
+		else {
+			return NULL;
+		}
+	}
+	#endif // ANALYTIC_VARIANT
 #endif	// DEPTHFIRST
 
 
@@ -62,16 +86,39 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	return g;
 }
 
-NodeData* FindNextNodeInFinalPath(NodeData* node)
-{
-	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
-		// Return the first NodeData in the list (the instigating node):
-		return GetNodeDataAdjacentNodeListElement(node)->node;
+	#ifdef ANALYTIC_VARIANT
+	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	{
+		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+			// Return the NodeData with the lowest weight in the list:
+			NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+			NodeData* lowest_weight_node = current_element->node;
+
+			while (IsElementValid(current_element)) {
+				// NodeData field in the adjacent_nodes list should never be NULL (unless we've screwed up in adding or deleting).
+				if (GetNodeDataWeight(current_element->node) < GetNodeDataWeight(lowest_weight_node)) {
+					lowest_weight_node = current_element->node;
+				}
+				current_element = current_element->tail;
+				}
+			return lowest_weight_node;
+			}
+		else {
+			return NULL;
+		}
+		}
+	#else
+	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	{
+		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
+			// Return the first NodeData in the list (the instigating node):
+			return GetNodeDataAdjacentNodeListElement(node)->node;
+		}
+		else {
+			return NULL;
+		}
 	}
-	else {
-		return NULL;
-	}
-}
+	#endif // ANALYTIC_VARIANT
 #endif // BREADTHFIRST
 
 
