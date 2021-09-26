@@ -18,11 +18,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#define MAX_WEIGHT 500
+#define MAX_MAP_CODE 265
+#define MIN_MAP_CODE 10
+
 static int width = MAP_SIZE_X * 10;
 static int height = MAP_SIZE_Y * 10;
 static int finalPathArray[MAP_SIZE_Y][MAP_SIZE_X];
-
-
 
 int GetArrayValue(int row, int col)
 {
@@ -88,9 +90,9 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
                             pixels[p + 2] = 127;//red
                         }
                         else {
-                            pixels[p + 0] = array[num][col]; //blue
-                            pixels[p + 1] = array[num][col];//green
-                            pixels[p + 2] = array[num][col];//red
+                            pixels[p + 0] = 255 - MapCodeToRGB(array[num][col]); //blue
+                            pixels[p + 1] = 255 - MapCodeToRGB(array[num][col]);//green
+                            pixels[p + 2] = 255 - MapCodeToRGB(array[num][col]);//red
                         }
 
                     }
@@ -262,6 +264,13 @@ void TestVisualMap()
 
 */
 
-
-
+int WeightToMapCode(int weight)
+{
+    return (int)((((float)weight) / 500) * MAX_MAP_CODE) + MIN_MAP_CODE;
+}
+int MapCodeToRGB(int code)
+{
+    if ((code <= MAX_MAP_CODE) && (code >= MIN_MAP_CODE)) { return code - 10; }
+    return 0;
+}
 #endif 

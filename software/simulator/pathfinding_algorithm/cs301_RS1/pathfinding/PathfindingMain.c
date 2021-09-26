@@ -47,6 +47,11 @@ void FindShortestPath()
 			PrintNodeData(current_node);
 		#endif
 
+		#ifdef PRINT_WEIGHT
+			WriteFinalMap(current_node->posx, current_node->posy, WeightToMapCode(current_node->weight));
+		#endif // PRINT_WEIGHT
+
+
 		// NodeData saved to NodeMap, so we can discard the list element struct:
 		DestroyListElement(current_node_element);
 
@@ -55,7 +60,7 @@ void FindShortestPath()
 			if (IsGoalReached()) {			// hacky assumption that there is only one path cell adjacent to the goal
 				final_node = current_node;
 				SetGoalReached(FALSE);
-			}	
+			}
 		#else
 			final_node = current_node;
 			if (IsGoalReached()) { break; }	// exit once goal reached (heuristic approach)

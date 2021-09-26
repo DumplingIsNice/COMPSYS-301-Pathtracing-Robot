@@ -102,11 +102,11 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 				current_element = current_element->tail;
 				}
 			return lowest_weight_node;
-			}
+		}
 		else {
 			return NULL;
 		}
-		}
+	}
 	#else
 	NodeData* FindNextNodeInFinalPath(NodeData* node)
 	{

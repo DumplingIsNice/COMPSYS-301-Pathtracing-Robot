@@ -66,7 +66,7 @@ void PrintMap(const int map[MAP_SIZE_Y][MAP_SIZE_X])
 {
     for (int i = 0; i < MAP_SIZE_Y; i++) {
         for (int j = 0; j < MAP_SIZE_X; j++) {
-            printf("%d ", map[i][j]);
+            printf("%3d ", map[i][j]);
         }
         putchar('\n');
     }
