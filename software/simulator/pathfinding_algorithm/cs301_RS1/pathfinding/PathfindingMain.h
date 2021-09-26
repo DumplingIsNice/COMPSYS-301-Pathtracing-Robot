@@ -27,7 +27,7 @@
 
 #define DEPTHFIRST
 //#define BREADTHFIRST
-//#define ASTAR
+#define ASTAR
 
 //
 void FindShortestPath();
