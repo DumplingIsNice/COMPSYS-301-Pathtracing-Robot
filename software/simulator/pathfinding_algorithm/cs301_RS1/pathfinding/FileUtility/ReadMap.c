@@ -2,6 +2,7 @@
 #define READMAP_C
 
 #include "ReadMap.h"
+#include "../Visualization/MapVisual.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,14 +42,18 @@ int ReadMapFile(const char* file_name)
         switch (c)
         {
         case '\n':
+#ifdef DEBUG
             putchar('\n');
+#endif // DEBUG
             i = 0;
             j++;
             continue;
         case ' ':
             break;
         }
+#ifdef DEBUG
         printf("%d ", ASCIIToInt(c));
+#endif // DEBUG
         map[j][i++] = ASCIIToInt(c);
         outputMap[j][i-1] = ASCIIToInt(c);
         finalMap[j][i - 1] = ASCIIToInt(c);
@@ -86,7 +91,7 @@ void WriteOutputMap(const int x, const int y, const int value) {
 
 void CreateFinalMap()
 {
-    createBMPFromArrayInput(&finalMap);
+    createBMPFromArrayInput(finalMap);
 }
 
 void PrintFinalMap()
