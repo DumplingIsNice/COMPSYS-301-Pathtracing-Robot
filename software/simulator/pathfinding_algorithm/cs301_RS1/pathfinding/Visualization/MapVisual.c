@@ -90,9 +90,9 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
                             pixels[p + 2] = 127;//red
                         }
                         else {
-                            pixels[p + 0] = 255 - WeightToRGB(array[num][col]); //blue
-                            pixels[p + 1] = 255 - 0.95*WeightToRGB(array[num][col]);//green
-                            pixels[p + 2] = 255 - 0.85*WeightToRGB(array[num][col]);//red
+                            pixels[p + 0] = 255 - MapCodeToRGB(array[num][col]); //blue
+                            pixels[p + 1] = 255 - 0.95*MapCodeToRGB(array[num][col]);//green
+                            pixels[p + 2] = 255 - 0.85*MapCodeToRGB(array[num][col]);//red
                         }
 
                     }
