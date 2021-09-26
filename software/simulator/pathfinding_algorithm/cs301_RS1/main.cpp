@@ -16,8 +16,11 @@
 
 // TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
 // TESTMODE1: travel in a circle 
-#define TESTMODE0
+//#define TESTMODE0
 //#define TESTMODE1
+
+#define TEST_MODE_MAP
+
 #define NITERATIONS 20
 #define STARTUPDELAY 5 //sec
 
@@ -27,7 +30,10 @@
 #include <iostream>
 #include "highPerformanceTimer.h"//just to include if timer function is required by user.
 
-//#include "pathfinding/PathfindingMain.h"
+extern "C"
+{
+	#include "pathfinding/PathfindingMain.h"
+}
 
 using namespace std;
 
@@ -262,9 +268,14 @@ int virtualCarUpdate0()
 
 int main(int argc, char** argv)
 {
-	//FindShortestPath();
 
-	FungGlAppMainFuction(argc, argv);
+#ifdef TEST_MODE_MAP
+	FindShortestPath();
+	PrintFinalMap();
+	CreateFinalMap();
+#endif
+
+	//FungGlAppMainFuction(argc, argv);
 
 	return 0;
 }

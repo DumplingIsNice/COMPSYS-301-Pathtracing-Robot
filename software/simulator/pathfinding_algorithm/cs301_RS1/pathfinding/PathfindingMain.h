@@ -14,7 +14,7 @@
 #define WALKED_PATH 8
 
 /* These values should overwrite placeholders in the other files. */
-#define MAP_NAME	"map.txt"
+#define MAP_NAME	"./map/map.txt"
 #define MAP_SIZE_X	19
 #define MAP_SIZE_Y	15
 
@@ -23,7 +23,7 @@
 #define START_X		1
 #define START_Y		1
 
-#define DEBUG
+//#define DEBUG
 
 //#define DEPTHFIRST
 //#define BREADTHFIRST

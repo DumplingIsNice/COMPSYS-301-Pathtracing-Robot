@@ -54,7 +54,7 @@ int IsElementValid(NodeListElement* element);
 
 // Append an element to a specific element. Not NodeList head/tail safe
 // (will not update them).
-void Insert(NodeListElement* current, NodeListElement* new);
+void Insert(NodeListElement* current, NodeListElement* add);
 
 // Remove a NodeListElement from a chain of dependencies.
 // 'preceding_node' should be the element directly before the element to be

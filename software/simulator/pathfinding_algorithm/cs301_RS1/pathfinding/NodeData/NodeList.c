@@ -35,10 +35,10 @@ int IsElementValid(NodeListElement* element)
 	return (element != NULL);
 }
 
-void Insert(NodeListElement* current, NodeListElement* new)
+void Insert(NodeListElement* current, NodeListElement* add)
 {
-	new->tail = current->tail;
-	current->tail = new;
+	add->tail = current->tail;
+	current->tail = add;
 	return;
 }
 
