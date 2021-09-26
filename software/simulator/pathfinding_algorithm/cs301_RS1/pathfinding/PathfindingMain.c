@@ -48,7 +48,7 @@ void FindShortestPath()
 		#endif
 
 		#ifdef PRINT_WEIGHT
-			WriteFinalMap(current_node->posx, current_node->posy, WeightToMapCode(current_node->weight));
+			WriteFinalMap(current_node->posx, current_node->posy, current_node->weight);
 		#endif // PRINT_WEIGHT
 
 

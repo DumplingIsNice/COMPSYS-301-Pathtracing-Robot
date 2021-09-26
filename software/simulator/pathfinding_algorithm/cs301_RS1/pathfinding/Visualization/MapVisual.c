@@ -90,9 +90,9 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
                             pixels[p + 2] = 127;//red
                         }
                         else {
-                            pixels[p + 0] = 255 - MapCodeToRGB(array[num][col]); //blue
-                            pixels[p + 1] = 255 - MapCodeToRGB(array[num][col]);//green
-                            pixels[p + 2] = 255 - MapCodeToRGB(array[num][col]);//red
+                            pixels[p + 0] = 255 - WeightToRGB(array[num][col]); //blue
+                            pixels[p + 1] = 255 - WeightToRGB(array[num][col]);//green
+                            pixels[p + 2] = 255 - WeightToRGB(array[num][col]);//red
                         }
 
                     }
@@ -272,5 +272,9 @@ int MapCodeToRGB(int code)
 {
     if ((code <= MAX_MAP_CODE) && (code >= MIN_MAP_CODE)) { return code - 10; }
     return 0;
+}
+int WeightToRGB(int weight)
+{
+    return MapCodeToRGB(WeightToMapCode(weight));
 }
 #endif 

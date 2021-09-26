@@ -9,8 +9,11 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]);
 void createBMP();
 void initBMPFile();
 
+/* Conversion Functions */
 int WeightToMapCode(int weight);
 int MapCodeToRGB(int code);
+int WeightToRGB(int weight);
+
 void TestVisualMap();
 
 #endif // MAPVISUAL_C
