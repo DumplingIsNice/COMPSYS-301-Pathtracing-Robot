@@ -2,7 +2,8 @@
 #define VISUALISATION_C
 
 //#define _CRT_SECURE_NO_WARNINGS
-// code is not optimised
+
+
 
 #include "MapVisual.h"
 #include "ReadMap.h"
@@ -41,8 +42,7 @@ void SetArrayValue(int x, int y, int value)
 * 
 */
 void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
-    //xpos = xpos * 10;
-    //ypos = ypos * 10;
+  
 
     int size = width * height * 4; //for 32-bit bitmap only
 
@@ -72,6 +72,7 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
                     for (int j = 0; j < 10; j++) {
                         int num = MAP_SIZE_Y-1 - row;
                         int p = ((row*10 + i) * width + col*10 + j) * 4;
+
                         if (array[num][col] == 0) {
                             pixels[p + 0] = 0; //blue
                             pixels[p + 1] = 127;//green
@@ -96,7 +97,7 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
     }
 
     FILE* ft;
-    char const* name = "maze.bmp";
+    char const* name = "mazeArrayInput.bmp";
     errno_t err = fopen_s(&ft,name, "w+");
     if (ft == NULL)
     {
@@ -114,13 +115,12 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
 
 
 /*
-* Takes in an input array with the map locations. The 1 and 0 will be coded as wall and path and
-* the chosen path should be added in as 2.
+* Creates a BMP file of the map using the static array located in this file. The caller of this function
+* should ensure that the array is populated with values before using this function.
 *
 */
 void createBMP() {
-    //xpos = xpos * 10;
-    //ypos = ypos * 10;
+  
 
     int size = width * height * 4; //for 32-bit bitmap only
 
@@ -190,8 +190,7 @@ void createBMP() {
 
 }
 
-// currently not used as i didnt know how to modify an existing file instead of over writing it
-// but if that is solved then this fucntion can be used
+// Currently not used. Just left over function from original attempts. Can directly call create BMP functions
 void initBMPFile() {
     int size = width * height * 4; //for 32-bit bitmap only
 
