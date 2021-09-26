@@ -76,15 +76,19 @@ void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add)
 	// If the list is empty...
 
 	// Start Node Logic
-	if (node_to_add == NULL)
+	/*if (node_to_add == NULL)
 	{
 		node->adjacent_nodes = NULL;
 		return;
 	} else if (node == NULL) {
 		return;
-	}
+	}*/
+
+	if (!IsNodeDataValid(node)) { return; }
+	if (!IsNodeDataValid(node_to_add)) { return; }
 
 	if (!IsElementValid(node->adjacent_nodes)) {
+		// If list is empty...
 		node->adjacent_nodes = NewNodeListElement(node_to_add);
 		return;
 	}

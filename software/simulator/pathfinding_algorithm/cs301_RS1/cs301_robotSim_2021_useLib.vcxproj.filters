@@ -51,6 +51,9 @@
     <ClInclude Include="pathfinding\Visualization\MapVisual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pathfinding\RebaseWeights.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\Visualization\MapVisual.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\RebaseWeights.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

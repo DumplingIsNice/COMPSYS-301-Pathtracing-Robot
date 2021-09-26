@@ -7,6 +7,8 @@
 #include "PathfindingAlgorithm.h"
 #include "NodeData/NodeDataOps.h"
 #include "FileUtility/ReadMap.h"
+#include "RebaseWeights.h"
+#include "PathfindingMain.h"
 
 #ifndef MAP_SIZE_X				// This should be overridden by ReadMap.h!
 	#define MAP_SIZE_X	0
@@ -173,6 +175,11 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		if (preexisting == NULL) { return; }
 		AddToNodeDataAdjacentNode(instigating_node, preexisting);
 		SetNodeDataAdjacentPaths(instigating_node, GetNodeDataAdjacentPaths(instigating_node) + 1);
+		
+		#ifdef WEIGHT_REBASING
+			StartRebase(preexisting, instigating_node);
+		#endif
+
 		return;
 	}
 }
