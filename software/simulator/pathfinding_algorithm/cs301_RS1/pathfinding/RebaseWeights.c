@@ -14,6 +14,7 @@ RebaseListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeDat
 {
 	RebaseListElement* element = malloc(sizeof(struct RebaseListElement));
 	if (element == NULL) { return NULL; }
+	element->tail = NULL;
 	element->rebased = rebased;
 	element->to_rebase = to_rebase;
 	return element;
@@ -45,20 +46,13 @@ void RebaseWeight(RebaseListElement* element)
 	if (GetNodeDataWeight(to_rebase) > (GetNodeDataWeight(rebased) + 1)) {
 		SetNodeDataWeight(to_rebase, GetNodeDataWeight(rebased) + 1);
 
+		// Queue all nodes in adjacent_nodes to also be checked for rebasing.
 		NodeListElement* element = GetNodeDataAdjacentNodeListElement(to_rebase);
-		//element = element->tail;	// skip the first in the list, as it is the instigating node
-		if (!IsElementValid(element)) { return; }
-
-		RebaseListElement* new_rebase = NewRebaseListElement(to_rebase, element->node);
-		AddToRebaseWeightQueue(new_rebase);	// add the first in the list (instigating node)...
-
-		//// Queue all nodes in adjacent_nodes to also be checked for rebasing.
-		//NodeListElement* element = GetNodeDataAdjacentNodeListElement(to_rebase);
-		//while (IsElementValid(element)) {
-		//	RebaseListElement* new_rebase = NewRebaseListElement(to_rebase, element->node);
-		//	AddToRebaseWeightQueue(new_rebase);
-		//	element = element->tail;
-		//}
+		while (IsElementValid(element)) {
+			RebaseListElement* new_rebase = NewRebaseListElement(to_rebase, element->node);
+			AddToRebaseWeightQueue(new_rebase);
+			element = element->tail;
+		}
 	}
 }
 
