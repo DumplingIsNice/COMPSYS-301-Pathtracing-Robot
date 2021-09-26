@@ -203,6 +203,10 @@ int IsNodeQueueEmpty()
 	return !IsElementValid(GetListHead(&NodeQueue));
 }
 
+NodeList* GetFinalQueue() {
+	return &FinalQueue;
+}
+
 void AddToFinalQueue(NodeData* node)
 {
 	NodeListElement* element = NewNodeListElement(node);

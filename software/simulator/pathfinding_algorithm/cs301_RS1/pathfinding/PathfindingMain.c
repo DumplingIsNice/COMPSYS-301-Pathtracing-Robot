@@ -20,13 +20,19 @@ void FindShortestPath()
 	// Create the starting node and add it to NodeQueue:
 	EvaluateCell(NULL, START_X, START_Y);
 	
+	// Performance counters:
+	int nodes_evaluated_count	= 0;
+	int final_path_length		= 0;
+
 	// Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells) 
 	// until goal is reached:
 	NodeListElement*	current_node_element	= NULL;
 	NodeData*			current_node			= NULL;
 	NodeData*			final_node				= NULL;
 
-	int i = 0;
+	/*
+		Evaluate Nodes
+	*/
 	while (!IsNodeQueueEmpty())
 	{
 		current_node_element = ExtractNextInNodeQueue();
@@ -44,6 +50,7 @@ void FindShortestPath()
 		// NodeData saved to NodeMap, so we can discard the list element struct:
 		DestroyListElement(current_node_element);
 
+
 		#ifdef ANALYTIC_VARIANT
 			if (IsGoalReached()) {			// hacky assumption that there is only one path cell adjacent to the goal
 				final_node = current_node;
@@ -54,11 +61,12 @@ void FindShortestPath()
 			if (IsGoalReached()) { break; }	// exit once goal reached (heuristic approach)
 		#endif // !ANALYTIC_VARIANT
 
-		i++;
+		nodes_evaluated_count++;
 	}
 
-
-	// Determine shortest path:
+	/*
+		Determine Shortest Path
+	*/
 	// Note: if goal has not been reached, final_node_ele will be NULL.
 	NodeData* next_node = final_node;
 
@@ -76,6 +84,7 @@ void FindShortestPath()
 	{
 		AddToFinalQueue(next_node);
 		next_node = FindNextNodeInFinalPath(next_node);
+		final_path_length++;
 	}
 
 	// Artificially add start to FinalQueue
@@ -90,11 +99,20 @@ void FindShortestPath()
 		WriteFinalMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
 	}
 
-	// ## This is the point that FinalQueue and/or FinalMap may be used/exported. ##
-	// After this point, data is to be destoried.
+	/*
+		Cleanup
+	*/
+	CleanUpFindShortestPath();	// prevent memory leaks
 
-	// Prevent memory leaks:
-	CleanUpFindShortestPath();
+	/*
+		Performance Overview
+	*/
+	printf("Total number of nodes evaluated: %d\n", nodes_evaluated_count);
+	printf("Length of final path: %d\n", final_path_length);
+	printf("\n");
+	printf("Time to find shortest path: %d\n", 0);
+	printf("RAM used by NodeQueue and NodeMap: %d\n", 0);
+
 	return;
 }
 
@@ -107,6 +125,10 @@ void CleanUpFindShortestPath()
 
 	// Free the last of the NodeQueue elements (but not their NodeData!):
 	DestroyListElements(GetNodeQueue());
+
+	// Free the FinalQueue elements.
+	DestroyListElements(GetFinalQueue());
+
 	// Free all NodeData values:
 	NodeMapClear();
 }

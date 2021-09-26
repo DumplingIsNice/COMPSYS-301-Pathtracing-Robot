@@ -100,6 +100,9 @@ NodeListElement* ExtractNextInNodeQueue();
 // Returns true if no NodeListElements left in NodeQueue.
 int IsNodeQueueEmpty();
 
+// Return a reference to the FinalQueue.
+NodeList* GetFinalQueue();
+
 // Insert a node element in the final Queue.
 void AddToFinalQueue(NodeData* node);
 

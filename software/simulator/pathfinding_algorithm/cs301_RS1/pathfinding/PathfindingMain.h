@@ -27,8 +27,8 @@
 
 //#define ANALYTIC_VARIANT	// use for DEPTHFIRST and BREADTHFIRST to evaluate all nodes to ensure shortest path is found
 //#define DEPTHFIRST
-#define BREADTHFIRST
-//#define ASTAR
+//#define BREADTHFIRST
+#define ASTAR
 
 //
 void FindShortestPath();
