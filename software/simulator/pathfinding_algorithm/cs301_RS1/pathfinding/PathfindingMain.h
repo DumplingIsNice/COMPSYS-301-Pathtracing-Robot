@@ -26,11 +26,11 @@
 //#define DEBUG
 #define PRINT_WEIGHT
 
-#define		WEIGHT_REBASING
-#define		ANALYTIC_VARIANT	// use for DEPTHFIRST and BREADTHFIRST to evaluate all nodes to ensure shortest path is found
-#define		DEPTHFIRST
+#define		WEIGHT_REBASING		// allow node weighting to change dynamically when cheaper alternate paths are found
+//#define		ANALYTIC_VARIANT	// use ONLY for DEPTHFIRST and BREADTHFIRST to evaluate all nodes to ensure shortest path is found
+//#define		DEPTHFIRST
 //#define		BREADTHFIRST
-//#define ASTAR
+#define ASTAR
 
 //
 void FindShortestPath();
