@@ -40,7 +40,7 @@ void FindShortestPath()
 		current_node = current_node_element->node;
 
 		#ifdef DEBUG
-			printf("### Iteration i: %d ###\n", i);
+			printf("### Iteration i: %d ###\n", nodes_evaluated_count);
 			WriteOutputMap(current_node->posx, current_node->posy, WALKED_PATH);
 			//PrintNodeMap();
 			PrintOutputMap();
@@ -48,7 +48,7 @@ void FindShortestPath()
 		#endif
 
 		#ifdef PRINT_WEIGHT
-			WriteFinalMap(current_node->posx, current_node->posy, current_node->weight);
+			WriteFinalMap(current_node->posx, current_node->posy, WeightToMapCode(current_node->weight));
 		#endif // PRINT_WEIGHT
 
 
