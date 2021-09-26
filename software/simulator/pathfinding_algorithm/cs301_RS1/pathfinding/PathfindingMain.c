@@ -81,6 +81,7 @@ void FindShortestPath()
 			WriteFinalMap(current_node->posx, current_node->posy, WALKED_PATH);
 		}
 		PrintFinalMap();
+		CreateFinalMap();
 	#endif
 
 	// ## This is the point that FinalQueue and/or FinalMap may be used/exported. ##

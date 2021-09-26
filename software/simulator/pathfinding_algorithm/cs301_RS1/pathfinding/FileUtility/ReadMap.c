@@ -84,6 +84,11 @@ void WriteOutputMap(const int x, const int y, const int value) {
     outputMap[y][x] = value;
 }
 
+void CreateFinalMap()
+{
+    createBMPFromArrayInput(&finalMap);
+}
+
 void PrintFinalMap()
 {
     printf("## Printing Final Map! ##\n");

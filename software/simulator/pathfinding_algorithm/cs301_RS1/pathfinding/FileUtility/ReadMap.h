@@ -47,6 +47,8 @@ void PrintOutputMap();
 // Writes the 'private' output map in ReadMap.c (to track runtime position)
 void WriteOutputMap(const int x, const int y, const int value);
 
+void CreateFinalMap();
+
 // Prints the 'private' final map in ReadMap.c (for one final pathway)
 void PrintFinalMap();
 
