@@ -73,18 +73,18 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
                         int p = ((row*10 + i) * width + col*10 + j) * 4;
 
                         if (array[num][col] == 0) {
-                            pixels[p + 0] = 0; //blue
-                            pixels[p + 1] = 127;//green
-                            pixels[p + 2] = 0;//red
+                            pixels[p + 0] = 200; //blue
+                            pixels[p + 1] = 200;//green
+                            pixels[p + 2] = 200;//red
                         }
                         if (array[num][col] == 1) {
-                            pixels[p + 0] = 127; //blue
+                            pixels[p + 0] = 0; //blue
                             pixels[p + 1] = 0;//green
                             pixels[p + 2] = 0;//red
                         }
                         if (array[num][col] == 8) {
                             pixels[p + 0] = 0; //blue
-                            pixels[p + 1] = 0;//green
+                            pixels[p + 1] = 127;//green
                             pixels[p + 2] = 127;//red
                         }
 
