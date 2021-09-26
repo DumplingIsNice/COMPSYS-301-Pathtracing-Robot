@@ -271,7 +271,7 @@ int main(int argc, char** argv)
 
 #ifdef TEST_MODE_MAP
 	FindShortestPath();
-	// PrintFinalMap();
+	PrintFinalMap();
 	CreateFinalMap();
 #endif
 

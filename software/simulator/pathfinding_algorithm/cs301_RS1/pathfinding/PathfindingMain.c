@@ -113,7 +113,7 @@ void FindShortestPath()
 		Performance Overview
 	*/
 	printf("Total number of nodes evaluated: %d\n", nodes_evaluated_count);
-	printf("Length of final path: %d\n", final_path_length);
+	printf("Length of final path (excl. start and goal nodes): %d\n", final_path_length);
 	printf("\n");
 	printf("Time to find shortest path: %d\n", 0);
 	printf("RAM used by NodeQueue and NodeMap: %d\n", 0);
