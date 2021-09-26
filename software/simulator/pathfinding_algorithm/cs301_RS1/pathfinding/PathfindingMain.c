@@ -28,12 +28,12 @@ void FindShortestPath()
 	int i = 0;
 	while (!IsNodeQueueEmpty())
 	{
-		printf("### Iteration i: %d ###\n", i);
 		current_node_element = ExtractNextInNodeQueue();
 		EvaluateAdjacentCells(current_node_element->node);
 		final_node = current_node_element->node;
 
 		#ifdef DEBUG
+			printf("### Iteration i: %d ###\n", i);
 			WriteOutputMap(final_node->posx, final_node->posy, WALKED_PATH);
 			//PrintNodeMap();
 			PrintOutputMap();
@@ -71,18 +71,14 @@ void FindShortestPath()
 	// Artificially add start to FinalQueue
 	AddToFinalQueue(NodeMapGet(NodeMapGenKey(GetStartPosX(), GetStartPosY())));
 
-	#ifdef DEBUG
-		// Process final output from FinalQueue to FinalMap
-		while (!IsFinalQueueEmpty())
-		{
-			current_node_element = ExtractNextInFinalQueue();
-			current_node = current_node_element->node;
+	// Process final output from FinalQueue to FinalMap
+	while (!IsFinalQueueEmpty())
+	{
+		current_node_element = ExtractNextInFinalQueue();
+		current_node = current_node_element->node;
 
-			WriteFinalMap(current_node->posx, current_node->posy, WALKED_PATH);
-		}
-		PrintFinalMap();
-		CreateFinalMap();
-	#endif
+		WriteFinalMap(current_node->posx, current_node->posy, WALKED_PATH);
+	}
 
 	// ## This is the point that FinalQueue and/or FinalMap may be used/exported. ##
 	// After this point, data is to be destoried.

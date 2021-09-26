@@ -164,7 +164,10 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		// AddToNodeDataAdjacentNode() will reject non-unique values, so
 		// calling this on the node that led to the instigating node is not
 		// optimised but will not break anything.
-		printf("Found Checked Node!\n");
+
+		#ifdef DEBUG
+				printf("Found Checked Node!\n");
+		#endif
 
 		NodeData* preexisting = NodeMapGet(NodeMapGenKey(posx, posy));
 		if (preexisting == NULL) { return; }

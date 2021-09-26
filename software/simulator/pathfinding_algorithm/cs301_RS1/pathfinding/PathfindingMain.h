@@ -25,7 +25,7 @@
 
 #define DEBUG
 
-#define DEPTHFIRST
+//#define DEPTHFIRST
 //#define BREADTHFIRST
 #define ASTAR
 
@@ -34,8 +34,5 @@ void FindShortestPath();
 
 // Free all dynamically allocated memory.
 void CleanUpFindShortestPath();
-
-// Runs Depth First Pathfinding
-void DepthFirstSearch();
 
 #endif
