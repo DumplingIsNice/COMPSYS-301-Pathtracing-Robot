@@ -131,13 +131,13 @@ NodeData* FindNextNodeInFinalPath(NodeData* node)
 		NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
 		NodeData* lowest_weight_node = current_element->node;
 
-		while (IsNodeDataValid(current_element->node)) {
+		while (IsElementValid(current_element)) {
+			// NodeData field in the adjacent_nodes list should never be NULL (unless we've screwed up in adding or deleting).
 			if (GetNodeDataWeight(current_element->node) < GetNodeDataWeight(lowest_weight_node)) {
 				lowest_weight_node = current_element->node;
 			}
 			current_element = current_element->tail;
 		}
-
 		return lowest_weight_node;
 	} else {
 		return NULL;
