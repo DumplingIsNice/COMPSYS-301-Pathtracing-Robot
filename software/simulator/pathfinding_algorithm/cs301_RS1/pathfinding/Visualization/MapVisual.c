@@ -77,15 +77,20 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
                             pixels[p + 1] = 200;//green
                             pixels[p + 2] = 200;//red
                         }
-                        if (array[num][col] == 1) {
+                        else if (array[num][col] == 1) {
                             pixels[p + 0] = 0; //blue
                             pixels[p + 1] = 0;//green
                             pixels[p + 2] = 0;//red
                         }
-                        if (array[num][col] == 8) {
+                        else if (array[num][col] == 8) {
                             pixels[p + 0] = 0; //blue
                             pixels[p + 1] = 127;//green
                             pixels[p + 2] = 127;//red
+                        }
+                        else {
+                            pixels[p + 0] = array[num][col]; //blue
+                            pixels[p + 1] = array[num][col];//green
+                            pixels[p + 2] = array[num][col];//red
                         }
 
                     }
@@ -118,7 +123,7 @@ void createBMPFromArrayInput(int array[MAP_SIZE_Y][MAP_SIZE_X]) {
 * should ensure that the array is populated with values before using this function.
 *
 */
-void createBMP() {
+/*void createBMP() {
   
 
     int size = width * height * 4; //for 32-bit bitmap only
@@ -161,8 +166,8 @@ void createBMP() {
                     }
                     if (finalPathArray[num][col] == 2) {
                         pixels[p + 0] = 0; //blue
-                        pixels[p + 1] = 0;//green
-                        pixels[p + 2] = 127;//red
+                        pixels[p + 1] = 127;//green
+                        pixels[p + 2] = 0;//red
                     }
 
                 }
@@ -255,7 +260,7 @@ void TestVisualMap()
     createBMPFromArrayInput(map2);
 }
 
-
+*/
 
 
 
