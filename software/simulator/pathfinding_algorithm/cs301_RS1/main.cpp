@@ -19,7 +19,6 @@
 //#define TESTMODE0
 //#define TESTMODE1
 
-#define TEST_MODE_MAP
 
 #define NITERATIONS 20
 #define STARTUPDELAY 5 //sec
@@ -30,6 +29,7 @@
 #include <iostream>
 #include "highPerformanceTimer.h"//just to include if timer function is required by user.
 
+#define TEST_SHORTEST_PATH
 extern "C"
 {
 	#include "pathfinding/PathfindingMain.h"
@@ -269,11 +269,8 @@ int virtualCarUpdate0()
 int main(int argc, char** argv)
 {
 
-#ifdef TEST_MODE_MAP
-	FindShortestPath();
-	PrintOutputMap();
-	PrintFinalMap();
-	CreateFinalMap();
+#ifdef TEST_SHORTEST_PATH
+	FindShortestPathTest();
 #endif
 
 	//FungGlAppMainFuction(argc, argv);

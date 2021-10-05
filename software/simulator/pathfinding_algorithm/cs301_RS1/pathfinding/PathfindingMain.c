@@ -10,15 +10,19 @@
 #include "NodeData/NodeDataOps.h"
 #include "NodeData/NodeMap.h"
 
-void FindShortestPath()
+void FindShortestPathTest()
+{
+	FindShortestPath(GOAL_X, GOAL_Y, START_X, START_Y);
+}
+
+void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 {
 	// Read map and set up goal location:
 	ReadMapFile(MAP_NAME);
-	SetGoalPos(GOAL_X, GOAL_Y);
-	SetStartPos(START_X, START_Y);
+	SetMapParameters(goal_x, goal_y, start_x, start_y);
 
 	// Create the starting node and add it to NodeQueue:
-	EvaluateCell(NULL, START_X, START_Y);
+	EvaluateCell(NULL, GetStartPosX(), GetStartPosY());
 	
 	// Performance counters:
 	int nodes_evaluated_count	= 0;
@@ -45,17 +49,13 @@ void FindShortestPath()
 			//PrintNodeMap();
 			PrintOutputMap();
 			PrintNodeData(current_node);
-		#endif
-
-		#ifdef PRINT_WEIGHT
+			// Print weights:
 			WriteOutputMap(current_node->posx, current_node->posy, current_node->weight);
 			WriteFinalMap(current_node->posx, current_node->posy, WeightToMapCode(current_node->weight));
-		#endif // PRINT_WEIGHT
-
+		#endif
 
 		// NodeData saved to NodeMap, so we can discard the list element struct:
 		DestroyListElement(current_node_element);
-
 
 		#ifdef ANALYTIC_VARIANT
 			if (IsGoalReached()) {			// hacky assumption that there is only one path cell adjacent to the goal
@@ -76,16 +76,13 @@ void FindShortestPath()
 	// Note: if goal has not been reached, final_node_ele will be NULL.
 	NodeData* next_node = final_node;
 
+	// Trace back to the start node from the goal node and log in FinalQueue.
 	// Ends once there are no more valid preceding/instigating nodes
 	// (i.e. at start).
 
-	// Trace back to start with goal and log in FinalQueue
-
-	// Artificially creates goal node and add to FinalQueue
-	EvaluatePathCell(NULL, GetGoalPosX(), GetGoalPosY());
+	EvaluatePathCell(NULL, GetGoalPosX(), GetGoalPosY());	// Artificially creates goal node and add to FinalQueue
 	AddToFinalQueue(NodeMapGet(NodeMapGenKey(GetGoalPosX(), GetGoalPosY())));
 
-	// Trace NextNodeInFinalPath
 	while (!IsStartReached(next_node))
 	{
 		AddToFinalQueue(next_node);
@@ -93,26 +90,29 @@ void FindShortestPath()
 		final_path_length++;
 	}
 
-	// Artificially add start to FinalQueue
+	// Artificially add start node to FinalQueue
 	AddToFinalQueue(NodeMapGet(NodeMapGenKey(GetStartPosX(), GetStartPosY())));
 
-	// Process final output from FinalQueue to FinalMap
-	while (!IsFinalQueueEmpty())
-	{
-		current_node_element = ExtractNextInFinalQueue();
-		current_node = current_node_element->node;
-
-		WriteFinalMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
-
-		#ifdef PRINT_WEIGHT
-				WriteOutputMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
-		#endif // PRINT_WEIGHT
-	}
 
 	/*
-		Cleanup
+		Print Debug Info
 	*/
-	CleanUpFindShortestPath();	// prevent memory leaks
+	#ifdef DEBUG
+		// Process final output from FinalQueue to FinalMap
+		while (!IsFinalQueueEmpty())
+		{
+			current_node_element = ExtractNextInFinalQueue();
+			current_node = current_node_element->node;
+
+			WriteFinalMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
+
+			WriteOutputMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
+		}
+
+		PrintOutputMap();
+		PrintFinalMap();
+		CreateFinalMap();
+	#endif // DEBUG
 
 	/*
 		Performance Overview
@@ -123,7 +123,18 @@ void FindShortestPath()
 	printf("Time to find shortest path: %d\n", 0);
 	printf("RAM used by NodeQueue and NodeMap: %d\n", 0);
 
+	/*
+		Cleanup
+	*/
+	CleanUpFindShortestPath(); // prevent memory leaks
+
 	return;
+}
+
+void SetMapParameters(int goal_x, int goal_y, int start_x, int start_y)
+{
+	SetGoalPos(goal_x, goal_y);
+	SetStartPos(start_x, start_y);
 }
 
 
