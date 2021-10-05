@@ -33,16 +33,22 @@
 //#define		BREADTHFIRST
 #define ASTAR
 
-// Calls FindShortestPath() with the static testing values as arguments.
-void FindShortestPathTest();
-
-//
-void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y);
 
 // Dynamically set the goal and start positions.
 void SetMapParameters(int goal_x, int goal_y, int start_x, int start_y);
 
 // Free all dynamically allocated memory.
 void CleanUpFindShortestPath();
+
+// Calls FindShortestPath() with the static testing values as arguments.
+void FindShortestPathTest();
+
+//
+void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y);
+
+// Populate FinalQueue using NodeMap and final_node (node adjacent to the goal node).
+// Returns the total number of elements added to the FinalQueue.
+int PopulateFinalQueue(NodeData* final_node);
+
 
 #endif
