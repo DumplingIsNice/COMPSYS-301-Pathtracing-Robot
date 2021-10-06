@@ -26,4 +26,6 @@ typedef struct Directions {
     int forward;
 } Directions;
 
+// Prints a Directions struct to consol.
+void PrintDirections(Directions* d);
 #endif // PROJECT_H

@@ -13,13 +13,12 @@
 //Date 2012~2020
 //=======================================================================
 
-
 // TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
 // TESTMODE1: travel in a circle 
-//#define TESTMODE0
+#define TESTMODE0
 //#define TESTMODE1
 
-#define TEST_MODE_MAP
+//#define TEST_MODE_MAP
 
 #define NITERATIONS 20
 #define STARTUPDELAY 5 //sec
@@ -30,10 +29,15 @@
 #include <iostream>
 #include "highPerformanceTimer.h"//just to include if timer function is required by user.
 
+/* Custom Includes */
+
 extern "C"
 {
 	#include "pathfinding/PathfindingMain.h"
+	#include "robot_simulation/project.h"
 }
+
+#include "robot_simulation/sensor.h"
 
 using namespace std;
 
@@ -81,6 +85,9 @@ int virtualCarInit()
 	cout << "default virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
 	cout << "default virtualCarLinearSpeedFloor:" << virtualCarLinearSpeedFloor << endl;
 	cout << endl;
+
+	InitDirectionSensed();
+
 	// Three options for robot's sensor placement
 	// Custom - read in ../config/sensorPos.txt
 	sensorPopulationAlgorithmID = 2;
@@ -141,6 +148,8 @@ int virtualCarUpdate()
 		else
 			return 1;
 	}
+
+	TestSensor();
 
 #ifdef TESTMODE0
 	// run to N lops to measure distance travelled in X direction
@@ -204,67 +213,67 @@ int virtualCarUpdate()
 }
 
 
-//------------------------------------------------------------------------------------------
-int virtualCarUpdate0()
-{
-	//{----------------------------------
-	//process sensor state information
-	float halfTiltRange = (num_sensors - 1.0) / 2.0;
-	float tiltSum = 0.0;
-	float blackSensorCount = 0.0;
-	for (int i = 0; i < num_sensors; i++)
-	{
-		if (virtualCarSensorStates[i] == 0)
-		{
-			float tilt = (float)i - halfTiltRange;
-			tiltSum += tilt;
-			blackSensorCount += 1.0;
-		}
-	}
-    //}------------------------------------
-
-	////{------------------------------------
-	////updat linear and rotational speed based on sensor information
-	//if (blackSensorCount > 0.0)
-	//	setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
-	//	//setVirtualCarSpeed(0.60, 40.0*tiltSum);
-	//else
-	//    setVirtualCarSpeed(0.0, virtualCarAngularSpeed_seed);
-	//	//setVirtualCarSpeed(0.0, 40.0);
-	////}---------------------------------------
-
-	//below is optional. just to provid some status report .
-	//{--------------------------------------------------------------
-	
-	if (myTimer.getTimer() > 0.5)
-	{
-		myTimer.resetTimer();
-		cout << "Sensor State: ";
-		for (int i = 0; i < num_sensors; i++)
-		{
-			cout << virtualCarSensorStates[i] << " ";
-		
-		}
-		cout << endl;
-		//for (int i = 0; i < ghostInfoPackList.size(); i++)
-		//	cout << ghostInfoPackList[i].ghostType << " , " << ghostInfoPackList[i].direction << endl;
-		cout << "=====================================" << endl;
-		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-		cout << "-----------------------------------------" << endl;
-		cout << " ghost list info:" << endl;
-		for (int i = 0; i < ghostInfoPackList.size(); i++)
-		{
-			cout << "g[" << i << "]: (" << ghostInfoPackList[i].coord_x << ", " << ghostInfoPackList[i].coord_y <<"); [s="<<
-				ghostInfoPackList[i].speed<<"; [d="<< ghostInfoPackList[i].direction << "]; [T=" << ghostInfoPackList[i].ghostType<<"]" << endl;
-		}
-	}
-	
-	//}---------------------------------------------------------------
-	
-	return 1;
-}
-//}=============================================================
+////------------------------------------------------------------------------------------------
+//int virtualCarUpdate0()
+//{
+//	//{----------------------------------
+//	//process sensor state information
+//	float halfTiltRange = (num_sensors - 1.0) / 2.0;
+//	float tiltSum = 0.0;
+//	float blackSensorCount = 0.0;
+//	for (int i = 0; i < num_sensors; i++)
+//	{
+//		if (virtualCarSensorStates[i] == 0)
+//		{
+//			float tilt = (float)i - halfTiltRange;
+//			tiltSum += tilt;
+//			blackSensorCount += 1.0;
+//		}
+//	}
+//    //}------------------------------------
+//
+//	////{------------------------------------
+//	////updat linear and rotational speed based on sensor information
+//	//if (blackSensorCount > 0.0)
+//	//	setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
+//	//	//setVirtualCarSpeed(0.60, 40.0*tiltSum);
+//	//else
+//	//    setVirtualCarSpeed(0.0, virtualCarAngularSpeed_seed);
+//	//	//setVirtualCarSpeed(0.0, 40.0);
+//	////}---------------------------------------
+//
+//	//below is optional. just to provid some status report .
+//	//{--------------------------------------------------------------
+//	
+//	if (myTimer.getTimer() > 0.5)
+//	{
+//		myTimer.resetTimer();
+//		cout << "Sensor State: ";
+//		for (int i = 0; i < num_sensors; i++)
+//		{
+//			cout << virtualCarSensorStates[i] << " ";
+//		
+//		}
+//		cout << endl;
+//		//for (int i = 0; i < ghostInfoPackList.size(); i++)
+//		//	cout << ghostInfoPackList[i].ghostType << " , " << ghostInfoPackList[i].direction << endl;
+//		cout << "=====================================" << endl;
+//		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
+//		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
+//		cout << "-----------------------------------------" << endl;
+//		cout << " ghost list info:" << endl;
+//		for (int i = 0; i < ghostInfoPackList.size(); i++)
+//		{
+//			cout << "g[" << i << "]: (" << ghostInfoPackList[i].coord_x << ", " << ghostInfoPackList[i].coord_y <<"); [s="<<
+//				ghostInfoPackList[i].speed<<"; [d="<< ghostInfoPackList[i].direction << "]; [T=" << ghostInfoPackList[i].ghostType<<"]" << endl;
+//		}
+//	}
+//	
+//	//}---------------------------------------------------------------
+//	
+//	return 1;
+//}
+////}=============================================================
 
 int main(int argc, char** argv)
 {
@@ -276,7 +285,7 @@ int main(int argc, char** argv)
 	CreateFinalMap();
 #endif
 
-	//FungGlAppMainFuction(argc, argv);
+	FungGlAppMainFuction(argc, argv);
 
 	return 0;
 }
