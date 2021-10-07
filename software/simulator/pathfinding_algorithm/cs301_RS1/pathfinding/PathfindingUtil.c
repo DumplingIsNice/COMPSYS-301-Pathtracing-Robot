@@ -27,22 +27,13 @@ static int goal_x, goal_y, start_x, start_y;
 static int goal_reached = FALSE;
 
 
-/* IsPosChecked */
-int IsPosXChecked(NodeData* nodeData, int posx)
-{
-	return nodeData->isChecked;
-}
-void SetNodeChecked(NodeData* nodeData, int is_checked)
-{
-	nodeData->isChecked = is_checked;
-}
-
+/* Node Checked */
 int IsCheckedNode(int posx, int posy)
 {
-	NodeData* nodeData = NodeMapGet(NodeMapGenKey(posx, posy));
-	if (nodeData == NULL) { return FALSE; }
+	const NodeData* node = NodeMapGet(NodeMapGenKey(posx, posy));
+	if (!IsNodeDataValid(node)) { return FALSE; }
 	else {
-		if (GetNodeDataIsChecked(nodeData)) { return TRUE; }
+		if (GetNodeDataIsChecked(node)) { return TRUE; }
 		return FALSE;
 	}
 }
@@ -90,7 +81,7 @@ int GetStartPosY()
 	return start_y; // return pos_y of target cell
 }
 
-int IsStartReached(NodeData* node)
+int IsStartReached(const NodeData* node)
 {
 	if ((GetNodeDataPosX(node) == GetStartPosX()) && (GetNodeDataPosY(node) == GetStartPosY()))
 	{
@@ -182,17 +173,17 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 	}
 }
 
-NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked)
+NodeData* PopulateNodeData(const NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked)
 {
 	SetNodeDataPosX(node, posx);
 	SetNodeDataPosY(node, posy);
-	SetNodeChecked(node, isChecked);
+	SetNodeDataIsChecked(node, isChecked);
 	SetNodeDataWeight(node, CalculateNodeWeight(instigating_node, node, GetGoalPosX(), GetGoalPosY()));
 	AddToNodeDataAdjacentNode(node, instigating_node);
 	return node;
 }
 
-void AddToNodeQueue(NodeData* node)
+void AddToNodeQueue(const NodeData* node)
 {
 	NodeListElement* element = NewNodeListElement(node);
 	InsertInNodeQueue(&NodeQueue, element);					// <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
@@ -212,7 +203,7 @@ NodeList* GetFinalQueue() {
 	return &FinalQueue;
 }
 
-void AddToFinalQueue(NodeData* node)
+void AddToFinalQueue(const NodeData* node)
 {
 	NodeListElement* element = NewNodeListElement(node);
 	PrependToList(&FinalQueue, element);
@@ -228,7 +219,7 @@ int IsFinalQueueEmpty()
 	return !IsElementValid(GetListHead(&FinalQueue));
 }
 
-void PrintNodeData(NodeData* n)
+void PrintNodeData(const NodeData* n)
 {
 	printf("x: %d, y: %d, checked: %d, num_adjacent_paths: %d, weight: %d\n",
 		GetNodeDataPosX(n), GetNodeDataPosY(n), GetNodeDataIsChecked(n),

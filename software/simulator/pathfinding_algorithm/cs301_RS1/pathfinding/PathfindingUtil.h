@@ -43,8 +43,7 @@
 
 typedef enum CellType {EMPTY, PATH, GOAL} CellType;
 
-/* IsPosChecked */
-void SetNodeChecked(NodeData* nodeData, int is_checked);
+/* IsChecked */
 int IsCheckedNode(int posx, int posy);
 
 /* Goal Cell */
@@ -58,7 +57,7 @@ void SetGoalReached(int is_reached);
 void SetStartPos(int posx, int posy);
 int GetStartPosX();
 int GetStartPosY();
-int IsStartReached(NodeData* node);
+int IsStartReached(const NodeData* node);
 
 /* Pathfinding Algorithm Functions */
 
@@ -85,14 +84,14 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy);
 
 // Populate NodeData contextually. Uses PathfindingAlgorithm functions for calculating
 // weight.
-NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked);
+NodeData* PopulateNodeData(const NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked);
 
 
 
 /* Pathfinding Algorithm Functions */
 
 // Insert a node in the NodeQueue. Wrapper for functionality in PathfindingAlgorithm.
-void AddToNodeQueue(NodeData* node);
+void AddToNodeQueue(const NodeData* node);
 
 // Detach the NodeListElement from the top of the NodeQueue, and return it.
 NodeListElement* ExtractNextInNodeQueue();
@@ -104,7 +103,7 @@ int IsNodeQueueEmpty();
 NodeList* GetFinalQueue();
 
 // Insert a node element in the final Queue.
-void AddToFinalQueue(NodeData* node);
+void AddToFinalQueue(const NodeData* node);
 
 NodeListElement* ExtractNextInFinalQueue();
 
@@ -112,7 +111,7 @@ NodeListElement* ExtractNextInFinalQueue();
 int IsFinalQueueEmpty();
 
 // Debug function to visualize nodeData contents
-void PrintNodeData(NodeData* n);
+void PrintNodeData(const NodeData* n);
 
 // Debug function to visualize a node list element and its linked elements
 // Unfinished
