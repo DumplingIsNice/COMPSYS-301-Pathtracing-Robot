@@ -50,5 +50,8 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y);
 // Returns the total number of elements added to the FinalQueue.
 int PopulateFinalQueue(NodeData* final_node);
 
+// 
+void GenerateDirectionQueue();
+
 
 #endif

@@ -146,6 +146,7 @@
     <ClInclude Include="mainFungGLAppEngin.h" />
     <ClInclude Include="mazeGen.h" />
     <ClInclude Include="pathfinding\FileUtility\ReadMap.h" />
+    <ClInclude Include="pathfinding\NodeData\List.h" />
     <ClInclude Include="pathfinding\NodeData\NodeData.h" />
     <ClInclude Include="pathfinding\NodeData\NodeDataOps.h" />
     <ClInclude Include="pathfinding\NodeData\NodeList.h" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pathfinding\FileUtility\ReadMap.c" />
+    <ClCompile Include="pathfinding\NodeData\List.c" />
     <ClCompile Include="pathfinding\NodeData\NodeData.c" />
     <ClCompile Include="pathfinding\NodeData\NodeDataOps.c" />
     <ClCompile Include="pathfinding\NodeData\NodeList.c" />

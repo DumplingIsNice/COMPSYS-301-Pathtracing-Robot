@@ -9,6 +9,7 @@
 #include "PathfindingUtil.h"
 #include "NodeData/NodeDataOps.h"
 #include "NodeData/NodeMap.h"
+#include "Navigation/DirectionsList.h"
 
 
 void SetMapParameters(int goal_x, int goal_y, int start_x, int start_y)
@@ -30,6 +31,9 @@ void CleanUpFindShortestPath()
 
 	// Free all NodeData values:
 	NodeMapClear();
+
+	// Free all direction queue:
+	DestroyDirectionQueueAndContents();
 }
 
 void FindShortestPathTest()
@@ -161,6 +165,44 @@ int PopulateFinalQueue(NodeData* final_node) {
 	final_path_length++;
 
 	return final_path_length;
+}
+
+void GenerateDirectionQueue()
+{
+	// At least three nodes must be present in a path for it not to be a straight line.
+	// Thus a minimum of three nodes are required to calculate a new direction.
+	NodeListElement* next = GetListHead(GetFinalQueue())->tail;
+	NodeListElement* current = GetListHead(GetFinalQueue());
+	NodeListElement* prev = NULL;
+	
+
+	while (IsElementValid(next->tail)) {
+		prev = current;
+		current = next;
+		next = next->tail;
+
+		AddDirection(prev, current, next);
+	}
+
+	PrintDirectionQueue();
+
+	/*
+		From start of FinalQueue to end, iterate through.
+		To find the directions for an intersection we must use relative positioning.
+			- directions must be relative to the robot's current 'forward' vector.
+
+		Thus the forward vector of the robot is:
+			fwd_delta_x = (current_x - last_x): =0 if parallel, >0 if right, <0 if left.
+			fwd_delta_y = (current_y - last_y): =0 if parallel, >0 if down, <0 if up.
+			[global left: -x, global right: +x, global up: -y, global down: -y]
+			The robot must be travelling orthogonally, so no diagonals: !(up&&down) && !(left&&right).
+
+		We perform similar logic on (current_pos - next_pos) to find the direction to take.
+		
+		We can then find the direction to take relative to the forward vector.
+		Must use LUT/switch case to decode, since there is no immediately apparent easy
+		way to derive relative direction from coords (I don't think vectors will work here).
+	*/
 }
 
 
