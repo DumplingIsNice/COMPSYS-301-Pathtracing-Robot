@@ -18,30 +18,30 @@ void DestroyNodeDataAndContents(NodeData* node)
 	DestroyNodeData(node);
 }
 
-int GetNodeDataPosX(NodeData* node)
+int GetNodeDataPosX(const NodeData* node)
 {
 	return node->posx;
 	//return (node->pos) >> 16;
 }
-int GetNodeDataPosY(NodeData* node)
+int GetNodeDataPosY(const NodeData* node)
 {
 	return node->posy;
 	//return (node->pos) & 0x00FF;
 }
-int GetNodeDataIsChecked(NodeData* node)
+int GetNodeDataIsChecked(const NodeData* node)
 {
 	return node->isChecked;
 }
-int GetNodeDataAdjacentPaths(NodeData* node)
+int GetNodeDataAdjacentPaths(const NodeData* node)
 {
 	if (IsNodeDataValid(node)) { return node->num_adjacent_paths; }
 	return -1;
 }
-int GetNodeDataWeight(NodeData* node)
+int GetNodeDataWeight(const NodeData* node)
 {
 	return node->weight;
 }
-NodeListElement* GetNodeDataAdjacentNodeListElement(NodeData* node)
+NodeListElement* GetNodeDataAdjacentNodeListElement(const NodeData* node)
 {
 	return node->adjacent_nodes;
 }
@@ -75,19 +75,8 @@ void SetNodeDataWeight(NodeData* node, int weight)
 	node->weight = weight;
 }
 
-void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add)
+void AddToNodeDataAdjacentNode(NodeData* node, const NodeData* node_to_add)
 {
-	// If the list is empty...
-
-	// Start Node Logic
-	/*if (node_to_add == NULL)
-	{
-		node->adjacent_nodes = NULL;
-		return;
-	} else if (node == NULL) {
-		return;
-	}*/
-
 	if (!IsNodeDataValid(node)) { return; }
 	if (!IsNodeDataValid(node_to_add)) { return; }
 
