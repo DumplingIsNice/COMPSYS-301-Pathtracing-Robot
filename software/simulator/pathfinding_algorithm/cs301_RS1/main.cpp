@@ -16,7 +16,7 @@
 
 // TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
 // TESTMODE1: travel in a circle 
-#define TESTMODE0
+ //#define TESTMODE0
 //#define TESTMODE1
 
 #define TEST_MODE_MAP
@@ -70,7 +70,6 @@ float virtualCarLinearSpeed_seed;		// maximum speed of your robot in mm/s
 float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in degrees/s
 
 
-
 //added2021_2_22
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
@@ -83,16 +82,16 @@ int virtualCarInit()
 	cout << endl;
 	// Three options for robot's sensor placement
 	// Custom - read in ../config/sensorPos.txt
-	sensorPopulationAlgorithmID = PLACE_SENSORS_USER_DEFINED;
+	//sensorPopulationAlgorithmID = PLACE_SENSORS_USER_DEFINED;
 	
 	// Linear Distribution - Auto Linear distribution
-	//sensorPopulationAlgorithmID = PLACE_SENSORS_AUTO_SEP;
-	//num_sensors = 4;
+	sensorPopulationAlgorithmID = PLACE_SENSORS_AUTO_SEP;
+	num_sensors = 3;
 
 	// Linear Distribution - Custom Linear distribution
 	//sensorPopulationAlgorithmID = PLACE_SENSORS_SEP_USER_DEFINED;
-	num_sensors = 5;
-	sensorSeparation = 0.1;
+	//num_sensors = 3;
+	//sensorSeparation = 0.2;
 
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -107,8 +106,9 @@ int virtualCarInit()
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
 
-	currentCarPosCoord_X = floorToCoordX(currentCarPosFloor_X);
-	currentCarPosCoord_Y = floorToCoordY(currentCarPosFloor_Y);
+	currentCarPosCoord_X = cellToCoordX(1);
+	currentCarPosCoord_Y = cellToCoordY(7);
+	currentCarAngle = 0;
 
 #ifdef TESTMODE0
 	currentCarPosCoord_X = cellToCoordX(1);
@@ -129,7 +129,7 @@ int virtualCarInit()
 	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
 #endif
 
-	//myTimer.resetTimer();
+	myTimer.resetTimer();
 	return 1;
 }
 int virtualCarUpdate0()
@@ -164,6 +164,7 @@ int virtualCarUpdate0()
 
 		prev_position = coordToFloorX(currentCarPosCoord_X);
 		i++;
+	
 	}
 	else
 		setVirtualCarSpeed(0, 0);
@@ -214,7 +215,7 @@ int virtualCarUpdate()
 {
 	//{----------------------------------
 	//process sensor state information
-	float halfTiltRange = (num_sensors - 1.0) / 2.0;
+	float halfTiltRange = (num_sensors - 20) / 2.0;
 	float tiltSum = 0.0;
 	float blackSensorCount = 0.0;
 	for (int i = 0; i < num_sensors; i++)
@@ -231,11 +232,16 @@ int virtualCarUpdate()
 	////{------------------------------------
 	////updat linear and rotational speed based on sensor information
 	if (blackSensorCount > 0.0)
-		setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
-		//setVirtualCarSpeed(0.60, 40.0*tiltSum);
+	{
+		//setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
+		//setVirtualCarSpeed(virtualCarLinearSpeed_seed, 0);
+		setVirtualCarSpeed(0.5, 0);
+	}
 	else
-	    setVirtualCarSpeed(0.0, virtualCarAngularSpeed_seed);
-	//	//setVirtualCarSpeed(0.0, 40.0);
+	{
+		setVirtualCarSpeed(0.0, -90);
+	}
+		//setVirtualCarSpeed(0.0, 10.0);
 	////}---------------------------------------
 
 	//below is optional. just to provid some status report .
