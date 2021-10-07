@@ -43,14 +43,14 @@ typedef struct NodeList {
 NodeList* NewNodeList();
 
 // Create and allocate memory for a new blank NodeListElement.
-NodeListElement* NewNodeListElement(struct NodeData* node);
+NodeListElement* NewNodeListElement(const struct NodeData* node);
 
 
 // Return TRUE if valid (list != NULL)
-int IsListValid(NodeList* list);
+int IsListValid(const NodeList* list);
 
 // Return TRUE if valid (list != NULL)
-int IsElementValid(NodeListElement* element);
+int IsElementValid(const NodeListElement* element);
 
 // Append an element to a specific element. Not NodeList head/tail safe
 // (will not update them).
@@ -80,10 +80,10 @@ NodeListElement* RemoveListHead(NodeList* list);
 NodeListElement* RemoveListTail(NodeList* list);
 
 // Return the head (first element) of a NodeList.
-NodeListElement* GetListHead(NodeList* list);
+NodeListElement* GetListHead(const NodeList* list);
 
 // Return the tail (last element) of a NodeList.
-NodeListElement* GetListTail(NodeList* list);
+NodeListElement* GetListTail(const NodeList* list);
 
 
 // Free() the NodeListElement structs, but not the NodeData structs.

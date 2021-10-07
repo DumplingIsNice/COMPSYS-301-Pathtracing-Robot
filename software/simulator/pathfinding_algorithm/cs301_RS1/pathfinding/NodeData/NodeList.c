@@ -4,6 +4,7 @@
 #include "NodeList.h"
 
 #include "stdlib.h"		// malloc(), NULL
+#include "NodeDataOps.h" // for destroy contents function
 
 NodeList* NewNodeList()
 {
@@ -15,7 +16,7 @@ NodeList* NewNodeList()
 	return list;
 }
 
-NodeListElement* NewNodeListElement(struct NodeData* node)
+NodeListElement* NewNodeListElement(const struct NodeData* node)
 {
 	NodeListElement* element = malloc(sizeof(struct NodeListElement));
 	if (element == NULL) { return NULL; }
@@ -25,12 +26,12 @@ NodeListElement* NewNodeListElement(struct NodeData* node)
 	return element;
 }
 
-int IsListValid(NodeList* list)
+int IsListValid(const NodeList* list)
 {
 	return (list != NULL);
 }
 
-int IsElementValid(NodeListElement* element)
+int IsElementValid(const NodeListElement* element)
 {
 	return (element != NULL);
 }
@@ -115,12 +116,12 @@ NodeListElement* RemoveListTail(NodeList* list)
 	return to_remove;
 }
 
-NodeListElement* GetListHead(NodeList* list)
+NodeListElement* GetListHead(const NodeList* list)
 {
 	return list->head;
 }
 
-NodeListElement* GetListTail(NodeList* list)
+NodeListElement* GetListTail(const NodeList* list)
 {
 	return list->tail;
 }
@@ -136,6 +137,9 @@ void DestroyListElements(NodeList* list)
 		element = element->tail;
 		free(prev_element);
 	}
+
+	list->head = NULL;
+	list->tail = NULL;
 }
 
 void DestroyListElementsAndContents(NodeList* list)
@@ -145,11 +149,14 @@ void DestroyListElementsAndContents(NodeList* list)
 
 	while (IsElementValid(element)) {
 		// DestroyNodeData() could be used here, but would increase coupling (as it requires #include "NodeData.h").
-		if (element->node != NULL) { free(element->node); }
+		if (element->node != NULL) { DestroyNodeDataAndContents(element->node); }
 		prev_element = element;
 		element = element->tail;
 		free(prev_element);
 	}
+
+	list->head = NULL;
+	list->tail = NULL;
 }
 
 void DestroyList(NodeList* list)
