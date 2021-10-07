@@ -1,0 +1,55 @@
+numberOfOutputFiles 5
+collectCircleSamplePts 1
+
+cam_ID_num 1
+
+map_image_width 1228
+map_image_height 768
+
+benchmarkMode 0
+
+projectedAreaUL_x 0
+projectedAreaUL_y 0
+projectedAreaUR_x 2444
+projectedAreaUR_y 0
+projectedAreaLR_x 2444
+projectedAreaLR_y 1564
+projectedAreaLL_x 0
+projectedAreaLL_y 1564
+
+projectorFullScreenUpperLeftX 2000
+fullScreen 1
+
+robotDetectLowTH_adjust 20
+
+mazeHeight 15
+mazeWidth 19
+mazeRandSeed 21734235
+numRandomGhosts 5
+numAStarGhosts 5
+numSwingGhosts 5
+robotMarkerExt 70
+checkFoodExt 80
+checkGhostExt 80
+
+ghostPixelPerSecHigh  40
+ghostPixelPerSecLow   20
+robotPixelPerSec 100
+
+maxPacmanEatGhostTime 5
+numRandomSuperFood 8
+
+baudrate 57600
+rs232TransmitInterval 0.0667
+debug_RF_Transmission 1
+
+speedLogCounterInterval  7
+
+student_practice_mode 1
+writeLogFlag 1
+numDummyGhostInfo 3
+
+gameLevel 12
+simulateRobot 1
+drawFood 1
+drawGhost 1

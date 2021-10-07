@@ -1,0 +1,72 @@
+numberOfOutputFiles 6
+collectCircleSamplePts 0
+
+map_image_width 1228
+map_image_height 768
+
+cameraZ 14.7
+
+carSizeX_floor 140
+carSizeY_floor 90
+
+ini_virtualCarLinearSpeedFloor 130
+ini_currentCarPosFloor_X 1607
+ini_currentCarPosFloor_Y 782
+ini_virtualCarAngularSpeed_seed 40
+ini_currentCarAngle 30
+
+user_defined_robot_state_update_time_interval 0.5
+speed_log_update_multiply 5
+maxDarkDefValueTH 220
+mean 0.0
+stdErr 0.0
+benchmarkMode 0
+
+projectedAreaUL_x 0
+projectedAreaUL_y 0
+projectedAreaUR_x 2444
+projectedAreaUR_y 0
+projectedAreaLR_x 2444
+projectedAreaLR_y 1564
+projectedAreaLL_x 0
+projectedAreaLL_y 1564
+
+projectorFullScreenUpperLeftX 10
+fullScreen 0
+
+robotDetectLowTH_adjust 20
+
+mazeHeight 15
+mazeWidth 19
+mazeRandSeed 21734235
+numRandomGhosts 1
+numAStarGhosts 0
+numSwingGhosts 0
+robotMarkerExt 70
+checkFoodExt 80
+checkGhostExt 80
+
+ghostPixelPerSecHigh  40
+ghostPixelPerSecLow   20
+
+ghostCoordPerSecHigh 0.5
+ghostCoordPerSecLow 0.2
+
+robotPixelPerSec 100
+
+maxPacmanEatGhostTime 5
+numRandomSuperFood 6
+
+baudrate 57600
+rs232TransmitInterval 0.0667
+debug_RF_Transmission 1
+
+student_practice_mode 0
+writeLogFlag 1
+numDummyGhostInfo 3
+
+gameLevel 0
+simulateRobot 1
+drawFood 1
+drawGhost 1
+
