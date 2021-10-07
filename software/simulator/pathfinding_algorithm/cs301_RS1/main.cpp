@@ -16,7 +16,7 @@
 
 // TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
 // TESTMODE1: travel in a circle 
-//#define TESTMODE0
+#define TESTMODE0
 //#define TESTMODE1
 
 #define TEST_MODE_MAP
@@ -83,7 +83,7 @@ int virtualCarInit()
 	cout << endl;
 	// Three options for robot's sensor placement
 	// Custom - read in ../config/sensorPos.txt
-	sensorPopulationAlgorithmID = 2;
+	sensorPopulationAlgorithmID = PLACE_SENSORS_USER_DEFINED;
 	
 	// Linear Distribution - Auto Linear distribution
 	//sensorPopulationAlgorithmID = PLACE_SENSORS_AUTO_SEP;
@@ -91,8 +91,8 @@ int virtualCarInit()
 
 	// Linear Distribution - Custom Linear distribution
 	//sensorPopulationAlgorithmID = PLACE_SENSORS_SEP_USER_DEFINED;
-	//num_sensors = 2;
-	//sensorSeparation = 0.15;
+	num_sensors = 5;
+	sensorSeparation = 0.1;
 
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -105,6 +105,11 @@ int virtualCarInit()
 	//currentCarAngle = 90;//degree
 	//maxDarkDefValueTH = 20;
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
+
+	currentCarPosCoord_X = floorToCoordX(currentCarPosFloor_X);
+	currentCarPosCoord_Y = floorToCoordY(currentCarPosFloor_Y);
+
 #ifdef TESTMODE0
 	currentCarPosCoord_X = cellToCoordX(1);
 	currentCarPosCoord_Y = cellToCoordY(7);
@@ -124,10 +129,10 @@ int virtualCarInit()
 	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
 #endif
 
-	myTimer.resetTimer();
+	//myTimer.resetTimer();
 	return 1;
 }
-int virtualCarUpdate()
+int virtualCarUpdate0()
 {
 	static int i = 0;
 	static float prev_position = coordToFloorX(currentCarPosCoord_X);
@@ -205,7 +210,7 @@ int virtualCarUpdate()
 
 
 //------------------------------------------------------------------------------------------
-int virtualCarUpdate0()
+int virtualCarUpdate()
 {
 	//{----------------------------------
 	//process sensor state information
@@ -225,11 +230,11 @@ int virtualCarUpdate0()
 
 	////{------------------------------------
 	////updat linear and rotational speed based on sensor information
-	//if (blackSensorCount > 0.0)
-	//	setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
-	//	//setVirtualCarSpeed(0.60, 40.0*tiltSum);
-	//else
-	//    setVirtualCarSpeed(0.0, virtualCarAngularSpeed_seed);
+	if (blackSensorCount > 0.0)
+		setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
+		//setVirtualCarSpeed(0.60, 40.0*tiltSum);
+	else
+	    setVirtualCarSpeed(0.0, virtualCarAngularSpeed_seed);
 	//	//setVirtualCarSpeed(0.0, 40.0);
 	////}---------------------------------------
 
@@ -270,13 +275,14 @@ int main(int argc, char** argv)
 {
 
 #ifdef TEST_MODE_MAP
-	FindShortestPath();
-	PrintOutputMap();
-	PrintFinalMap();
-	CreateFinalMap();
+	//FindShortestPath();
+	//PrintOutputMap();
+	//PrintFinalMap();
+	//CreateFinalMap();
 #endif
 
-	//FungGlAppMainFuction(argc, argv);
+	FungGlAppMainFuction(argc, argv);
+	
 
 	return 0;
 }
