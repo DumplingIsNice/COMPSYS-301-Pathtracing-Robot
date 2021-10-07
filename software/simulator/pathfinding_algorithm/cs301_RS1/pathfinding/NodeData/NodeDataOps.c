@@ -66,6 +66,10 @@ void SetNodeDataAdjacentPaths(NodeData* node, int adj_paths)
 {
 	if (IsNodeDataValid(node)) { node->num_adjacent_paths = adj_paths; }
 }
+void IncrementNodeDataAdjacentpaths(NodeData* node)
+{
+	if (IsNodeDataValid(node)) { node->num_adjacent_paths = 1 + node->num_adjacent_paths; }
+}
 void SetNodeDataWeight(NodeData* node, int weight)
 {
 	node->weight = weight;
@@ -90,16 +94,22 @@ void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add)
 	if (!IsElementValid(node->adjacent_nodes)) {
 		// If list is empty...
 		node->adjacent_nodes = NewNodeListElement(node_to_add);
+
+		IncrementNodeDataAdjacentpaths(node);
 		return;
 	}
 	// Otherwise add a new node (if it is unique)...
 	NodeListElement* current_node = node->adjacent_nodes;
+	NodeListElement* prev_node = current_node;
 
-	while (IsElementValid(current_node->tail)) {
+	while (IsElementValid(current_node)) {
 		if (current_node->node == node_to_add) { return; }
+		prev_node = current_node;
 		current_node = current_node->tail;
 	}
-	Insert(current_node, NewNodeListElement(node_to_add));
+	Insert(prev_node, NewNodeListElement(node_to_add));
+
+	IncrementNodeDataAdjacentpaths(node);
 }
 
 #endif // !NODEDATAOPS_C

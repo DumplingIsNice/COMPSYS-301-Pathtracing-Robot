@@ -156,7 +156,6 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		NodeData* new_node = NewNodeData();
 		PopulateNodeData(instigating_node, new_node, posx, posy, TRUE);
 		AddToNodeDataAdjacentNode(instigating_node, new_node);
-		SetNodeDataAdjacentPaths(instigating_node, GetNodeDataAdjacentPaths(instigating_node) + 1);
 		AddToNodeQueue(new_node);
 		NodeMapSet(NodeMapGenKey(posx, posy), new_node);
 		return;
@@ -174,7 +173,6 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy)
 		NodeData* preexisting = NodeMapGet(NodeMapGenKey(posx, posy));
 		if (preexisting == NULL) { return; }
 		AddToNodeDataAdjacentNode(instigating_node, preexisting);
-		SetNodeDataAdjacentPaths(instigating_node, GetNodeDataAdjacentPaths(instigating_node) + 1);
 		
 		#ifdef WEIGHT_REBASING
 			StartRebase(preexisting, instigating_node);

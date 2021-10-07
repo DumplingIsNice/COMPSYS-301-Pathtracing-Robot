@@ -186,7 +186,7 @@ void GenerateDirectionQueue()
 		current = next;
 		next = next->tail;
 
-		AddDirection(prev->node, current->node, next->node);
+		if (GetNodeDataAdjacentPaths(next->node) >= 2) { AddDirection(prev->node, current->node, next->node); } // only find for intersection nodes
 	}
 
 	PrintDirectionQueue();
@@ -205,8 +205,6 @@ void GenerateDirectionQueue()
 		We perform similar logic on (current_pos - next_pos) to find the direction to take.
 		
 		We can then find the direction to take relative to the forward vector.
-		Must use LUT/switch case to decode, since there is no immediately apparent easy
-		way to derive relative direction from coords (I don't think vectors will work here).
 	*/
 }
 

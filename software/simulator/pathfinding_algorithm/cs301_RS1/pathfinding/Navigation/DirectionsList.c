@@ -48,9 +48,9 @@ void AddDirection(struct NodeData* prev_node, struct NodeData* current_node, str
 	int direction_delta_x = GetNodeDataPosX(next_node) - GetNodeDataPosX(current_node);
 	int direction_delta_y = GetNodeDataPosY(next_node) - GetNodeDataPosY(current_node);
 
-	printf("current_d_x = %d, current_d_y = %d || direction_d_x = %d, direction_d_y = %d ||    --->    ", current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
+	//printf("current_d_x = %d, current_d_y = %d || direction_d_x = %d, direction_d_y = %d ||    --->    ", current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
 	TakeRelativeDeltas(&current_delta_x, &current_delta_y, &direction_delta_x, &direction_delta_y);
-	printf("relative direction_d_x = %d, relative direction_d_y = %d\n", direction_delta_x, direction_delta_y);
+	//printf("relative direction_d_x = %d, relative direction_d_y = %d\n", direction_delta_x, direction_delta_y);
 	
 	DirectionListElement* element = NewDirectionListElement(CalculateDirection(&direction_delta_x, &direction_delta_y));
 	if (element == NULL) { return; }
