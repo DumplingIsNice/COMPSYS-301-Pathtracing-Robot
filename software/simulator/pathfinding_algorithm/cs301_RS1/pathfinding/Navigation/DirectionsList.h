@@ -24,12 +24,12 @@ DirectionListElement* GetDirectionQueue();
 DirectionListElement* NewDirectionListElement(Direction direction);
 
 // Append to the DirectionQueue
-void AddToDirectionQueue(DirectionListElement* element);
+void AddToDirectionQueue(const DirectionListElement* element);
 
 // Find the direction and add it to the DirectionQueue. Previous and current nodes should be the
 // two nodes travelled through by the robot directly before approaching the third (intersection)
 // node--the third node being the one we require the direction to.
-void AddDirection(struct NodeData* prev_node, struct NodeData* current_node, struct NodeData* next_node);
+void AddDirection(const struct NodeData* prev_node, const struct NodeData* current_node, const struct NodeData* next_node);
 
 // Align the direction_delta values from the global coordinate system (up/down/left/right) to
 // instead be relative to the current_delta forward direction (assuming movement along only one

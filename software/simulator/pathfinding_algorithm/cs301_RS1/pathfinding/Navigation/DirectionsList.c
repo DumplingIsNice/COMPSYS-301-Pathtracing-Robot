@@ -23,7 +23,7 @@ DirectionListElement* NewDirectionListElement(Direction direction)
 	return element;
 }
 
-void AddToDirectionQueue(DirectionListElement* element)
+void AddToDirectionQueue(const DirectionListElement* element)
 {
 	// @TODO: Optimise by using List instance so we can directly reference tail
 	if (GetDirectionQueue() == NULL) {
@@ -40,7 +40,7 @@ void AddToDirectionQueue(DirectionListElement* element)
 	return;
 }
 
-void AddDirection(struct NodeData* prev_node, struct NodeData* current_node, struct NodeData* next_node)
+void AddDirection(const struct NodeData* prev_node, const struct NodeData* current_node, const struct NodeData* next_node)
 {
 	int current_delta_x = GetNodeDataPosX(current_node) - GetNodeDataPosX(prev_node);		// +right, -left
 	int current_delta_y = GetNodeDataPosY(current_node) - GetNodeDataPosY(prev_node);		// +down, -up
