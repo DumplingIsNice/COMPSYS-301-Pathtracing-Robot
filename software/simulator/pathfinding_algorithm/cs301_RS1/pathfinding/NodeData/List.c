@@ -1,167 +1,167 @@
-#ifndef LIST_C
-#define LIST_C
-
-#include "List.h"
-
-#include "stdlib.h"		// malloc(), NULL
-
-List* NewList()
-{
-	List* list = malloc(sizeof(struct List));
-	if (list == NULL) { return NULL; }
-	// Initialise to non-garbage values:
-	list->head = NULL;
-	list->tail = NULL;
-	return list;
-}
-
-ListElement* NewListElement(void* data)
-{
-	ListElement* element = malloc(sizeof(struct ListElement));
-	if (element == NULL) { return NULL; }
-	// Initialise to non-garbage values:
-	element->tail = NULL;
-	element->data = data;
-	return element;
-}
-
-int IsListValid(List* list)
-{
-	return (list != NULL);
-}
-
-int IsElementValid(ListElement* element)
-{
-	return (element != NULL);
-}
-
-void Insert(ListElement* current, ListElement* add)
-{
-	add->tail = current->tail;
-	current->tail = add;
-	return;
-}
-
-ListElement* DetachNext(ListElement* preceding_element)
-{
-	ListElement* to_remove = preceding_element->tail;
-	preceding_element->tail = to_remove->tail;
-	to_remove->tail = NULL;
-	return to_remove;
-}
-
-void AppendToList(List* list, ListElement* element)
-{
-	if (IsElementValid(list->tail)) {
-		// If NodeList is not empty then add as normal...
-		Insert(list->tail, element);
-	}
-	else {
-		element->tail = NULL;
-	}
-	list->tail = element;
-
-	if (!IsElementValid(list->head)) {
-		list->head = element;	// If the only element in the list, assign as head too.
-	}
-}
-
-void PrependToList(List* list, ListElement* element)
-{
-	if (IsElementValid(list->head)) {
-		// If NodeList is not empty then link tail as normal...
-
-		if (!IsElementValid(list->tail)) {
-			// If there is only one element in the list then update tail...
-			list->tail = list->head;
-		}
-		element->tail = list->head;
-	}
-	else {
-		element->tail = NULL;
-	}
-	list->head = element;
-
-	if (!IsElementValid(list->tail)) {
-		list->tail = element;	// If this is the only element in the list, assign as tail too.
-	}
-}
-
-void InsertInList(List* list, ListElement* current, ListElement* add)
-{
-	if (current == list->tail) {
-		AppendToList(list, add);
-	}
-	else {
-		Insert(current, add);
-	}
-}
-
-ListElement* RemoveListHead(List* list)
-{
-	ListElement* to_remove = list->head;
-	list->head = to_remove->tail;
-	if (list->tail == to_remove) {
-		list->tail = to_remove->tail;		// Clean up if the list has only one element.
-	}
-	return to_remove;
-}
-
-ListElement* RemoveListTail(List* list)
-{
-	ListElement* to_remove = list->tail;
-	list->tail = to_remove->tail;
-	if (list->head == to_remove) {
-		list->head = to_remove->tail;			// Clean up if the list has only one element.
-	}
-	return to_remove;
-}
-
-ListElement* GetListHead(List* list)
-{
-	return list->head;
-}
-
-ListElement* GetListTail(List* list)
-{
-	return list->tail;
-}
-
-
-void DestroyListElements(List* list)
-{
-	ListElement* element = GetListHead(list);
-	ListElement* prev_element;
-
-	while (IsElementValid(element)) {
-		prev_element = element;
-		element = element->tail;
-		free(prev_element);
-	}
-}
-
-void DestroyListElementsAndContents(List* list)
-{
-	ListElement* element = GetListHead(list);
-	ListElement* prev_element;
-
-	while (IsElementValid(element)) {
-		// DestroyNodeData() could be used here, but would increase coupling (as it requires #include "NodeData.h").
-		if (element->data != NULL) { free(element->data); }
-		prev_element = element;
-		element = element->tail;
-		free(prev_element);
-	}
-}
-
-void DestroyList(List* list)
-{
-	if (IsListValid(list)) { free(list); }
-}
-
-void DestroyListElement(ListElement* element)
-{
-	if (IsElementValid(element)) { free(element); }
-}
-
-#endif // !LIST_C
+//#ifndef LIST_C
+//#define LIST_C
+//
+//#include "List.h"
+//
+//#include "stdlib.h"		// malloc(), NULL
+//
+//List* NewList()
+//{
+//	List* list = malloc(sizeof(struct List));
+//	if (list == NULL) { return NULL; }
+//	// Initialise to non-garbage values:
+//	list->head = NULL;
+//	list->tail = NULL;
+//	return list;
+//}
+//
+//ListElement* NewListElement(void* data)
+//{
+//	ListElement* element = malloc(sizeof(struct ListElement));
+//	if (element == NULL) { return NULL; }
+//	// Initialise to non-garbage values:
+//	element->tail = NULL;
+//	element->data = data;
+//	return element;
+//}
+//
+//int IsListValid(List* list)
+//{
+//	return (list != NULL);
+//}
+//
+//int IsElementValid(ListElement* element)
+//{
+//	return (element != NULL);
+//}
+//
+//void Insert(ListElement* current, ListElement* add)
+//{
+//	add->tail = current->tail;
+//	current->tail = add;
+//	return;
+//}
+//
+//ListElement* DetachNext(ListElement* preceding_element)
+//{
+//	ListElement* to_remove = preceding_element->tail;
+//	preceding_element->tail = to_remove->tail;
+//	to_remove->tail = NULL;
+//	return to_remove;
+//}
+//
+//void AppendToList(List* list, ListElement* element)
+//{
+//	if (IsElementValid(list->tail)) {
+//		// If NodeList is not empty then add as normal...
+//		Insert(list->tail, element);
+//	}
+//	else {
+//		element->tail = NULL;
+//	}
+//	list->tail = element;
+//
+//	if (!IsElementValid(list->head)) {
+//		list->head = element;	// If the only element in the list, assign as head too.
+//	}
+//}
+//
+//void PrependToList(List* list, ListElement* element)
+//{
+//	if (IsElementValid(list->head)) {
+//		// If NodeList is not empty then link tail as normal...
+//
+//		if (!IsElementValid(list->tail)) {
+//			// If there is only one element in the list then update tail...
+//			list->tail = list->head;
+//		}
+//		element->tail = list->head;
+//	}
+//	else {
+//		element->tail = NULL;
+//	}
+//	list->head = element;
+//
+//	if (!IsElementValid(list->tail)) {
+//		list->tail = element;	// If this is the only element in the list, assign as tail too.
+//	}
+//}
+//
+//void InsertInList(List* list, ListElement* current, ListElement* add)
+//{
+//	if (current == list->tail) {
+//		AppendToList(list, add);
+//	}
+//	else {
+//		Insert(current, add);
+//	}
+//}
+//
+//ListElement* RemoveListHead(List* list)
+//{
+//	ListElement* to_remove = list->head;
+//	list->head = to_remove->tail;
+//	if (list->tail == to_remove) {
+//		list->tail = to_remove->tail;		// Clean up if the list has only one element.
+//	}
+//	return to_remove;
+//}
+//
+//ListElement* RemoveListTail(List* list)
+//{
+//	ListElement* to_remove = list->tail;
+//	list->tail = to_remove->tail;
+//	if (list->head == to_remove) {
+//		list->head = to_remove->tail;			// Clean up if the list has only one element.
+//	}
+//	return to_remove;
+//}
+//
+//ListElement* GetListHead(List* list)
+//{
+//	return list->head;
+//}
+//
+//ListElement* GetListTail(List* list)
+//{
+//	return list->tail;
+//}
+//
+//
+//void DestroyListElements(List* list)
+//{
+//	ListElement* element = GetListHead(list);
+//	ListElement* prev_element;
+//
+//	while (IsElementValid(element)) {
+//		prev_element = element;
+//		element = element->tail;
+//		free(prev_element);
+//	}
+//}
+//
+//void DestroyListElementsAndContents(List* list)
+//{
+//	ListElement* element = GetListHead(list);
+//	ListElement* prev_element;
+//
+//	while (IsElementValid(element)) {
+//		// DestroyNodeData() could be used here, but would increase coupling (as it requires #include "NodeData.h").
+//		if (element->data != NULL) { free(element->data); }
+//		prev_element = element;
+//		element = element->tail;
+//		free(prev_element);
+//	}
+//}
+//
+//void DestroyList(List* list)
+//{
+//	if (IsListValid(list)) { free(list); }
+//}
+//
+//void DestroyListElement(ListElement* element)
+//{
+//	if (IsElementValid(element)) { free(element); }
+//}
+//
+//#endif // !LIST_C

@@ -16,10 +16,11 @@ DirectionListElement* GetDirectionQueue()
 
 DirectionListElement* NewDirectionListElement(Direction direction)
 {
-	DirectionListElement* element = malloc(sizeof(DirectionListElement));
+	DirectionListElement* element = malloc(sizeof(struct DirectionListElement));
 	if (element == NULL) { return NULL; }
 	element->tail = NULL;
 	element->direction = direction;
+	return element;
 }
 
 void AddToDirectionQueue(DirectionListElement* element)
@@ -47,9 +48,12 @@ void AddDirection(struct NodeData* prev_node, struct NodeData* current_node, str
 	int direction_delta_x = GetNodeDataPosX(next_node) - GetNodeDataPosX(current_node);
 	int direction_delta_y = GetNodeDataPosY(next_node) - GetNodeDataPosY(current_node);
 
-	TakeRelativeDeltas(current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
+	printf("current_d_x = %d, current_d_y = %d || direction_d_x = %d, direction_d_y = %d ||    --->    ", current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
+	TakeRelativeDeltas(&current_delta_x, &current_delta_y, &direction_delta_x, &direction_delta_y);
+	printf("relative direction_d_x = %d, relative direction_d_y = %d\n", direction_delta_x, direction_delta_y);
 	
-	DirectionListElement* element = NewDirectionListElement(CalculateDirection(direction_delta_x, direction_delta_y));
+	DirectionListElement* element = NewDirectionListElement(CalculateDirection(&direction_delta_x, &direction_delta_y));
+	if (element == NULL) { return; }
 	AddToDirectionQueue(element);
 }
 
@@ -58,6 +62,15 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 	// Assuming movement is only along one axis at a time...
 	if ((*current_delta_x & *current_delta_y) != 0) { printf("Error: movement along two axis.\n"); return; }
 	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return; }
+
+	// Automatically return forward if there is no change in direction.
+	// Note that we must do that here otherwise consecutive LEFT and RIGHT are not handled it correctly.
+	// WARNING: The equality operators assume that the current and direction delta are binary and equal in magnitude...if grid implementation is changed this will be wrong!
+	if ((*current_delta_x == *direction_delta_x) && (*current_delta_y == *direction_delta_y)) {
+		*direction_delta_x = 0;
+		*direction_delta_y = -1 * abs(*direction_delta_y);
+		return;
+	}
 
 	if (*current_delta_x != 0) {
 		if (*current_delta_x > 0) {
@@ -92,7 +105,7 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 Direction CalculateDirection(const int* direction_delta_x, const int* direction_delta_y)
 {
 	// Assuming movement is only along one axis at a time...
-	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return NULL; }
+	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return DEADEND; }
 
 	if (*direction_delta_x != 0) {
 		if (*direction_delta_x > 0) { return RIGHT; }
@@ -102,7 +115,7 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 		if (*direction_delta_y > 0) { return DEADEND; }
 		else { return UP; }
 	}
-	return NULL;
+	return DEADEND;	// should never be reached
 }
 
 void PrintDirectionQueue()

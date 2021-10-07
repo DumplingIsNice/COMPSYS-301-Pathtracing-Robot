@@ -42,5 +42,8 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 //
 void PrintDirectionQueue();
 
+//
+void DestroyDirectionQueueAndContents();
+
 #endif // !DIRECTIONSLIST_H
 

@@ -124,6 +124,11 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	#endif // DEBUG
 
 	/*
+		Generate Direction Queue
+	*/
+	GenerateDirectionQueue();
+
+	/*
 		Performance Overview
 	*/
 	printf("Total number of nodes evaluated: %d\n", nodes_evaluated_count);
@@ -181,7 +186,7 @@ void GenerateDirectionQueue()
 		current = next;
 		next = next->tail;
 
-		AddDirection(prev, current, next);
+		AddDirection(prev->node, current->node, next->node);
 	}
 
 	PrintDirectionQueue();
