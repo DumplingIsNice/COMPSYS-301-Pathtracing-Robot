@@ -19,9 +19,10 @@
 //#define TESTMODE1
 
 //#define TEST_MODE_MAP
+#define TESTSENSOR
 
-#define NITERATIONS 20
-#define STARTUPDELAY 5 //sec
+#define NITERATIONS 1
+#define STARTUPDELAY 2 //sec
 
 #include "mainFungGLAppEngin.h" //a must
 #include "mazeGen.h" //just include to use radnom number generation function
@@ -116,7 +117,7 @@ int virtualCarInit()
 	currentCarPosCoord_X = cellToCoordX(1);
 	currentCarPosCoord_Y = cellToCoordY(7);
 	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 130;
+	virtualCarLinearSpeedFloor = 70;
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
 #endif
 
@@ -124,11 +125,19 @@ int virtualCarInit()
 	currentCarPosCoord_X = cellToCoordX(8);
 	currentCarPosCoord_Y = cellToCoordY(7);
 	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 260; // mm/s
+	virtualCarLinearSpeedFloor = 0; // mm/s
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
 	virtualCarAngularSpeed_seed = 180;
 	cout << "updated virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
 	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
+#endif
+
+#ifdef TESTSENSOR
+	currentCarPosCoord_X = cellToCoordX(1);
+	currentCarPosCoord_Y = cellToCoordY(2);
+	currentCarAngle = 0;//degree
+	virtualCarLinearSpeedFloor = 70;
+	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
 #endif
 
 	myTimer.resetTimer();
@@ -207,6 +216,37 @@ int virtualCarUpdate()
 	}
 		
 #endif
+
+#ifdef TESTSENSOR
+	//{------------------------------------
+	// Rudenmentry self aligning system
+	// Alignment sensor located at back for least duration oscillation. 
+	// Prob Need to be fix condition to while the robot is under the travel straight command.
+	// Requires dynamic readjustment magnitude (PID??)
+		// Needs to be fast when center returns to path.
+	// Critical note: **We cannot turn on a dime**.
+	//updat linear and rotational speed based on sensor information
+
+	//static float alignAngularSpeed = 0.0;
+	//static float alignAccAngularSpeed = 2.0;
+
+	//if ((F_SENSOR == SENSE_FALSE) && (C_SENSOR == SENSE_FALSE))
+	//{
+	//	if (LA_SENSOR == SENSE_TRUE)
+	//		setVirtualCarSpeed(virtualCarLinearSpeed_seed, (alignAngularSpeed+=alignAccAngularSpeed));
+	//	else if (RA_SENSOR == SENSE_TRUE)
+	//		setVirtualCarSpeed(virtualCarLinearSpeed_seed, (alignAngularSpeed-=alignAccAngularSpeed));
+	//	else
+	//	{
+	//		setVirtualCarSpeed(virtualCarLinearSpeed_seed, -2*alignAngularSpeed);
+	//		alignAngularSpeed = 0.0;
+	//	}
+	//	printf("Angular Speed: %f\n", virtualCarAngularSpeed_seed);
+	//} 
+
+	//}---------------------------------------
+#endif // TEST_SENSOR
+
 	myTimer.resetTimer();
 
 	return 1;

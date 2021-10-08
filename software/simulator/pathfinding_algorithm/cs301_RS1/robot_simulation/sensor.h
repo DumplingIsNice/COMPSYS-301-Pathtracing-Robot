@@ -24,11 +24,26 @@ extern "C"
 #define LA_SENSOR   virtualCarSensorStates[4]
 #define RA_SENSOR   virtualCarSensorStates[5]
 
-static Directions directionsSensed;
+#define SENSE_TRUE  0
+#define SENSE_FALSE 1
 
-void CalcValidDirections(Directions* d);
+enum SenseState
+{
+    STRAIGHT, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
+    T_SEC, LEFT_BRANCH_T, RIGHT_BRANCH_T, CROSS_ROAD, NO_PATH
+};
+
 void InitDirectionSensed();
 Directions*  GetDirectionsSensed();
-void TestSensor();
+
+// Runs ensor FSM logic
+void SensorFSM();
+
+// Sensor handling example
+void HandleSensor();
+
+// Debug functions to print infomation to terminal
+void PrintSenseFSMState(SenseState s);
+void PrintSensorStates();
 
 #endif // SENSOR_H
