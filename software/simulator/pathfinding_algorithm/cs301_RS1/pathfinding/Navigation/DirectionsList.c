@@ -113,7 +113,7 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 	}
 	else {
 		if (*direction_delta_y > 0) { return DEADEND; }
-		else { return UP; }
+		else { return FORWARD; }
 	}
 	return DEADEND;	// should never be reached
 }
@@ -131,7 +131,7 @@ void PrintDirectionQueue()
 		switch (direction) {
 		case LEFT:			printf("%d. LEFT\n", count); break;
 		case RIGHT:			printf("%d. RIGHT\n", count); break;
-		case UP:			printf("%d. UP\n", count); break;
+		case FORWARD:			printf("%d. FORWARD\n", count); break;
 		default:			printf("%d. Warning: DEADEND\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
 		}
 

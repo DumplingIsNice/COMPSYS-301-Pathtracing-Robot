@@ -5,11 +5,19 @@
 	Directions List
 
 	A list of directions used by the robot to follow a given path through a maze.
-	The directions are relative to the current position of the car.
+	Direction vectors are initially calculated relative to global positioning,
+	before being adjusted such that the final DirectionQueue directions are
+	relative to the position of the robot as it travels through the maze.
+
+	Global positioning:
+		Left	: Left
+		Right	: Right
+		Forward	: Up
+		Deadend	: Down
 
 */
 
-typedef enum Direction {LEFT, RIGHT, UP, DEADEND} Direction;
+typedef enum Direction {LEFT, RIGHT, FORWARD, DEADEND} Direction;
 
 typedef struct DirectionListElement {
 	struct DirectionListElement*	tail;
