@@ -16,12 +16,14 @@
 
 // TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
 // TESTMODE1: travel in a circle 
- //#define TESTMODE0
+//#define TESTMODE0
 //#define TESTMODE1
+//#define TESTMODE2
+//#define TESTMODE3
 
 #define TEST_MODE_MAP
 
-#define NITERATIONS 20
+#define NITERATIONS 2
 #define STARTUPDELAY 5 //sec
 
 #include "mainFungGLAppEngin.h" //a must
@@ -98,19 +100,21 @@ int virtualCarInit()
 	//variables below can be initializes in config file,
 	//or you can uncomment them to override config file settings.
 	//----------------------------------------------
-	//virtualCarLinearSpeedFloor = 130;//mm
+	virtualCarLinearSpeedFloor = 130;//mm
+	currentCarPosCoord_X = cellToCoordX(1);
+	currentCarPosCoord_Y = cellToCoordY(7);
+	currentCarAngle = 0;
 
 	//virtualCarAngularSpeed_seed = 40;//degree
 	//currentCarAngle = 90;//degree
 	//maxDarkDefValueTH = 20;
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
+	virtualCarAngularSpeed_seed = 0;
+	
+	
 
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(7);
-	currentCarAngle = 0;
-
-#ifdef TESTMODE0
+#ifdef TESTMODE0 //go straight one cell
 	currentCarPosCoord_X = cellToCoordX(1);
 	currentCarPosCoord_Y = cellToCoordY(7);
 	currentCarAngle = 0;//degree
@@ -118,21 +122,42 @@ int virtualCarInit()
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
 #endif
 
-#ifdef TESTMODE1
-	currentCarPosCoord_X = cellToCoordX(8);
+#ifdef TESTMODE1 //turn left
+	currentCarPosCoord_X = cellToCoordX(1);
 	currentCarPosCoord_Y = cellToCoordY(7);
 	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 260; // mm/s
+	virtualCarLinearSpeedFloor = 0; // mm/s
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
-	virtualCarAngularSpeed_seed = 180;
+	virtualCarAngularSpeed_seed = 90;
 	cout << "updated virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
 	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
+#endif
+
+#ifdef TESTMODE2 //turn right
+	currentCarPosCoord_X = cellToCoordX(1);
+	currentCarPosCoord_Y = cellToCoordY(1);
+	currentCarAngle = 0;
+	virtualCarLinearSpeedFloor = 0; // mm/s
+	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
+	virtualCarAngularSpeed_seed = -90; 
+#endif
+
+#ifdef TESTMODE3 //turn 180
+	currentCarPosCoord_X = cellToCoordX(3);
+	currentCarPosCoord_Y = cellToCoordY(7);
+	currentCarAngle = 0;
+	virtualCarLinearSpeedFloor = 0; // mm/s
+	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
+	virtualCarAngularSpeed_seed = 180;
 #endif
 
 	myTimer.resetTimer();
 	return 1;
 }
-int virtualCarUpdate0()
+
+
+
+int virtualCarUpdate()
 {
 	static int i = 0;
 	static float prev_position = coordToFloorX(currentCarPosCoord_X);
@@ -204,6 +229,56 @@ int virtualCarUpdate0()
 	}
 		
 #endif
+
+#ifdef TESTMODE2
+	if (i < NITERATIONS)
+	{
+		//		setVirtualCarSpeed(virtualCarLinearSpeed_seed * 0.10, 360/10);
+		virtualCarLinearSpeed = virtualCarLinearSpeed_seed;
+		virtualCarAngularSpeed = virtualCarAngularSpeed_seed;
+		cout << "=====================================" << endl;
+		cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << " with angular speed_seed: " << virtualCarAngularSpeed_seed << endl;
+
+		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
+		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
+		cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
+		cout << "-----------------------------------------" << endl;
+
+		prev_position = coordToFloorX(currentCarPosCoord_X);
+		i++;
+}
+	else
+	{
+		setVirtualCarSpeed(0, 0);
+		if (i == NITERATIONS)
+		{
+			cout << "=====================================" << endl;
+			cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << endl;
+
+			cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
+			cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
+			cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
+			cout << "-----------------------------------------" << endl;
+		}
+		i++;
+	}
+
+#endif
+
+#ifdef TESTMODE3
+	if (i < NITERATIONS)
+	{
+		virtualCarLinearSpeed = virtualCarLinearSpeed_seed;
+		virtualCarAngularSpeed = virtualCarAngularSpeed_seed;
+		i++;
+	} 
+	else
+	{
+		setVirtualCarSpeed(0, 0);
+		currentCarAngle = 180;
+	}
+#endif // TESTMODE3
+
 	myTimer.resetTimer();
 
 	return 1;
@@ -211,7 +286,7 @@ int virtualCarUpdate0()
 
 
 //------------------------------------------------------------------------------------------
-int virtualCarUpdate()
+int virtualCarUpdate0()
 {
 	//{----------------------------------
 	//process sensor state information
@@ -227,20 +302,29 @@ int virtualCarUpdate()
 			blackSensorCount += 1.0;
 		}
 	}
+	int count = 0;
+	if (count < 3) {
+		setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed);
+		count++;
+	}else{
+		setVirtualCarSpeed(0, 0);
+	}
+	count = 0;
+	
     //}------------------------------------
 
 	////{------------------------------------
 	////updat linear and rotational speed based on sensor information
-	if (blackSensorCount > 0.0)
-	{
+	//if (blackSensorCount > 0.0)
+	//{
 		//setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
 		//setVirtualCarSpeed(virtualCarLinearSpeed_seed, 0);
-		setVirtualCarSpeed(0.5, 0);
-	}
-	else
-	{
-		setVirtualCarSpeed(0.0, -90);
-	}
+		//setVirtualCarSpeed(0.5, 0);
+	//}
+	//else
+	//{
+		//setVirtualCarSpeed(0.0, -90);
+	//}
 		//setVirtualCarSpeed(0.0, 10.0);
 	////}---------------------------------------
 
