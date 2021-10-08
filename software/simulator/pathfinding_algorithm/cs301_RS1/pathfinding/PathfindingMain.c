@@ -145,7 +145,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	return;
 }
 
-int PopulateFinalQueue(NodeData* final_node) {
+int PopulateFinalQueue(const NodeData* final_node) {
 	int final_path_length = 0;
 	NodeData* next_node = final_node;
 

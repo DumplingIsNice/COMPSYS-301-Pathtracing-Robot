@@ -17,7 +17,7 @@ void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 	PrependToList(NodeQueue, element);
 }
 
-int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+int CalculateNodeWeight(const NodeData* instigating_node, const NodeData* node, int goal_x, int goal_y)
 {
 	int g = 1;
 
@@ -51,7 +51,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 		}
 	}
 	#else
-	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	NodeData* FindNextNodeInFinalPath(const NodeData* node)
 	{
 		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 			// Return the first NodeData in the list (the instigating node):
@@ -74,7 +74,7 @@ void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 	AppendToList(NodeQueue, element);
 }
 
-int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+int CalculateNodeWeight(const NodeData* instigating_node, const NodeData* node, int goal_x, int goal_y)
 {
 	int g = 1;
 
@@ -108,7 +108,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 		}
 	}
 	#else
-	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	NodeData* FindNextNodeInFinalPath(const NodeData* node)
 	{
 		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 			// Return the first NodeData in the list (the instigating node):
@@ -155,7 +155,7 @@ void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 
 }
 
-int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+int CalculateNodeWeight(const NodeData* instigating_node, const NodeData* node, int goal_x, int goal_y)
 {
 	int h = 0;
 	int g = 1;
@@ -171,7 +171,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	return h + g;
 }
 
-NodeData* FindNextNodeInFinalPath(NodeData* node)
+NodeData* FindNextNodeInFinalPath(const NodeData* node)
 {
 	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 		// Return the NodeData with the lowest weight in the list:
