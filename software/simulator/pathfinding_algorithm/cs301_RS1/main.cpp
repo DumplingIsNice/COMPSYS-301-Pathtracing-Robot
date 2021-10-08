@@ -19,7 +19,7 @@
 //#define TESTMODE0
 //#define TESTMODE1
 //#define TESTMODE2
-//#define TESTMODE3
+#define TESTMODE3
 
 #define TEST_MODE_MAP
 
@@ -84,11 +84,11 @@ int virtualCarInit()
 	cout << endl;
 	// Three options for robot's sensor placement
 	// Custom - read in ../config/sensorPos.txt
-	//sensorPopulationAlgorithmID = PLACE_SENSORS_USER_DEFINED;
+	sensorPopulationAlgorithmID = PLACE_SENSORS_USER_DEFINED;
 	
 	// Linear Distribution - Auto Linear distribution
-	sensorPopulationAlgorithmID = PLACE_SENSORS_AUTO_SEP;
-	num_sensors = 3;
+	//sensorPopulationAlgorithmID = PLACE_SENSORS_AUTO_SEP;
+	//num_sensors = 3;
 
 	// Linear Distribution - Custom Linear distribution
 	//sensorPopulationAlgorithmID = PLACE_SENSORS_SEP_USER_DEFINED;
