@@ -27,6 +27,8 @@ Directions* GetDirectionsSensed()
 void HandleSensor()
 {
     SensorFSM();
+
+    // Debug information
     PrintDirections(GetDirectionsSensed());
 }
 
@@ -63,6 +65,7 @@ void SensorFSM()
             }
         }
     }
+    // Exit descerning for turns
     else {
         if (F_SENSOR == SENSE_TRUE) {
             currentState = STRAIGHT;
@@ -121,7 +124,7 @@ void SensorFSM()
         break;
     }
 
-    // Debig information
+    // Debug information
     printf("Current State is: ");
     PrintSenseFSMState(currentState);
     printf("Next State is: ");

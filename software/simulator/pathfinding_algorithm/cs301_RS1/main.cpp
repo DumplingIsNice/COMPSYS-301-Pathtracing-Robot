@@ -158,7 +158,7 @@ int virtualCarUpdate()
 			return 1;
 	}
 
-	TestSensor();
+	HandleSensor();
 
 #ifdef TESTMODE0
 	// run to N lops to measure distance travelled in X direction
