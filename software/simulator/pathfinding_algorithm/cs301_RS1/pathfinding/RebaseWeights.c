@@ -10,7 +10,7 @@
 static RebaseListElement* RebaseWeightQueueHead = NULL;
 
 
-RebaseListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeData* to_rebase)
+RebaseListElement* NewRebaseListElement(const struct NodeData* rebased, const struct NodeData* to_rebase)
 {
 	RebaseListElement* element = malloc(sizeof(struct RebaseListElement));
 	if (element == NULL) { return NULL; }
@@ -56,7 +56,7 @@ void RebaseWeight(RebaseListElement* element)
 	}
 }
 
-void AddToRebaseWeightQueue(RebaseListElement* element)
+void AddToRebaseWeightQueue(const RebaseListElement* element)
 {
 	if (RebaseWeightQueueHead == NULL) {
 		// Queue has no elements...

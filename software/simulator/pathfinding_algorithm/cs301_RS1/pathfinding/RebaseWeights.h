@@ -21,7 +21,7 @@ typedef struct RebaseListElement {
 } RebaseListElement;
 
 
-RebaseListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeData* to_rebase);
+RebaseListElement* NewRebaseListElement(const struct NodeData* rebased, const struct NodeData* to_rebase);
 
 void DestroyRebaseListElement(RebaseListElement* element);
 
@@ -33,7 +33,7 @@ void StartRebase(struct NodeData* alternate, struct NodeData* instigating);
 void RebaseWeight(RebaseListElement* element);
 
 // Append to RebaseWeightQueue
-void AddToRebaseWeightQueue(RebaseListElement* element);
+void AddToRebaseWeightQueue(const RebaseListElement* element);
 
 // Detach and return the head of the RebaseWeightQueue.
 RebaseListElement* GetNextinRebaseWeightQueue();
