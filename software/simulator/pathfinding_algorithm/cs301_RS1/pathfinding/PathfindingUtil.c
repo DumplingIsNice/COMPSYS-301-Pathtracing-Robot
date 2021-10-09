@@ -4,6 +4,7 @@
 #include "PathfindingUtil.h"
 
 #include "stdio.h"
+#include "NodeData/List.h"
 #include "PathfindingAlgorithm.h"
 #include "NodeData/NodeDataOps.h"
 #include "FileUtility/ReadMap.h"

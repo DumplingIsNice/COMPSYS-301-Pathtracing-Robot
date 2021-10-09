@@ -19,20 +19,18 @@
 
 typedef enum Direction {LEFT, RIGHT, FORWARD, DEADEND} Direction;
 
-typedef struct DirectionListElement {
-	struct DirectionListElement*	tail;
-	Direction						direction;
-} DirectionListElement;
-
 
 // Get the head of the DirectionQueue
-DirectionListElement* GetDirectionQueue();
+struct List* GetDirectionQueue();
+
+// Instance in memory to use with List.h pointers
+Direction* NewDirection(Direction direction);
 
 //
-DirectionListElement* NewDirectionListElement(Direction direction);
+struct ListElement* NewDirectionListElement(Direction direction);
 
 // Append to the DirectionQueue
-void AddToDirectionQueue(DirectionListElement* element);
+void AddToDirectionQueue(struct ListElement* element);
 
 // Find the direction and add it to the DirectionQueue. Previous and current nodes should be the
 // two nodes travelled through by the robot directly before approaching the third (intersection)
