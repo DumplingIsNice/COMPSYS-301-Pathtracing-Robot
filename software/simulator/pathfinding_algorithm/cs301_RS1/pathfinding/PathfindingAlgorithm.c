@@ -4,7 +4,7 @@
 #include "PathfindingAlgorithm.h"
 
 #include <stdlib.h>	// for abs()
-#include "NodeData/NodeList.h"
+#include "NodeData/List.h"
 #include "NodeData/NodeDataOps.h"
 #include "PathfindingMain.h"
 
@@ -12,12 +12,12 @@
 	DEPTH-FIRST
 */
 #ifdef DEPTHFIRST
-void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
+void InsertInNodeQueue(List* NodeQueue, ListElement* element)
 {
 	PrependToList(NodeQueue, element);
 }
 
-int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+int CalculateNodeWeight(const NodeData* instigating_node, const NodeData* node, int goal_x, int goal_y)
 {
 	int g = 1;
 
@@ -34,7 +34,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	{
 		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 			// Return the NodeData with the lowest weight in the list:
-			NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+			ListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
 			NodeData* lowest_weight_node = current_element->node;
 
 			while (IsElementValid(current_element)) {
@@ -51,7 +51,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 		}
 	}
 	#else
-	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	NodeData* FindNextNodeInFinalPath(const NodeData* node)
 	{
 		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 			// Return the first NodeData in the list (the instigating node):
@@ -69,12 +69,12 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	BREADTH-FIRST
 */
 #ifdef BREADTHFIRST
-void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
+void InsertInNodeQueue(List* NodeQueue, ListElement* element)
 {
 	AppendToList(NodeQueue, element);
 }
 
-int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+int CalculateNodeWeight(const NodeData* instigating_node, const NodeData* node, int goal_x, int goal_y)
 {
 	int g = 1;
 
@@ -91,7 +91,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	{
 		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 			// Return the NodeData with the lowest weight in the list:
-			NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+			ListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
 			NodeData* lowest_weight_node = current_element->node;
 
 			while (IsElementValid(current_element)) {
@@ -108,7 +108,7 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 		}
 	}
 	#else
-	NodeData* FindNextNodeInFinalPath(NodeData* node)
+	NodeData* FindNextNodeInFinalPath(const NodeData* node)
 	{
 		if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 			// Return the first NodeData in the list (the instigating node):
@@ -126,12 +126,12 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	A*
 */
 #ifdef ASTAR
-void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
+void InsertInNodeQueue(List* NodeQueue, ListElement* element)
 {
 	// A*/Dijkstra:
 	// Insert in list, sorted from lowest weight to highest weight.
-	NodeListElement* current_element = GetListHead(NodeQueue);
-	NodeListElement* prev_element = NULL;
+	ListElement* current_element = GetListHead(NodeQueue);
+	ListElement* prev_element = NULL;
 
 	// Protect start node case
 	if (!IsElementValid(current_element))
@@ -155,7 +155,7 @@ void InsertInNodeQueue(NodeList* NodeQueue, NodeListElement* element)
 
 }
 
-int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, int goal_y)
+int CalculateNodeWeight(const NodeData* instigating_node, const NodeData* node, int goal_x, int goal_y)
 {
 	int h = 0;
 	int g = 1;
@@ -171,11 +171,11 @@ int CalculateNodeWeight(NodeData* instigating_node, NodeData* node, int goal_x, 
 	return h + g;
 }
 
-NodeData* FindNextNodeInFinalPath(NodeData* node)
+NodeData* FindNextNodeInFinalPath(const NodeData* node)
 {
 	if (IsElementValid(GetNodeDataAdjacentNodeListElement(node))) {
 		// Return the NodeData with the lowest weight in the list:
-		NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+		ListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
 		NodeData* lowest_weight_node = current_element->node;
 
 		while (IsElementValid(current_element)) {

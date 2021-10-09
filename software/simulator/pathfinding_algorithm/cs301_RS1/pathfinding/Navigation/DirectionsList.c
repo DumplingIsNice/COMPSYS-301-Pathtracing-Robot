@@ -3,44 +3,37 @@
 
 #include "DirectionsList.h"
 
+#include "../NodeData/List.h"
 #include "../NodeData/NodeDataOps.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-static DirectionListElement* DirectionQueue = NULL;
+static List DirectionQueue = { .head = NULL, .tail = NULL };
 
-DirectionListElement* GetDirectionQueue()
+List* GetDirectionQueue()
 {
-	return DirectionQueue;
+	return &DirectionQueue;
 }
 
-DirectionListElement* NewDirectionListElement(Direction direction)
+Direction* NewDirection(Direction direction)
 {
-	DirectionListElement* element = malloc(sizeof(struct DirectionListElement));
-	if (element == NULL) { return NULL; }
-	element->tail = NULL;
-	element->direction = direction;
-	return element;
+	Direction* new_direction = malloc(sizeof(Direction));
+	if (new_direction == NULL) { return NULL; }
+	*new_direction = direction;
+	return new_direction;
 }
 
-void AddToDirectionQueue(DirectionListElement* element)
+ListElement* NewDirectionListElement(Direction direction)
 {
-	// @TODO: Optimise by using List instance so we can directly reference tail
-	if (GetDirectionQueue() == NULL) {
-		DirectionQueue = element;
-		return;
-	}
-
-	DirectionListElement* current = GetDirectionQueue();
-	while (current->tail != NULL) {
-		current = current->tail;
-	}
-	// current is the last element in the queue, so append element...
-	current->tail = element;
-	return;
+	return NewListElement(NewDirection(direction));
 }
 
-void AddDirection(struct NodeData* prev_node, struct NodeData* current_node, struct NodeData* next_node)
+void AddToDirectionQueue(ListElement* element)
+{
+	AppendToList(GetDirectionQueue(), element);
+}
+
+void AddDirection(const struct NodeData* prev_node, const struct NodeData* current_node, const struct NodeData* next_node)
 {
 	int current_delta_x = GetNodeDataPosX(current_node) - GetNodeDataPosX(prev_node);		// +right, -left
 	int current_delta_y = GetNodeDataPosY(current_node) - GetNodeDataPosY(prev_node);		// +down, -up
@@ -52,7 +45,7 @@ void AddDirection(struct NodeData* prev_node, struct NodeData* current_node, str
 	TakeRelativeDeltas(&current_delta_x, &current_delta_y, &direction_delta_x, &direction_delta_y);
 	//printf("relative direction_d_x = %d, relative direction_d_y = %d\n", direction_delta_x, direction_delta_y);
 	
-	DirectionListElement* element = NewDirectionListElement(CalculateDirection(&direction_delta_x, &direction_delta_y));
+	ListElement* element = NewDirectionListElement(CalculateDirection(&direction_delta_x, &direction_delta_y));
 	if (element == NULL) { return; }
 	AddToDirectionQueue(element);
 }
@@ -113,7 +106,7 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 	}
 	else {
 		if (*direction_delta_y > 0) { return DEADEND; }
-		else { return UP; }
+		else { return FORWARD; }
 	}
 	return DEADEND;	// should never be reached
 }
@@ -121,17 +114,17 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 void PrintDirectionQueue()
 {
 	printf("DirectionQueue Contents:\n");
-	DirectionListElement* element = GetDirectionQueue();
+	ListElement* element = GetListHead(GetDirectionQueue());
 	int count = 0;
 
 	while (element != NULL) {
 		count++;
 
-		Direction direction = element->direction;
+		Direction direction = *(Direction*)(element->node);
 		switch (direction) {
 		case LEFT:			printf("%d. LEFT\n", count); break;
 		case RIGHT:			printf("%d. RIGHT\n", count); break;
-		case UP:			printf("%d. UP\n", count); break;
+		case FORWARD:			printf("%d. FORWARD\n", count); break;
 		default:			printf("%d. Warning: DEADEND\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
 		}
 
@@ -143,15 +136,7 @@ void PrintDirectionQueue()
 
 void DestroyDirectionQueueAndContents()
 {
-	DirectionListElement* element = GetDirectionQueue();
-	DirectionListElement* next_element = NULL;
-	DirectionQueue = NULL;
-
-	while (element != NULL) {
-		next_element = element->tail;
-		free(element);
-		element = next_element;
-	}
+	DestroyListElementsAndImmediateContents(GetDirectionQueue());
 }
 
 #endif // !DIRECTIONSLIST_C

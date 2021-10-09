@@ -23,12 +23,12 @@
 
 // Add a NodeListElement to the NodeQueue.
 // The insertion position in the NodeQueue depends on the algorithm.
-void InsertInNodeQueue(struct NodeList* NodeQueue, struct NodeListElement* element);
+void InsertInNodeQueue(struct List* NodeQueue, struct ListElement* element);
 
 // Used for weight-based algorithms (A*, Dijkstra).
-int CalculateNodeWeight(struct NodeData* instigating_node, struct NodeData* node, int goal_x, int goal_y);
+int CalculateNodeWeight(const struct NodeData* instigating_node, const struct NodeData* node, int goal_x, int goal_y);
 
 // Return the most suitable NodeData from adjacent_nodes list.
-struct NodeData* FindNextNodeInFinalPath(struct NodeData* node);
+struct NodeData* FindNextNodeInFinalPath(const struct NodeData* node);
 
 #endif // !PATHFINDING_ALGORITHM_H

@@ -32,7 +32,7 @@ void CleanUpFindShortestPath()
 	// Free all NodeData values:
 	NodeMapClear();
 
-	// Free all direction queue:
+	// Free all DirectionQueue elements and their Direction enums.
 	DestroyDirectionQueueAndContents();
 }
 
@@ -43,6 +43,9 @@ void FindShortestPathTest()
 
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 {
+	CleanUpFindShortestPath(); // ensure no pre-existing values remain
+
+
 	// Read map and set up goal location:
 	ReadMapFile(MAP_NAME);
 	SetMapParameters(goal_x, goal_y, start_x, start_y);
@@ -56,8 +59,8 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 
 	// Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells) 
 	// until goal is reached:
-	NodeListElement*	current_node_element	= NULL;
-	NodeData* current_node = NULL;
+	//ListElement* current_node_element = NULL;
+	//NodeData* current_node = NULL;
 	NodeData* final_node = NULL;
 
 	/*
@@ -65,9 +68,9 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	*/
 	while (!IsNodeQueueEmpty())
 	{
-		current_node_element = ExtractNextInNodeQueue();
+		ListElement* current_node_element = ExtractNextInNodeQueue();
 		EvaluateAdjacentCells(current_node_element->node);
-		current_node = current_node_element->node;
+		NodeData* current_node = current_node_element->node;
 
 		#ifdef DEBUG
 			printf("### Iteration i: %d ###\n", nodes_evaluated_count);
@@ -108,14 +111,15 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	*/
 	#ifdef DEBUG
 		// Process final output from FinalQueue to FinalMap
-		while (!IsFinalQueueEmpty())
+		ListElement* current_node_element = GetListHead(GetFinalQueue());
+		while (IsElementValid(current_node_element))
 		{
-			current_node_element = ExtractNextInFinalQueue();
-			current_node = current_node_element->node;
+			NodeData* current_node = current_node_element->node;
 
 			WriteFinalMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
-
 			WriteOutputMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
+
+			current_node_element = current_node_element->tail;
 		}
 
 		PrintOutputMap();
@@ -176,9 +180,10 @@ void GenerateDirectionQueue()
 {
 	// At least three nodes must be present in a path for it not to be a straight line.
 	// Thus a minimum of three nodes are required to calculate a new direction.
-	NodeListElement* next = GetListHead(GetFinalQueue())->tail;
-	NodeListElement* current = GetListHead(GetFinalQueue());
-	NodeListElement* prev = NULL;
+	//if (!IsElementValid(GetListHead(GetFinalQueue()))) { return; }	// if we are using ANALYTIC_VARIANT
+	ListElement* next = GetListHead(GetFinalQueue())->tail;
+	ListElement* current = GetListHead(GetFinalQueue());
+	ListElement* prev = NULL;
 	
 
 	while (IsElementValid(next->tail)) {
@@ -186,7 +191,7 @@ void GenerateDirectionQueue()
 		current = next;
 		next = next->tail;
 
-		if (GetNodeDataAdjacentPaths(next->node) > 2) { AddDirection(prev->node, current->node, next->node); } // only find for intersection nodes (where there must be more than 2 prev/next nodes)
+		if (GetNodeDataAdjacentPaths(current->node) > 2) { AddDirection(prev->node, current->node, next->node); } // only find for intersection nodes (where there must be more than 2 prev/next nodes)
 	}
 
 	PrintDirectionQueue();

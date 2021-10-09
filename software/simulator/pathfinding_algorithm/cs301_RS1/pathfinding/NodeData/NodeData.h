@@ -22,11 +22,11 @@ typedef struct NodeData {
 	int isChecked;
 	int num_adjacent_paths;
 	int weight;
-	struct NodeListElement* adjacent_nodes;
+	struct ListElement* adjacent_nodes;
 } NodeData;
 
 // Returns true if != NULL.
-int IsNodeDataValid(NodeData* node);
+int IsNodeDataValid(const NodeData* node);
 
 // Create and allocate memory for a blank NodeData.
 NodeData* NewNodeData();

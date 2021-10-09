@@ -5,30 +5,39 @@
 
 #include <stdlib.h>
 #include "NodeData/NodeDataOps.h"
-#include "NodeData/NodeList.h"
+#include "NodeData/List.h"
 
-static RebaseListElement* RebaseWeightQueueHead = NULL;
+static List RebaseWeightQueue = { .head = NULL, .tail = NULL };
 
 
-RebaseListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeData* to_rebase)
+struct RebaseData* NewRebaseData(struct NodeData* rebased, struct NodeData* to_rebase)
 {
-	RebaseListElement* element = malloc(sizeof(struct RebaseListElement));
-	if (element == NULL) { return NULL; }
-	element->tail = NULL;
-	element->rebased = rebased;
-	element->to_rebase = to_rebase;
-	return element;
+	RebaseData* data = malloc(sizeof(struct RebaseData));
+	if (data == NULL) { return NULL; }
+	data->rebased = rebased;
+	data->to_rebase = to_rebase;
+	return data;
 }
 
-void DestroyRebaseListElement(RebaseListElement* element)
+ListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeData* to_rebase)
 {
-	if (element != NULL) { free(element); }
+	return NewListElement(NewRebaseData(rebased, to_rebase));
+}
+
+void DestroyRebaseListElement(ListElement* element)
+{
+	if (IsElementValid(element)) {
+		RebaseData* data = (RebaseData*)(element->node);
+		if (data != NULL) { free(data); }
+
+		DestroyListElement(element);
+	}
 }
 
 
 void StartRebase(struct NodeData* alternate, struct NodeData* instigating)
 {
-	RebaseListElement* new_rebase = NewRebaseListElement(alternate, instigating);
+	ListElement* new_rebase = NewRebaseListElement(alternate, instigating);
 	RebaseWeight(new_rebase);
 
 	while (!IsRebaseWeightQueueEmpty()) {
@@ -38,54 +47,37 @@ void StartRebase(struct NodeData* alternate, struct NodeData* instigating)
 	}
 }
 
-void RebaseWeight(RebaseListElement* element)
+void RebaseWeight(ListElement* element)
 {
-	NodeData* rebased = element->rebased;
-	NodeData* to_rebase = element->to_rebase;
+	NodeData* rebased = ((RebaseData*)(element->node))->rebased;
+	NodeData* to_rebase = ((RebaseData*)(element->node))->to_rebase;
 
 	if (GetNodeDataWeight(to_rebase) > (GetNodeDataWeight(rebased) + 1)) {
 		SetNodeDataWeight(to_rebase, GetNodeDataWeight(rebased) + 1);
 
 		// Queue all nodes in adjacent_nodes to also be checked for rebasing.
-		NodeListElement* element = GetNodeDataAdjacentNodeListElement(to_rebase);
+		ListElement* element = GetNodeDataAdjacentNodeListElement(to_rebase);
 		while (IsElementValid(element)) {
-			RebaseListElement* new_rebase = NewRebaseListElement(to_rebase, element->node);
+			ListElement* new_rebase = NewRebaseListElement(to_rebase, element->node);
 			AddToRebaseWeightQueue(new_rebase);
 			element = element->tail;
 		}
 	}
 }
 
-void AddToRebaseWeightQueue(RebaseListElement* element)
+void AddToRebaseWeightQueue(ListElement* element)
 {
-	if (RebaseWeightQueueHead == NULL) {
-		// Queue has no elements...
-		RebaseWeightQueueHead = element;
-	}
-	else {
-		// Append...
-		RebaseListElement* next = RebaseWeightQueueHead;
-		RebaseListElement* prev = next;
-		while (next != NULL) {
-			prev = next;
-			next = next->tail;
-		}
-		prev->tail = element;
-	}
+	AppendToList(&RebaseWeightQueue, element);
 }
 
-RebaseListElement* GetNextinRebaseWeightQueue()
+ListElement* GetNextinRebaseWeightQueue()
 {
-	if (RebaseWeightQueueHead == NULL) { return NULL; }
-
-	RebaseListElement* head = RebaseWeightQueueHead;
-	RebaseWeightQueueHead = head->tail;
-	return head;
+	return RemoveListHead(&RebaseWeightQueue);
 }
 
 int IsRebaseWeightQueueEmpty()
 {
-	return (RebaseWeightQueueHead == NULL);
+	return !IsElementValid(GetListHead(&RebaseWeightQueue));
 }
 
 

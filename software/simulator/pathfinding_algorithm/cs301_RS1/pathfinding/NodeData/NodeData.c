@@ -5,7 +5,7 @@
 
 #include "stdlib.h"
 
-int IsNodeDataValid(NodeData* node)
+int IsNodeDataValid(const NodeData* node)
 {
 	return (node != NULL);
 }
