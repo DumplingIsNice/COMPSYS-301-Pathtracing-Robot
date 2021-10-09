@@ -43,6 +43,9 @@ void FindShortestPathTest()
 
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 {
+	CleanUpFindShortestPath(); // ensure no pre-existing values remain
+
+
 	// Read map and set up goal location:
 	ReadMapFile(MAP_NAME);
 	SetMapParameters(goal_x, goal_y, start_x, start_y);
