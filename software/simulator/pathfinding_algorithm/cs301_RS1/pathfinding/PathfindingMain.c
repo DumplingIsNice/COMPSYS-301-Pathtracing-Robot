@@ -59,8 +59,8 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 
 	// Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells) 
 	// until goal is reached:
-	ListElement* current_node_element = NULL;
-	NodeData* current_node = NULL;
+	//ListElement* current_node_element = NULL;
+	//NodeData* current_node = NULL;
 	NodeData* final_node = NULL;
 
 	/*
@@ -68,9 +68,9 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	*/
 	while (!IsNodeQueueEmpty())
 	{
-		current_node_element = ExtractNextInNodeQueue();
+		ListElement* current_node_element = ExtractNextInNodeQueue();
 		EvaluateAdjacentCells(current_node_element->node);
-		current_node = current_node_element->node;
+		NodeData* current_node = current_node_element->node;
 
 		#ifdef DEBUG
 			printf("### Iteration i: %d ###\n", nodes_evaluated_count);
@@ -111,14 +111,15 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	*/
 	#ifdef DEBUG
 		// Process final output from FinalQueue to FinalMap
-		while (!IsFinalQueueEmpty())
+		ListElement* current_node_element = GetListHead(GetFinalQueue());
+		while (IsElementValid(current_node_element))
 		{
-			current_node_element = ExtractNextInFinalQueue();
-			current_node = current_node_element->node;
+			NodeData* current_node = current_node_element->node;
 
 			WriteFinalMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
-
 			WriteOutputMap(GetNodeDataPosX(current_node), GetNodeDataPosY(current_node), WALKED_PATH);
+
+			current_node_element = current_node_element->tail;
 		}
 
 		PrintOutputMap();
@@ -179,6 +180,7 @@ void GenerateDirectionQueue()
 {
 	// At least three nodes must be present in a path for it not to be a straight line.
 	// Thus a minimum of three nodes are required to calculate a new direction.
+	//if (!IsElementValid(GetListHead(GetFinalQueue()))) { return; }	// if we are using ANALYTIC_VARIANT
 	ListElement* next = GetListHead(GetFinalQueue())->tail;
 	ListElement* current = GetListHead(GetFinalQueue());
 	ListElement* prev = NULL;
