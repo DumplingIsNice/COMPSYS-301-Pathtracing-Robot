@@ -3,12 +3,13 @@
 
 #include "NodeDataOps.h"
 #include <stddef.h>
-#include "NodeList.h"
+//#include "NodeList.h"
+#include "List.h"
 
 void DestroyNodeDataAndContents(NodeData* node)
 {
-	NodeListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
-	NodeListElement* prev_element;
+	ListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
+	ListElement* prev_element;
 
 	while (IsElementValid(current_element)) {
 		prev_element = current_element;
@@ -41,7 +42,7 @@ int GetNodeDataWeight(const NodeData* node)
 {
 	return node->weight;
 }
-NodeListElement* GetNodeDataAdjacentNodeListElement(const NodeData* node)
+ListElement* GetNodeDataAdjacentNodeListElement(const NodeData* node)
 {
 	return node->adjacent_nodes;
 }
@@ -82,21 +83,21 @@ void AddToNodeDataAdjacentNode(NodeData* node, const NodeData* node_to_add)
 
 	if (!IsElementValid(node->adjacent_nodes)) {
 		// If list is empty...
-		node->adjacent_nodes = NewNodeListElement(node_to_add);
+		node->adjacent_nodes = NewListElement(node_to_add);
 
 		IncrementNodeDataAdjacentpaths(node);
 		return;
 	}
 	// Otherwise add a new node (if it is unique)...
-	NodeListElement* current_node = node->adjacent_nodes;
-	NodeListElement* prev_node = current_node;
+	ListElement* current_node = node->adjacent_nodes;
+	ListElement* prev_node = current_node;
 
 	while (IsElementValid(current_node)) {
 		if (current_node->node == node_to_add) { return; }
 		prev_node = current_node;
 		current_node = current_node->tail;
 	}
-	Insert(prev_node, NewNodeListElement(node_to_add));
+	Insert(prev_node, NewListElement(node_to_add));
 
 	IncrementNodeDataAdjacentpaths(node);
 }

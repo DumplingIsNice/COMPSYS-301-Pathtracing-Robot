@@ -22,7 +22,7 @@ int GetNodeDataPosY(const NodeData* node);
 int GetNodeDataIsChecked(const NodeData* node);
 int GetNodeDataAdjacentPaths(const NodeData* node);
 int GetNodeDataWeight(const NodeData* node);
-struct NodeListElement* GetNodeDataAdjacentNodeListElement(const NodeData* node);
+struct ListElement* GetNodeDataAdjacentNodeListElement(const NodeData* node);
 
 void SetNodeDataPosX(NodeData* node, int pos_x);
 void SetNodeDataPosY(NodeData* node, int pos_y);

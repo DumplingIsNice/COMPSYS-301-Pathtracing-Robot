@@ -59,7 +59,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 
 	// Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells) 
 	// until goal is reached:
-	NodeListElement*	current_node_element	= NULL;
+	ListElement* current_node_element = NULL;
 	NodeData* current_node = NULL;
 	NodeData* final_node = NULL;
 
@@ -179,9 +179,9 @@ void GenerateDirectionQueue()
 {
 	// At least three nodes must be present in a path for it not to be a straight line.
 	// Thus a minimum of three nodes are required to calculate a new direction.
-	NodeListElement* next = GetListHead(GetFinalQueue())->tail;
-	NodeListElement* current = GetListHead(GetFinalQueue());
-	NodeListElement* prev = NULL;
+	ListElement* next = GetListHead(GetFinalQueue())->tail;
+	ListElement* current = GetListHead(GetFinalQueue());
+	ListElement* prev = NULL;
 	
 
 	while (IsElementValid(next->tail)) {

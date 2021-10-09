@@ -22,7 +22,7 @@ typedef struct NodeData {
 	int isChecked;
 	int num_adjacent_paths;
 	int weight;
-	struct NodeListElement* adjacent_nodes;
+	struct ListElement* adjacent_nodes;
 } NodeData;
 
 // Returns true if != NULL.

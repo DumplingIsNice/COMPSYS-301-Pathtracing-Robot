@@ -1,10 +1,8 @@
 #ifndef PATHFINDING_UTIL_H
 #define PATHFINDING_UTIL_H
 
-#include "NodeData/NodeList.h"
-
+#include "NodeData/List.h"
 #include "NodeData/NodeData.h"	// only required in PathfindingUtil.c, but added for convenience of the typedef
-
 #include "NodeData/NodeMap.h"
 
 /*
@@ -62,7 +60,7 @@ int IsStartReached(const NodeData* node);
 /* Pathfinding Algorithm Functions */
 
 // Return a reference to the NodeQueue list.
-NodeList* GetNodeQueue();
+List* GetNodeQueue();
 
 // Classify and return the CellType of the cell at the given coords.
 CellType GetCellType(int posx, int posy);
@@ -94,18 +92,18 @@ NodeData* PopulateNodeData(const NodeData* instigating_node, NodeData* node, int
 void AddToNodeQueue(const NodeData* node);
 
 // Detach the NodeListElement from the top of the NodeQueue, and return it.
-NodeListElement* ExtractNextInNodeQueue();
+ListElement* ExtractNextInNodeQueue();
 
 // Returns true if no NodeListElements left in NodeQueue.
 int IsNodeQueueEmpty();
 
 // Return a reference to the FinalQueue.
-NodeList* GetFinalQueue();
+List* GetFinalQueue();
 
 // Insert a node element in the final Queue.
 void AddToFinalQueue(const NodeData* node);
 
-NodeListElement* ExtractNextInFinalQueue();
+ListElement* ExtractNextInFinalQueue();
 
 // Returns true if no NodeListElements left in FinalQueue.
 int IsFinalQueueEmpty();

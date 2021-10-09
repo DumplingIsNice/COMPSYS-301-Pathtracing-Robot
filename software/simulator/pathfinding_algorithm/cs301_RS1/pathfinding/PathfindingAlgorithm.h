@@ -23,7 +23,7 @@
 
 // Add a NodeListElement to the NodeQueue.
 // The insertion position in the NodeQueue depends on the algorithm.
-void InsertInNodeQueue(struct NodeList* NodeQueue, struct NodeListElement* element);
+void InsertInNodeQueue(struct List* NodeQueue, struct ListElement* element);
 
 // Used for weight-based algorithms (A*, Dijkstra).
 int CalculateNodeWeight(const struct NodeData* instigating_node, const struct NodeData* node, int goal_x, int goal_y);

@@ -23,7 +23,7 @@ DirectionListElement* NewDirectionListElement(Direction direction)
 	return element;
 }
 
-void AddToDirectionQueue(const DirectionListElement* element)
+void AddToDirectionQueue(DirectionListElement* element)
 {
 	// @TODO: Optimise by using List instance so we can directly reference tail
 	if (GetDirectionQueue() == NULL) {

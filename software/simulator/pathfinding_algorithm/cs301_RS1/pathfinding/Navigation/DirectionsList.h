@@ -32,7 +32,7 @@ DirectionListElement* GetDirectionQueue();
 DirectionListElement* NewDirectionListElement(Direction direction);
 
 // Append to the DirectionQueue
-void AddToDirectionQueue(const DirectionListElement* element);
+void AddToDirectionQueue(DirectionListElement* element);
 
 // Find the direction and add it to the DirectionQueue. Previous and current nodes should be the
 // two nodes travelled through by the robot directly before approaching the third (intersection)

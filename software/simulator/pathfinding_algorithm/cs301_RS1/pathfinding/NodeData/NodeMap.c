@@ -9,7 +9,7 @@ void NodeMapSet(const int key, const void* val)
 
 NodeData* NodeMapGet(const int key)
 {
-    return nodeMap[key];
+    return (NodeData*)nodeMap[key];
 }
 
 void NodeMapDel(const int key)

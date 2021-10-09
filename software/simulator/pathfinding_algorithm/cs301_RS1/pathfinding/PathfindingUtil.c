@@ -20,8 +20,8 @@
 // 'Private' variables
 //static int PosXCheckedArray[MAP_SIZE_X] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
 //static int PosYCheckedArray[MAP_SIZE_Y] = { 0 };	// @TO REMOVE // Hao: replaced with NodeMap
-static NodeList NodeQueue = { .tail = NULL };		// initialise .data to {0}
-static NodeList FinalQueue = { .tail = NULL };
+static List NodeQueue = { .head = NULL, .tail = NULL };		// initialise .data to {0}
+static List FinalQueue = { .head = NULL, .tail = NULL };
 
 static int goal_x, goal_y, start_x, start_y;
 static int goal_reached = FALSE;
@@ -92,7 +92,7 @@ int IsStartReached(const NodeData* node)
 
 /* Pathfinding Algorithm Functions */
 
-NodeList* GetNodeQueue()
+List* GetNodeQueue()
 {
 	return &NodeQueue;
 }
@@ -185,11 +185,11 @@ NodeData* PopulateNodeData(const NodeData* instigating_node, NodeData* node, int
 
 void AddToNodeQueue(const NodeData* node)
 {
-	NodeListElement* element = NewNodeListElement(node);
+	ListElement* element = NewListElement(node);
 	InsertInNodeQueue(&NodeQueue, element);					// <--- ACTUAL FUNCTIONALITY IN PATHFINDING.H
 }
 
-NodeListElement* ExtractNextInNodeQueue()
+ListElement* ExtractNextInNodeQueue()
 {
 	return RemoveListHead(&NodeQueue);
 }
@@ -199,17 +199,17 @@ int IsNodeQueueEmpty()
 	return !IsElementValid(GetListHead(&NodeQueue));
 }
 
-NodeList* GetFinalQueue() {
+List* GetFinalQueue() {
 	return &FinalQueue;
 }
 
 void AddToFinalQueue(const NodeData* node)
 {
-	NodeListElement* element = NewNodeListElement(node);
+	ListElement* element = NewListElement(node);
 	PrependToList(&FinalQueue, element);
 }
 
-NodeListElement* ExtractNextInFinalQueue()
+ListElement* ExtractNextInFinalQueue()
 {
 	return RemoveListHead(&FinalQueue);
 }
