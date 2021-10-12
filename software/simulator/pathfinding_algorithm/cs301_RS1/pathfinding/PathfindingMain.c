@@ -11,6 +11,7 @@
 #include "NodeData/NodeMap.h"
 #include "Navigation/DirectionsList.h"
 
+#include "Timer/CPUTimer.h"
 
 void SetMapParameters(int goal_x, int goal_y, int start_x, int start_y)
 {
@@ -32,12 +33,13 @@ void CleanUpFindShortestPath()
 	// Free all DirectionQueue elements and their Direction enums.
 	unsigned long direction_queue_bytes = DestroyDirectionQueueElementsAndContents();
 
-	printf("Node Queue Bytes: %ld B\n", node_queue_bytes);
-	printf("Final Queue Bytes: %ld B\n", final_queue_bytes);
+	printf("NodeQueue Bytes: %ld B\n", node_queue_bytes);
+	printf("Finished FinalQueue Bytes: %ld B\n", final_queue_bytes);
 	printf("Total NodeData Bytes: %ld B\n", total_nodedata_bytes);
 	printf("    Sum: %ld B\n", (node_queue_bytes + final_queue_bytes + total_nodedata_bytes));
 	printf("DirectionQueue Bytes: %ld B\n", direction_queue_bytes);
 	printf("    Total: %ld B\n", (node_queue_bytes + final_queue_bytes + total_nodedata_bytes + direction_queue_bytes));
+	printf("\n\n");
 }
 
 void FindShortestPathTest()
@@ -47,6 +49,14 @@ void FindShortestPathTest()
 
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 {
+	clock_t total_time = GetCurrentClockTime();
+	clock_t node_queue_time = 0;
+	clock_t shortest_path_time = 0;
+	clock_t direction_queue_time = 0;
+
+	clock_t time_error = GetCurrentClockTime();
+	time_error = GetCurrentClockTime() - time_error;
+
 	CleanUpFindShortestPath(); // ensure no pre-existing values remain
 
 
@@ -70,6 +80,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	/*
 		Evaluate Nodes
 	*/
+	node_queue_time = GetCurrentClockTime();
 	while (!IsNodeQueueEmpty())
 	{
 		ListElement* current_node_element = ExtractNextInNodeQueue();
@@ -102,13 +113,16 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 
 		nodes_evaluated_count++;
 	}
+	node_queue_time = GetCurrentClockTime() - node_queue_time;
 
 	/*
 		Determine Shortest Path
 	*/
+	shortest_path_time = GetCurrentClockTime();
 	// Note: if goal has not been reached, final_node_ele will be NULL.
 	NodeData* next_node = final_node;
 	final_path_length = PopulateFinalQueue(final_node);
+	shortest_path_time = GetCurrentClockTime() - shortest_path_time;
 
 	/*
 		Print Debug Info
@@ -134,15 +148,23 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	/*
 		Generate Direction Queue
 	*/
+	direction_queue_time = GetCurrentClockTime();
 	GenerateDirectionQueue();
+	direction_queue_time = GetCurrentClockTime() - direction_queue_time;
 
 	/*
 		Performance Overview
 	*/
+	total_time = GetCurrentClockTime() - total_time;	// note that total_time is bloated by debug and timing overhead
+
 	printf("Total number of nodes evaluated: %d\n", nodes_evaluated_count);
 	printf("Length of final path: %d\n", final_path_length);
 	printf("\n");
-	printf("Time to find shortest path: %d\n", 0);
+	printf("Total time to find shortest path and directions: %ds %dms\n", ConvertToMilliSeconds(total_time, time_error)/1000, ConvertToMilliSeconds(total_time, time_error)%1000);
+	printf("\n");
+	printf("Time in search algorithm (NodeQueue): %ds %dms\n", ConvertToMilliSeconds(node_queue_time, time_error) / 1000, ConvertToMilliSeconds(node_queue_time, time_error) % 1000);
+	printf("Time in shortest path solver (FinalQueue): %ds %dms\n", ConvertToMilliSeconds(shortest_path_time, time_error) / 1000, ConvertToMilliSeconds(shortest_path_time, time_error) % 1000);
+	printf("Time to generate DirectionQueue: %ds %dms\n", ConvertToMilliSeconds(direction_queue_time, time_error) / 1000, ConvertToMilliSeconds(direction_queue_time, time_error) % 1000);
 	printf("\n");
 
 	/*

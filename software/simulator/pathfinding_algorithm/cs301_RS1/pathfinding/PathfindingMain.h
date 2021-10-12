@@ -25,7 +25,7 @@
 #define MAP_SIZE_Y	15
 
 
-#define DEBUG
+//#define DEBUG
 
 #define		WEIGHT_REBASING		// allow node weighting to change dynamically when cheaper alternate paths are found
 //#define		ANALYTIC_VARIANT	// use ONLY for DEPTHFIRST and BREADTHFIRST to evaluate all nodes to ensure shortest path is found

@@ -155,6 +155,7 @@
     <ClInclude Include="pathfinding\PathfindingMain.h" />
     <ClInclude Include="pathfinding\PathfindingUtil.h" />
     <ClInclude Include="pathfinding\RebaseWeights.h" />
+    <ClInclude Include="pathfinding\Timer\CPUTimer.h" />
     <ClInclude Include="pathfinding\Visualization\MapVisual.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClCompile Include="pathfinding\PathfindingMain.c" />
     <ClCompile Include="pathfinding\PathfindingUtil.c" />
     <ClCompile Include="pathfinding\RebaseWeights.c" />
+    <ClCompile Include="pathfinding\Timer\CPUTimer.c" />
     <ClCompile Include="pathfinding\Visualization\MapVisual.c" />
   </ItemGroup>
   <ItemGroup>
