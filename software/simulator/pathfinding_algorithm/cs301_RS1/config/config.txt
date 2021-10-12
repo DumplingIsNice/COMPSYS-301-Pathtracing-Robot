@@ -15,7 +15,7 @@ ini_currentCarPosFloor_Y 782
 ini_virtualCarAngularSpeed_seed 40
 ini_currentCarAngle 30
 
-user_defined_robot_state_update_time_interval 0.2
+user_defined_robot_state_update_time_interval 0.1
 speed_log_update_multiply 5
 maxDarkDefValueTH 220
 mean 0.0

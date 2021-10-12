@@ -22,9 +22,15 @@
 
 //#define TEST_MODE_MAP
 #define TESTSENSOR
+#define TESTMOVELEFT
+//#define TESTMOVERIGHT
 
-#define NITERATIONS 1
+#define NITERATIONS 100
 #define STARTUPDELAY 2 //sec
+
+#define TURNING_SPEED			60 //rad/s
+#define LEFT_TURNING_SPEED		TURNING_SPEED
+#define RIGHT_TURNING_SPEED		-TURNING_SPEED
 
 #include "mainFungGLAppEngin.h" //a must
 #include "mazeGen.h" //just include to use radnom number generation function
@@ -81,24 +87,38 @@ float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in de
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
 
+typedef enum MotionState
+{
+	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, LEAVING
+};
+
+static MotionState RobotMotionState = FOLLOWING;
+
+MotionState GetRobotMotionState() {
+	return RobotMotionState;
+}
+
+void SetRobotMotionState(const MotionState s) {
+	RobotMotionState = s;
+}
+
 
 /*Input speed : takes in a speed for the robot in mm/s*/
 void moveStraight(int speed) {
 
 	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
-
 }
 
 
 void turnLeft() {
 	
-	setVirtualCarSpeed(0, 180);
-
+	setVirtualCarSpeed(0, LEFT_TURNING_SPEED);
+	SetRobotMotionState(LEFT_TURNING);
 }
 
 void turnRight() {
-	setVirtualCarSpeed(0, -180);
-	
+	setVirtualCarSpeed(0, RIGHT_TURNING_SPEED);
+	SetRobotMotionState(RIGHT_TURNING);
 }
 
 void turnBack() {
@@ -128,7 +148,7 @@ by the called. When testing this the turns took two iterations to complete
 
 [we're trying to implement this in here as well]
 */
-void movementDirection(int direction, int speed = 130) {
+void movementDirection(int direction, int speed = 80) {
 
 	if (direction == 0) {
 		moveStraight(speed);
@@ -207,11 +227,21 @@ int virtualCarInit()
 
 #ifdef TESTSENSOR
 	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(2);
+	currentCarPosCoord_Y = cellToCoordY(8);
 	currentCarAngle = 0;//degree
 	virtualCarLinearSpeedFloor = 70;
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
-#endif TESTSENSOR
+#endif //TESTSENSOR
+
+#ifdef TESTMOVERIGHT
+	currentCarPosCoord_X = cellToCoordX(4);
+	currentCarPosCoord_Y = cellToCoordY(2);
+#endif //TESTMOVERIGHT
+
+#ifdef TESTMOVELEFT
+	currentCarPosCoord_X = cellToCoordX(1);
+	currentCarPosCoord_Y = cellToCoordY(2);
+#endif //TESTMOVELEFT
 
 	myTimer.resetTimer();
 	return 1;
@@ -254,7 +284,7 @@ int virtualCarUpdate()
 //}
 //	else
 //	{
-//		setVirtualCarSpeed(0, 0);
+//		stopMovement();
 //		if (i == NITERATIONS)
 //		{
 //			cout << "=====================================" << endl;
@@ -269,10 +299,63 @@ int virtualCarUpdate()
 //	}
 
 #ifdef TESTMODE3
+
 	if (i < NITERATIONS)
 	{	
-
-		movementDirection(3);
+		Directions* validDirections = GetDirectionsSensed();
+		
+		switch (GetRobotMotionState()) 
+		{
+		case FOLLOWING:
+			if (validDirections->forward)
+			{
+				movementDirection(0); // Straight
+			}
+			if (validDirections->left)
+			{
+				movementDirection(1); // Left
+			}
+			if (validDirections->right)
+			{
+				movementDirection(2); // Right
+			}
+			if ((!validDirections->left && !validDirections->right) && !validDirections->forward)
+			{
+				stopMovement(); // Right
+			}
+			break;
+		case LEFT_TURNING:
+			if ((validDirections->forward) && (validDirections->left))
+			{
+				movementDirection(0); // Straight
+				SetRobotMotionState(LEAVING);
+			}
+			break;
+		case RIGHT_TURNING:
+			if ((validDirections->forward))
+			{
+				movementDirection(0); // Straight
+				SetRobotMotionState(LEAVING);
+			}
+			break;
+		case LEAVING:
+			if (validDirections->forward)
+			{
+				movementDirection(0); // Straight
+			}
+			if (!((validDirections->left) && (validDirections->forward)))
+			{
+				SetRobotMotionState(FOLLOWING);
+			}
+			if (!((validDirections->right) && (validDirections->forward)))
+			{
+				SetRobotMotionState(FOLLOWING);
+			}
+			break;
+		default:
+			;
+		}
+		
 		i++;
 	} 
 	else
