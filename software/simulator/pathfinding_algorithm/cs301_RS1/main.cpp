@@ -16,14 +16,11 @@
 
 // TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
 // TESTMODE1: travel in a circle 
-//#define TESTMODE0
-//#define TESTMODE1
-//#define TESTMODE2
 #define TESTMODE3
 
 #define TEST_MODE_MAP
 
-#define NITERATIONS 2
+#define NITERATIONS 1
 #define STARTUPDELAY 5 //sec
 
 #include "mainFungGLAppEngin.h" //a must
@@ -76,6 +73,73 @@ float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in de
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
 
+
+/*Input speed : takes in a speed for the robot in mm/s*/
+void moveStraight(int speed) {
+
+	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
+
+}
+
+
+void turnLeft() {
+	
+	setVirtualCarSpeed(0, 180);
+
+}
+
+void turnRight() {
+	setVirtualCarSpeed(0, -180);
+	
+}
+
+void turnBack() {
+	setVirtualCarSpeed(0, 360);
+
+}
+
+
+void stopMovement() {
+	setVirtualCarSpeed(0, 0);
+}
+
+
+/*Input direction : takes an integer for the directions
+					0 - straight
+					1- left
+					2- right
+					3- back
+					4 - stop
+This can be changed to the macros used in the other files for better integration
+Input speed is an optional parameter used for setting the speed when moving straight
+If no value is supplied it will assume default of 130 mm/s
+
+The turning functions that are called set the linear and angular speed of the car,
+it doesnt take into account the iterations the turns should be called for, this should be handled,
+by the called. When testing this the turns took two iterations to complete
+
+[we're trying to implement this in here as well]
+*/
+void movementDirection(int direction, int speed = 130) {
+
+	if (direction == 0) {
+		moveStraight(speed);
+	}
+	else if (direction == 1) {
+		turnLeft();
+	}
+	else if (direction == 2) {
+		turnRight();
+	}
+	else if (direction == 3) {
+		turnBack();
+	}
+	else {
+		stopMovement();
+	}
+
+}
+
 int virtualCarInit()
 {
 	cout << "default virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
@@ -114,41 +178,13 @@ int virtualCarInit()
 	
 	
 
-#ifdef TESTMODE0 //go straight one cell
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(7);
-	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 130;
-	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
-#endif
-
-#ifdef TESTMODE1 //turn left
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(7);
-	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 0; // mm/s
-	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
-	virtualCarAngularSpeed_seed = 90;
-	cout << "updated virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
-	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
-#endif
-
-#ifdef TESTMODE2 //turn right
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(1);
-	currentCarAngle = 0;
-	virtualCarLinearSpeedFloor = 0; // mm/s
-	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
-	virtualCarAngularSpeed_seed = -90; 
-#endif
-
 #ifdef TESTMODE3 //turn 180
 	currentCarPosCoord_X = cellToCoordX(3);
 	currentCarPosCoord_Y = cellToCoordY(7);
-	currentCarAngle = 0;
-	virtualCarLinearSpeedFloor = 0; // mm/s
-	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
-	virtualCarAngularSpeed_seed = 180;
+	//currentCarAngle = 0;
+	//virtualCarLinearSpeedFloor = 0; // mm/s
+	//virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
+	//virtualCarAngularSpeed_seed = 180;
 #endif
 
 	myTimer.resetTimer();
@@ -172,110 +208,53 @@ int virtualCarUpdate()
 			return 1;
 	}
 
-#ifdef TESTMODE0
-	// run to N lops to measure distance travelled in X direction
-	
-	if (i < NITERATIONS)
-	{
-		setVirtualCarSpeed(virtualCarLinearSpeed_seed , 0);
-		//setVirtualCarSpeed(myspeed, 0);
-		cout << "=====================================" << endl;
-		cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << endl;
-		
-		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-		cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
-		cout << "-----------------------------------------" << endl;
 
-		prev_position = coordToFloorX(currentCarPosCoord_X);
-		i++;
-	
-	}
-	else
-		setVirtualCarSpeed(0, 0);
-#endif
 
-#ifdef TESTMODE1
-	if (i < NITERATIONS)
-	{
-//		setVirtualCarSpeed(virtualCarLinearSpeed_seed * 0.10, 360/10);
-		virtualCarLinearSpeed = virtualCarLinearSpeed_seed;
-		virtualCarAngularSpeed = virtualCarAngularSpeed_seed;
-		cout << "=====================================" << endl;
-		cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << " with angular speed_seed: " << virtualCarAngularSpeed_seed << endl;
+//	if (i < NITERATIONS)
+//	{
+//		//		setVirtualCarSpeed(virtualCarLinearSpeed_seed * 0.10, 360/10);
+//		virtualCarLinearSpeed = virtualCarLinearSpeed_seed;
+//		virtualCarAngularSpeed = virtualCarAngularSpeed_seed;
+//		cout << "=====================================" << endl;
+//		cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << " with angular speed_seed: " << virtualCarAngularSpeed_seed << endl;
+//
+//		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
+//		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
+//		cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
+//		cout << "-----------------------------------------" << endl;
+//
+//		prev_position = coordToFloorX(currentCarPosCoord_X);
+//		i++;
+//}
+//	else
+//	{
+//		setVirtualCarSpeed(0, 0);
+//		if (i == NITERATIONS)
+//		{
+//			cout << "=====================================" << endl;
+//			cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << endl;
+//
+//			cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
+//			cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
+//			cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
+//			cout << "-----------------------------------------" << endl;
+//		}
+//		i++;
+//	}
 
-		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-		cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
-		cout << "-----------------------------------------" << endl;
-
-		prev_position = coordToFloorX(currentCarPosCoord_X);
-		i++;
-	}
-	else 
-	{
-		setVirtualCarSpeed(0, 0);
-		if (i == NITERATIONS)
-		{
-			cout << "=====================================" << endl;
-			cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << endl;
-
-			cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-			cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-			cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
-			cout << "-----------------------------------------" << endl;
-		}
-		i++;
-	}
-		
-#endif
-
-#ifdef TESTMODE2
-	if (i < NITERATIONS)
-	{
-		//		setVirtualCarSpeed(virtualCarLinearSpeed_seed * 0.10, 360/10);
-		virtualCarLinearSpeed = virtualCarLinearSpeed_seed;
-		virtualCarAngularSpeed = virtualCarAngularSpeed_seed;
-		cout << "=====================================" << endl;
-		cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << " with angular speed_seed: " << virtualCarAngularSpeed_seed << endl;
-
-		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-		cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
-		cout << "-----------------------------------------" << endl;
-
-		prev_position = coordToFloorX(currentCarPosCoord_X);
-		i++;
-}
-	else
-	{
-		setVirtualCarSpeed(0, 0);
-		if (i == NITERATIONS)
-		{
-			cout << "=====================================" << endl;
-			cout << "iteration:" << i << " with speed_seed: " << virtualCarLinearSpeed_seed << endl;
-
-			cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-			cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-			cout << "del pos:" << coordToFloorX(currentCarPosCoord_X) - prev_position << endl;
-			cout << "-----------------------------------------" << endl;
-		}
-		i++;
-	}
-
-#endif
 
 #ifdef TESTMODE3
+	
 	if (i < NITERATIONS)
-	{
-		virtualCarLinearSpeed = virtualCarLinearSpeed_seed;
-		virtualCarAngularSpeed = virtualCarAngularSpeed_seed;
+	{	
+
+		movementDirection(3);
 		i++;
 	} 
 	else
 	{
-		setVirtualCarSpeed(0, 0);
-		currentCarAngle = 180;
+		stopMovement();
+		//currentCarAngle = 180;
 	}
 #endif // TESTMODE3
 
