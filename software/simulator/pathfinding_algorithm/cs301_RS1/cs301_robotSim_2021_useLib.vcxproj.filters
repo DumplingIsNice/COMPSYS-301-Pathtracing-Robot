@@ -13,45 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\pathfinding">
+      <UniqueIdentifier>{97c5bb7d-ce3a-4112-8de4-b84e9bc46770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pathfinding">
+      <UniqueIdentifier>{34be00b7-cb79-46ec-9af3-0d5b86d24709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="pathfinding\RebaseWeights.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
     <ClInclude Include="highPerformanceTimer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="mainFungGLAppEngin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mazeGen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\NodeData\NodeData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\NodeData\NodeDataOps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\PathfindingUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\PathfindingAlgorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\NodeData\NodeList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\FileUtility\ReadMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\PathfindingMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\NodeData\NodeMap.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="pathfinding\Visualization\MapVisual.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="mazeGen.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeData.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeDataOps.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeList.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeMap.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\PathfindingAlgorithm.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\PathfindingMain.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\PathfindingUtil.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\FileUtility\ReadMap.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="robot_simulation\project.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pathfinding\RebaseWeights.h">
+    <ClInclude Include="robot_simulation\sensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,34 +71,40 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pathfinding\Visualization\MapVisual.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
     <ClCompile Include="pathfinding\NodeData\NodeData.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\NodeData\NodeDataOps.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathfinding\PathfindingUtil.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathfinding\PathfindingAlgorithm.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\NodeData\NodeList.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathfinding\FileUtility\ReadMap.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathfinding\PathfindingMain.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\NodeData\NodeMap.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
-    <ClCompile Include="pathfinding\Visualization\MapVisual.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="pathfinding\PathfindingAlgorithm.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\PathfindingMain.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\PathfindingUtil.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\FileUtility\ReadMap.c">
+      <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\RebaseWeights.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="robot_simulation\sensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="robot_simulation\project.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
