@@ -31,7 +31,7 @@ int IsNodeDataValid(const NodeData* node);
 // Create and allocate memory for a blank NodeData.
 NodeData* NewNodeData();
 
-// Free() NodeData struct
-void DestroyNodeData(NodeData* node);
+// Free() NodeData struct and return the number of bytes freed.
+unsigned long DestroyNodeData(NodeData* node);
 
 #endif // !NODEDATA_H

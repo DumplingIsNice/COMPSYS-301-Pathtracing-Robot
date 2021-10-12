@@ -87,16 +87,21 @@ ListElement* GetListTail(const List* list);
 
 
 // Free() the NodeListElement structs, but not the NodeData structs.
-void DestroyListElements(List* list);
+// Returns the number of bytes freed.
+unsigned long DestroyListElements(List* list);
 
 // Free() the NodeListElement structs, and their valid NodeData structs.
 // Does NOT call destructors, just frees the node values. Potential MEMORY LEAK!
- void DestroyListElementsAndImmediateContents(List* list);
+// Returns the number of bytes freed only for ListElements.
+// EXCLUDES CONTENTS. Must extrapolate from the count of destroyed contents.
+unsigned long DestroyListElementsAndImmediateContents(List* list, int* count_destroyed_contents);
 
 // Free() a List. This does not affect its ListElements.
-void DestroyList(List* list);
+// Returns the number of bytes freed.
+unsigned long DestroyList(List* list);
 
 // Free() a ListElement. This does not affect its associated node.
-void DestroyListElement(ListElement* element);
+// Returns the number of bytes freed.
+unsigned long DestroyListElement(ListElement* element);
 
 #endif // !LIST_H

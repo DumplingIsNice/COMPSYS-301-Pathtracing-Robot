@@ -32,14 +32,16 @@ int IsPtrValid(void* ptr)
     }
 }
 
-void NodeMapClear()
+unsigned long NodeMapClear()
 {
+    unsigned long bytes = 0;
     for (int x = 0; x < (MAP_SIZE_X); x++) {
         for (int y = 0; y < (MAP_SIZE_Y); y++) {
             NodeData* node = NodeMapGet(NodeMapGenKey(x, y));
-            if (IsNodeDataValid(node)) { DestroyNodeDataAndContents(node); }
+            if (IsNodeDataValid(node)) { bytes += DestroyNodeDataAndContents(node);}
         }
     }
+    return bytes;
 }
 
 /* Debug Functions */ 

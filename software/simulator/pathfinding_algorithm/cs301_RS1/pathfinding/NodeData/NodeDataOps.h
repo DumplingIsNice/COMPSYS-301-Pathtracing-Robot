@@ -14,8 +14,9 @@
 	DO NOT ACCESS EXPLICITLY!
 */
 
-// Destroy NodeData and the NodeListElements in adjacent_nodes (but NOT their contents)
-void DestroyNodeDataAndContents(NodeData* node);
+// Destroy NodeData and the adjacent_nodes elements.
+// Return the number of bytes freed.
+unsigned long DestroyNodeDataAndContents(NodeData* node);
 
 int GetNodeDataPosX(const NodeData* node);
 int GetNodeDataPosY(const NodeData* node);

@@ -20,20 +20,24 @@ void SetMapParameters(int goal_x, int goal_y, int start_x, int start_y)
 
 void CleanUpFindShortestPath()
 {
-	// @TODO:
-	// Add a counter that sums sizeof() values for RAM-usage evaluation?
-
 	// Free the last of the NodeQueue elements (but not their NodeData!):
-	DestroyListElements(GetNodeQueue());
+	unsigned long node_queue_bytes = DestroyListElements(GetNodeQueue());
 
 	// Free the FinalQueue elements.
-	DestroyListElements(GetFinalQueue());
+	unsigned long final_queue_bytes = DestroyListElements(GetFinalQueue());
 
 	// Free all NodeData values:
-	NodeMapClear();
+	unsigned long total_nodedata_bytes = NodeMapClear();
 
 	// Free all DirectionQueue elements and their Direction enums.
-	DestroyDirectionQueueAndContents();
+	unsigned long direction_queue_bytes = DestroyDirectionQueueElementsAndContents();
+
+	printf("Node Queue Bytes: %ld B\n", node_queue_bytes);
+	printf("Final Queue Bytes: %ld B\n", final_queue_bytes);
+	printf("Total NodeData Bytes: %ld B\n", total_nodedata_bytes);
+	printf("    Sum: %ld B\n", (node_queue_bytes + final_queue_bytes + total_nodedata_bytes));
+	printf("DirectionQueue Bytes: %ld B\n", direction_queue_bytes);
+	printf("    Total: %ld B\n", (node_queue_bytes + final_queue_bytes + total_nodedata_bytes + direction_queue_bytes));
 }
 
 void FindShortestPathTest()
@@ -139,7 +143,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	printf("Length of final path: %d\n", final_path_length);
 	printf("\n");
 	printf("Time to find shortest path: %d\n", 0);
-	printf("RAM used by NodeQueue and NodeMap: %d\n", 0);
+	printf("\n");
 
 	/*
 		Cleanup

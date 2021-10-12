@@ -48,8 +48,8 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 //
 void PrintDirectionQueue();
 
-//
-void DestroyDirectionQueueAndContents();
+// Destroy the DirectionQueue contents and elements, and return the number of bytes freed.
+unsigned long DestroyDirectionQueueElementsAndContents();
 
 #endif // !DIRECTIONSLIST_H
 

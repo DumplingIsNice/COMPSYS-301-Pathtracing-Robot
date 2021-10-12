@@ -128,40 +128,53 @@ ListElement* GetListTail(const List* list)
 }
 
 
-void DestroyListElements(List* list)
+unsigned long DestroyListElements(List* list)
 {
+	unsigned long bytes = 0;
+
 	ListElement* element = GetListHead(list);
 	ListElement* prev_element;
 
 	while (IsElementValid(element)) {
 		prev_element = element;
 		element = element->tail;
+		bytes += sizeof(*prev_element);
 		free(prev_element);
 	}
+	return bytes;
 }
 
-void DestroyListElementsAndImmediateContents(List* list)
+unsigned long DestroyListElementsAndImmediateContents(List* list, int* count_destroyed_contents)
 {
+	unsigned long bytes = 0;
+
 	ListElement* element = GetListHead(list);
 	ListElement* prev_element;
 
 	while (IsElementValid(element)) {
 		// Note that we do not/cannot call the destructors for node.
-		if (element->node != NULL) { free(element->node); }
+		if (element->node != NULL) {
+			(*count_destroyed_contents)++;	// *node is not defined at compile time so we cannot use sizeof() on it
+			free(element->node);
+		}
 		prev_element = element;
 		element = element->tail;
+		bytes += sizeof(*prev_element);
 		free(prev_element);
 	}
+	return bytes;
 }
 
-void DestroyList(List* list)
+unsigned long DestroyList(List* list)
 {
-	if (IsListValid(list)) { free(list); }
+	if (IsListValid(list)) { free(list); return sizeof(struct List); }
+	return 0;
 }
 
-void DestroyListElement(ListElement* element)
+unsigned long DestroyListElement(ListElement* element)
 {
-	if (IsElementValid(element)) { free(element); }
+	if (IsElementValid(element)) { free(element); return sizeof(struct ListElement); }
+	return 0;
 }
 
 #endif // !LIST_C

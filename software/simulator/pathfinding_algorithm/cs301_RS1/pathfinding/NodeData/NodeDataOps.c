@@ -6,17 +6,21 @@
 //#include "NodeList.h"
 #include "List.h"
 
-void DestroyNodeDataAndContents(NodeData* node)
+unsigned long DestroyNodeDataAndContents(NodeData* node)
 {
+	unsigned long bytes = 0;
+
 	ListElement* current_element = GetNodeDataAdjacentNodeListElement(node);
 	ListElement* prev_element;
 
 	while (IsElementValid(current_element)) {
 		prev_element = current_element;
 		current_element = current_element->tail;
-		DestroyListElement(prev_element);
+		bytes += DestroyListElement(prev_element);
 	}
-	DestroyNodeData(node);
+	bytes += DestroyNodeData(node);
+
+	return bytes;
 }
 
 int GetNodeDataPosX(const NodeData* node)

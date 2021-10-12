@@ -24,9 +24,10 @@ NodeData* NewNodeData()
 	return node;
 }
 
-void DestroyNodeData(NodeData* node)
+unsigned long DestroyNodeData(NodeData* node)
 {
-	if (IsNodeDataValid(node)) { free(node); }
+	if (IsNodeDataValid(node)) { free(node); return sizeof(NodeData); }
+	return 0;
 }
 
 

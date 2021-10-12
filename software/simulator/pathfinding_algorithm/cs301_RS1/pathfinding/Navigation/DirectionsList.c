@@ -134,9 +134,15 @@ void PrintDirectionQueue()
 	printf("There are %d elements in the DirectionQueue.\n\n", count);
 }
 
-void DestroyDirectionQueueAndContents()
+unsigned long DestroyDirectionQueueElementsAndContents()
 {
-	DestroyListElementsAndImmediateContents(GetDirectionQueue());
+	unsigned long bytes = 0;
+	int direction_instances_destroyed = 0;
+
+	bytes = DestroyListElementsAndImmediateContents(GetDirectionQueue(), &direction_instances_destroyed);
+	bytes = direction_instances_destroyed * sizeof(Direction);
+
+	return bytes;
 }
 
 #endif // !DIRECTIONSLIST_C
