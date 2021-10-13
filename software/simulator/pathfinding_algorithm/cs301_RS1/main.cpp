@@ -32,17 +32,6 @@
 //{------------------------------------
 #define NITERATIONS 1000
 #define STARTUPDELAY 2 //sec
-
-#define DEFAULT_LINEAR_SPEED	120
-#define LEAVING_COUNT			DEFAULT_LINEAR_SPEED/40
-
-#define TURNING_SPEED			120 //rad/s
-#define LEFT_TURNING_SPEED		TURNING_SPEED
-#define RIGHT_TURNING_SPEED		-TURNING_SPEED
-
-#define ALIGN_SPEED				20
-#define LEFT_ALIGN_SPEED		ALIGN_SPEED //mm/s
-#define RIGHT_ALIGN_SPEED		-ALIGN_SPEED //mm/s
 //}------------------------------------
 
 #include "mainFungGLAppEngin.h" //a must
@@ -286,7 +275,7 @@ int virtualCarUpdate()
 			return 1;
 	}
 
-  HandleSensor();
+	HandleSensor();
 
 //	if (i < NITERATIONS)
 //	{
@@ -322,86 +311,56 @@ int virtualCarUpdate()
 
 #ifdef TESTMODE3
 
-	printf("Current Robot Motion State is: ");
-	PrintRobotState(GetRobotMotionState());
-	printf("Prev Robot Motion State is: ");
-	PrintRobotState(GetPrevRobotMotionState());
-
-	static int toExit = 0;
-	static int leaveCounter = 0;
-	InitSpeedSeed();
-
-	Directions* validDirections = GetDirectionsSensed();
+	/*	This is a sample command structure : 
 		
-	switch (GetRobotMotionState())
-	{
-	case FOLLOWING:
-		if (validDirections->forward)
-		{
-			HandleAlignment();
-			LinearForward();
-		}
-		if (validDirections->left)
-		{
-			AngularLeft();
-			SetRobotMotionState(LEFT_TURNING);
-		}
-		if (validDirections->right)
-		{
-			AngularRight();
-			SetRobotMotionState(RIGHT_TURNING);
-		}
-		if ((!validDirections->left && !validDirections->right) && !validDirections->forward)
-		{
-			AngularRight();
-			SetRobotMotionState(U_TURN);
-		}
-		break;
-	case LEFT_TURNING:
-		AngularLeft();
-		if (!validDirections->forward) 
-		{ 
-			toExit = 1;
-		}
-		if (toExit && validDirections->forward)
-		{
-			SetRobotMotionState(LEAVING);
-			toExit = 0;
-		}
-		break;
-	case RIGHT_TURNING:
-		AngularRight();
-		if (!validDirections->forward)
-		{
-			toExit = 1;
-		}
-		if (toExit && validDirections->forward)
-		{
-			SetRobotMotionState(LEAVING);
-			toExit = 0;
-		}
-		break;
-	case LEAVING:
-		HandleAlignment();
-		LinearForward();
-		leaveCounter++;
-		if (leaveCounter > LEAVING_COUNT)
-		{
-			SetRobotMotionState(FOLLOWING);
-			leaveCounter = 0;
-		}
-		break;
-	case U_TURN:
-		AngularRight();
-		if (validDirections->forward)
-		{
-			SetRobotMotionState(LEAVING);
-		}
-	default:
-		;
-	}
-		
-	setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed);
+		The robot is driven by its currently sensed path + navagation command
+		Navigation command is a MotionState enum stored in NextRobotMotionState.
+
+		Ideally:
+			Navigation is handled after HandleSensor() (above) before the following 
+			section and a command is produced.
+
+			The following section load the command DEPENDING on the encountered path.
+
+				- A counter may be used to track each path met (and went straight)
+				  on the same following trace.
+
+		Currently, commands to deal with an intersection is fixed.
+
+		If no command is loaded, robot drives automatically in the following priority:
+			
+			Follow a line					-> Straight and automatic line following logic. 
+			Dead-end and floating off-line	-> U-turn (right)
+	*/
+	//}---------------------------------
+  if (GetRobotMotionState() == FOLLOWING)
+  {
+	  if (SENSED_CROSS_ROAD)
+	  {
+		  SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+	  }
+	  else if (SENSED_T)
+	  {
+		  SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+	  }
+	  else if (SENSED_L_BRANCH_T)
+	  {
+		  SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+	  }
+	  else if (SENSED_R_BRANCH_T)
+	  {
+		  SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+	  }
+  }
+  //}---------------------------------
+
+  /* Update Routine: */
+  
+  // Pass command as current state.
+  HandleCommands(GetNextRobotMotionState());
+  // Perform actuation depending on current RobotMotionState
+  HandleMovement();
+  printf("######################\n");
 #endif // TESTMODE3
 
 	myTimer.resetTimer();

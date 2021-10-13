@@ -45,10 +45,10 @@ void SensorFSM()
 {
     Directions* d = GetDirectionsSensed();
 
-    // Override turning while realigning 
-    /*if ((LA_SENSOR == SENSE_TRUE) || (RA_SENSOR == SENSE_TRUE)) {
-        currentState = STRAIGHT;
-    }*/
+    // Override turning while turning 
+    //if ((GetRobotMotionState() == FOLLOWING) && (GetRASensor() || GetLASensor())) {
+    //    currentState = STRAIGHT;
+    //}
 
     // FSM logic is driven by state of centre and forward sensor, branching 
     // by the relative states of right and left sensor according to truthtable
@@ -133,26 +133,32 @@ void SensorFSM()
     case T_SEC:
         d->left = true;
         d->right = true;
+        nextState = PENDING;
         break;
     case LEFT_BRANCH_T:
         d->forward = true;
         d->left = true;
+        nextState = PENDING;
         break;
     case RIGHT_BRANCH_T:
         d->right = true;
+        nextState = PENDING;
         break;
     case CROSS_ROAD:
         d->forward = true;
         d->left = true;
         d->right = true;
+        nextState = PENDING;
         break;
+    default:
+        ;
     }
 
     // Debug information
-    //printf("Current State is: ");
-    //PrintSenseFSMState(currentState);
-    //printf("Next State is: ");
-    //PrintSenseFSMState(nextState);
+    printf("Current State is: ");
+    PrintSenseFSMState(currentState);
+    printf("Next State is: ");
+    PrintSenseFSMState(nextState);
     //PrintSensorStates();
 
     if (nextState != NO_PATH)

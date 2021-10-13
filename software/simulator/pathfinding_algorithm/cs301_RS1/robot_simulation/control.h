@@ -1,16 +1,38 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#define DEFAULT_LINEAR_SPEED	120
+#define LEAVING_COUNT			DEFAULT_LINEAR_SPEED/40
+
+#define TURNING_SPEED			120 //rad/s
+#define LEFT_TURNING_SPEED		TURNING_SPEED
+#define RIGHT_TURNING_SPEED		-TURNING_SPEED
+
+#define ALIGN_SPEED				20
+#define LEFT_ALIGN_SPEED		ALIGN_SPEED //mm/s
+#define RIGHT_ALIGN_SPEED		-ALIGN_SPEED //mm/s
+
+#define SENSED_CROSS_ROAD	(GetDirectionsSensed()->left && GetDirectionsSensed()->right) && GetDirectionsSensed()->forward
+#define SENSED_T			(GetDirectionsSensed()->left && GetDirectionsSensed()->right) && !GetDirectionsSensed()->forward
+#define SENSED_L_BRANCH_T	(GetDirectionsSensed()->left && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->right
+#define SENSED_R_BRANCH_T	(GetDirectionsSensed()->right && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->left
+
 enum MotionState
 {
 	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, U_TURN, LEAVING, NO_STATE
 };
 
 MotionState GetRobotMotionState();
-MotionState GetPrevRobotMotionState();
+MotionState GetNextRobotMotionState();
 
 void SetRobotMotionState(const MotionState s);
-void SetPrevRobotMotionState(const MotionState s);
+void SetNextRobotMotionState(const MotionState s);
+
+// Handles commands from navigation
+void HandleCommands(MotionState command);
+
+// Performs movement logic based on robot's state
+void HandleMovement();
 
 // Runs alignmnet adjustments to AngularSpeed_seed
 void HandleAlignment();
@@ -23,10 +45,6 @@ void turnLeft();
 void turnRight();
 void turnBack();
 void stopMovement();
-
-void AlignLeft();
-void AlignRight();
-void AlignZero();
 
 /*Input direction : takes an integer for the directions
 					0 - straight

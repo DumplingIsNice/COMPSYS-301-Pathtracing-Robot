@@ -4,18 +4,20 @@
 
 #include <cstdio>
 
-static MotionState PrevRobotMotionState = NO_STATE;
+static MotionState NextMotionState = NO_STATE;
 static MotionState RobotMotionState = FOLLOWING;
-//static Command NextNavCommand = NO_COMMAND;
+
+extern float virtualCarLinearSpeed_seed;
+extern float virtualCarAngularSpeed_seed;
 
 MotionState GetRobotMotionState() 
 {
 	return RobotMotionState;
 }
 
-MotionState GetPrevRobotMotionState()
+MotionState GetNextRobotMotionState()
 {
-	return PrevRobotMotionState;
+	return NextMotionState;
 }
 
 void SetRobotMotionState(const MotionState s) 
@@ -23,11 +25,103 @@ void SetRobotMotionState(const MotionState s)
 	RobotMotionState = s;
 }
 
-void SetPrevRobotMotionState(const MotionState s)
+void SetNextRobotMotionState(const MotionState s)
 {
-	PrevRobotMotionState = s;
+	NextMotionState = s;
 }
 
+void HandleCommands(MotionState command)
+{
+	printf("Next Robot Motion State is: ");
+	PrintRobotState(GetNextRobotMotionState());
+	if (command != NO_STATE)
+	{
+		SetRobotMotionState(command);
+		SetNextRobotMotionState(NO_STATE);
+	}
+}
+
+void HandleMovement()
+{
+	printf("Current Robot Motion State is: ");
+	PrintRobotState(GetRobotMotionState());
+
+	Directions* validDirections = GetDirectionsSensed();
+
+	static int toExit = 0;
+	static int leaveCounter = 0;
+	InitSpeedSeed();
+
+	switch (GetRobotMotionState())
+	{
+	case FOLLOWING:
+		if ((!validDirections->left && !validDirections->right) && !validDirections->forward)
+		{
+			AngularRight();
+			SetRobotMotionState(U_TURN);
+		}
+		else if (validDirections->forward)
+		{
+			HandleAlignment();
+			LinearForward();
+		}
+		else if (validDirections->left)
+		{
+			AngularLeft();
+			SetRobotMotionState(LEFT_TURNING);
+		}
+		else if (validDirections->right)
+		{
+			AngularRight();
+			SetRobotMotionState(RIGHT_TURNING);
+		}
+		break;
+	case LEFT_TURNING:
+		AngularLeft();
+		if (!validDirections->forward)
+		{
+			toExit = 1;
+		}
+		if (toExit && validDirections->forward)
+		{
+			SetRobotMotionState(LEAVING);
+			toExit = 0;
+		}
+		break;
+	case RIGHT_TURNING:
+		AngularRight();
+		if (!validDirections->forward)
+		{
+			toExit = 1;
+		}
+		if (toExit && validDirections->forward)
+		{
+			SetRobotMotionState(LEAVING);
+			toExit = 0;
+		}
+		break;
+	case LEAVING:
+		HandleAlignment();
+		LinearForward();
+		leaveCounter++;
+		if (leaveCounter > LEAVING_COUNT)
+		{
+			SetRobotMotionState(FOLLOWING);
+			leaveCounter = 0;
+		}
+		break;
+	case U_TURN:
+		AngularRight();
+		if (validDirections->forward)
+		{
+			SetRobotMotionState(LEAVING);
+		}
+	default:
+		;
+	}
+
+	setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed);
+}
 
 //{------------------------------------
 // Rudenmentry self aligning system
@@ -71,6 +165,12 @@ void PrintRobotState(MotionState m)
         break;
 	case LEAVING:
 		printf("LEAVING\n");
+		break;
+	case U_TURN:
+		printf("U_TURN\n");
+		break;
+	case NO_STATE:
+		printf("NO_STATE\n");
 		break;
     default:
         printf("NULL\n");
