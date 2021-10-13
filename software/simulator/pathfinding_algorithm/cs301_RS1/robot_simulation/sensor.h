@@ -29,7 +29,7 @@ extern "C"
 
 enum SenseState
 {
-    STRAIGHT, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
+    STRAIGHT_PATH, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
     T_SEC, LEFT_BRANCH_T, RIGHT_BRANCH_T, CROSS_ROAD, NO_PATH
 };
 
@@ -39,11 +39,15 @@ Directions*  GetDirectionsSensed();
 // Runs ensor FSM logic
 void SensorFSM();
 
-// Sensor handling example
+// Processes sensor input and populate directionsSensed
 void HandleSensor();
 
 // Debug functions to print infomation to terminal
 void PrintSenseFSMState(SenseState s);
 void PrintSensorStates();
+
+// Get indivisual alignment sensors
+int GetRASensor();
+int GetLASensor();
 
 #endif // SENSOR_H

@@ -1,4 +1,5 @@
 #include "sensor.h"
+#include "control.h"
 
 #include "../mainFungGLAppEngin.h"
 #include <stdio.h>
@@ -32,6 +33,14 @@ void HandleSensor()
     PrintDirections(GetDirectionsSensed());
 }
 
+int GetRASensor() {
+    return RA_SENSOR == SENSE_TRUE;
+}
+
+int GetLASensor() {
+    return LA_SENSOR == SENSE_TRUE;
+}
+
 void SensorFSM()
 {
     Directions* d = GetDirectionsSensed();
@@ -45,31 +54,46 @@ void SensorFSM()
     // by the relative states of right and left sensor according to truthtable
     if (nextState == NO_PATH)
     {
-        if (C_SENSOR == SENSE_TRUE) {
-            if (F_SENSOR == SENSE_TRUE) {
-                if ((R_SENSOR == SENSE_TRUE) && (L_SENSOR == SENSE_TRUE)) {
-                    currentState = CROSS_ROAD;
-                }
-                else if (R_SENSOR == SENSE_TRUE) {
-                    currentState = RIGHT_BRANCH_T;
-                }
-                else if (L_SENSOR == SENSE_TRUE) {
-                    currentState = LEFT_BRANCH_T;
-                }
-                else /* (R_SENSOR == SENSE_FALSE) && (L_SENSOR == SENSE_FALSE) */ {
-                    currentState = STRAIGHT;
-                }
+        if (GetRASensor()||GetLASensor()) {
+            if ((R_SENSOR == SENSE_TRUE) && (L_SENSOR == SENSE_TRUE)) {
+                currentState = CROSS_ROAD;
             }
-            else /* (F_SENSOR == SENSE_FALSE) */ {
-                currentState = EXPECT_TURN;
+            else if (R_SENSOR == SENSE_TRUE) {
+                currentState = RIGHT_BRANCH_T;
             }
+            else if (L_SENSOR == SENSE_TRUE) {
+                currentState = LEFT_BRANCH_T;
+            }
+            else /* (R_SENSOR == SENSE_FALSE) && (L_SENSOR == SENSE_FALSE) */ {
+                currentState = STRAIGHT_PATH;
+            }
+        }
+        else /* (F_SENSOR == SENSE_FALSE) */ {
+            currentState = EXPECT_TURN;
         }
     }
     // Exit descerning for turns
     else {
-        if (F_SENSOR == SENSE_TRUE) {
-            currentState = STRAIGHT;
-            nextState = NO_PATH;
+        switch (GetRobotMotionState())
+        {
+        case RIGHT_TURNING:
+            if (GetRASensor()) {
+                currentState = STRAIGHT_PATH;
+                nextState = NO_PATH;
+            }
+            break;
+        case LEFT_TURNING:
+            if (GetLASensor()) {
+                currentState = STRAIGHT_PATH;
+                nextState = NO_PATH;
+            }
+            break;
+        default:
+            if (GetRASensor() || GetLASensor()) {
+                currentState = STRAIGHT_PATH;
+                nextState = NO_PATH;
+            }
+            break;
         }
     }
 
@@ -77,7 +101,7 @@ void SensorFSM()
 
     switch (currentState)
     {
-    case STRAIGHT:
+    case STRAIGHT_PATH:
         d->forward = true;
         break;
     case EXPECT_TURN:
@@ -94,7 +118,7 @@ void SensorFSM()
         // Cannot decern dead_end from other turning intersections soley on 
         // f,l,r sensors. Effective dead_end if veered off path, need 
         // reconsideration when implementing alignment logic
-        else if (C_SENSOR == SENSE_FALSE) {
+        else if (C_SENSOR == SENSE_FALSE && (!GetRASensor() && !GetLASensor())) {
             nextState = DEAD_END;
         }
         break;
@@ -125,10 +149,11 @@ void SensorFSM()
     }
 
     // Debug information
-    printf("Current State is: ");
-    PrintSenseFSMState(currentState);
-    printf("Next State is: ");
-    PrintSenseFSMState(nextState);
+    //printf("Current State is: ");
+    //PrintSenseFSMState(currentState);
+    //printf("Next State is: ");
+    //PrintSenseFSMState(nextState);
+    //PrintSensorStates();
 
     if (nextState != NO_PATH)
         currentState = nextState;
@@ -138,7 +163,7 @@ void PrintSenseFSMState(SenseState s)
 {
     switch (s)
     {
-    case STRAIGHT:
+    case STRAIGHT_PATH:
         printf("STRAIGHT\n");
         break;
     case EXPECT_TURN:
