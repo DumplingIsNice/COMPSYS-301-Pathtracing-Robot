@@ -13,31 +13,31 @@
 //Date 2012~2020
 //=======================================================================
 
-// TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
-// TESTMODE1: travel in a circle 
-
-#define TESTMODE0
-//#define TESTMODE1
 #define TESTMODE3
-
 //#define TEST_MODE_MAP
 #define TESTSENSOR
-#define TESTMOVELEFT
-//#define TESTMOVERIGHT
 
-#define NITERATIONS 100
+/* Starting Position Init */
+//#define TESTMOVELEFT
+//#define TESTMOVERIGHT
+#define TESTALIGN
+
+// Simulation parameters
+//{------------------------------------
+#define NITERATIONS 1000
 #define STARTUPDELAY 2 //sec
 
-#define TURNING_SPEED			60 //rad/s
-#define LEFT_TURNING_SPEED		TURNING_SPEED
-#define RIGHT_TURNING_SPEED		-TURNING_SPEED
+// More in 'Project.h'
+//}------------------------------------
 
+/* Do not touch Includes */
+//{------------------------------
 #include "mainFungGLAppEngin.h" //a must
 #include "mazeGen.h" //just include to use radnom number generation function
 #include <vector>
 #include <iostream>
 #include "highPerformanceTimer.h"//just to include if timer function is required by user.
-
+//}------------------------------------
 /* Custom Includes */
 
 extern "C"
@@ -46,6 +46,7 @@ extern "C"
 	#include "robot_simulation/project.h"
 }
 
+#include "robot_simulation/control.h"
 #include "robot_simulation/sensor.h"
 
 using namespace std;
@@ -87,87 +88,88 @@ float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in de
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
 
-typedef enum MotionState
+/* Actuation Functions */
+//{------------------------------------
+void LinearForward() { virtualCarLinearSpeed_seed = DEFAULT_LINEAR_SPEED * floorToCoordScaleFactor; }
+void LinearZero() { virtualCarLinearSpeed_seed = 0; }
+void AngularLeft() { virtualCarAngularSpeed_seed = LEFT_TURNING_SPEED; }
+void AngularRight() { virtualCarAngularSpeed_seed = RIGHT_TURNING_SPEED; }
+void AngularZero() { virtualCarAngularSpeed_seed = 0; }
+void AlignLeft() { virtualCarAngularSpeed_seed = LEFT_ALIGN_SPEED; }
+void AlignRight() { virtualCarAngularSpeed_seed = RIGHT_ALIGN_SPEED; }
+void AlignZero() { virtualCarAngularSpeed_seed = 0; }
+
+void InitSpeedSeed()
 {
-	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, LEAVING
-};
-
-static MotionState RobotMotionState = FOLLOWING;
-
-MotionState GetRobotMotionState() {
-	return RobotMotionState;
+	LinearZero();
+	AngularZero();
 }
 
-void SetRobotMotionState(const MotionState s) {
-	RobotMotionState = s;
-}
+///*Input speed : takes in a speed for the robot in mm/s*/
+//void moveStraight(int speed) {
+//
+//	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
+//
+//}
+//
+//
+//void turnLeft() {
+//
+//	setVirtualCarSpeed(0, 180);
+//
+//}
+//
+//void turnRight() {
+//	setVirtualCarSpeed(0, -180);
+//
+//}
+//
+//void turnBack() {
+//	setVirtualCarSpeed(0, 360);
+//
+//}
+//
+//
+//void stopMovement() {
+//	setVirtualCarSpeed(0, 0);
+//}
+//
+//
+///*Input direction : takes an integer for the directions
+//					0 - straight
+//					1- left
+//					2- right
+//					3- back
+//					4 - stop
+//This can be changed to the macros used in the other files for better integration
+//Input speed is an optional parameter used for setting the speed when moving straight
+//If no value is supplied it will assume default of 130 mm/s
+//The turning functions that are called set the linear and angular speed of the car,
+//it doesnt take into account the iterations the turns should be called for, this should be handled,
+//by the called. When testing this the turns took two iterations to complete
+//[we're trying to implement this in here as well]
+//*/
+//void movementDirection(int direction, int speed = 130) {
+//
+//	if (direction == 0) {
+//		moveStraight(speed);
+//	}
+//	else if (direction == 1) {
+//		turnLeft();
+//	}
+//	else if (direction == 2) {
+//		turnRight();
+//	}
+//	else if (direction == 3) {
+//		turnBack();
+//	}
+//	else {
+//		stopMovement();
+//	}
+//
+//}
 
-
-/*Input speed : takes in a speed for the robot in mm/s*/
-void moveStraight(int speed) {
-
-	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
-}
-
-
-void turnLeft() {
-	
-	setVirtualCarSpeed(0, LEFT_TURNING_SPEED);
-	SetRobotMotionState(LEFT_TURNING);
-}
-
-void turnRight() {
-	setVirtualCarSpeed(0, RIGHT_TURNING_SPEED);
-	SetRobotMotionState(RIGHT_TURNING);
-}
-
-void turnBack() {
-	setVirtualCarSpeed(0, 360);
-
-}
-
-
-void stopMovement() {
-	setVirtualCarSpeed(0, 0);
-}
-
-
-/*Input direction : takes an integer for the directions
-					0 - straight
-					1- left
-					2- right
-					3- back
-					4 - stop
-This can be changed to the macros used in the other files for better integration
-Input speed is an optional parameter used for setting the speed when moving straight
-If no value is supplied it will assume default of 130 mm/s
-
-The turning functions that are called set the linear and angular speed of the car,
-it doesnt take into account the iterations the turns should be called for, this should be handled,
-by the called. When testing this the turns took two iterations to complete
-
-[we're trying to implement this in here as well]
-*/
-void movementDirection(int direction, int speed = 80) {
-
-	if (direction == 0) {
-		moveStraight(speed);
-	}
-	else if (direction == 1) {
-		turnLeft();
-	}
-	else if (direction == 2) {
-		turnRight();
-	}
-	else if (direction == 3) {
-		turnBack();
-	}
-	else {
-		stopMovement();
-	}
-
-}
-
+//}------------------------------------
 int virtualCarInit()
 {
 	cout << "default virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
@@ -190,7 +192,6 @@ int virtualCarInit()
 	//num_sensors = 3;
 	//sensorSeparation = 0.2;
 
-
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//variables below can be initializes in config file,
 	//or you can uncomment them to override config file settings.
@@ -204,15 +205,6 @@ int virtualCarInit()
 	//currentCarAngle = 90;//degree
 	//maxDarkDefValueTH = 20;
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  
-#ifdef TESTMODE0
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(7);
-	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 70;
-	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
-	virtualCarAngularSpeed_seed = 0;
-#endif //TESTMODE0
 
 #ifdef TESTMODE3 //turn 180
 	currentCarPosCoord_X = cellToCoordX(3);
@@ -220,7 +212,7 @@ int virtualCarInit()
 	currentCarAngle = 0;//degree
 	virtualCarLinearSpeedFloor = 0; // mm/s
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
-	virtualCarAngularSpeed_seed = 180;
+	virtualCarAngularSpeed_seed = 0;
 	cout << "updated virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
 	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
 #endif //TESTMODE3
@@ -229,9 +221,15 @@ int virtualCarInit()
 	currentCarPosCoord_X = cellToCoordX(1);
 	currentCarPosCoord_Y = cellToCoordY(8);
 	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 70;
+	virtualCarLinearSpeedFloor = 0;
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
+	virtualCarAngularSpeed_seed = 0;
 #endif //TESTSENSOR
+
+#ifdef TESTALIGN
+	currentCarPosCoord_X = cellToCoordX(1);
+	currentCarPosCoord_Y = cellToCoordY(5);
+#endif //TESTALIGN
 
 #ifdef TESTMOVERIGHT
 	currentCarPosCoord_X = cellToCoordX(4);
@@ -264,7 +262,7 @@ int virtualCarUpdate()
 			return 1;
 	}
 
-  HandleSensor();
+	HandleSensor();
 
 //	if (i < NITERATIONS)
 //	{
@@ -300,181 +298,62 @@ int virtualCarUpdate()
 
 #ifdef TESTMODE3
 
-	if (i < NITERATIONS)
-	{	
-		Directions* validDirections = GetDirectionsSensed();
+	/*	This is a sample command structure : 
 		
-		switch (GetRobotMotionState()) 
-		{
-		case FOLLOWING:
-			if (validDirections->forward)
-			{
-				movementDirection(0); // Straight
-			}
-			if (validDirections->left)
-			{
-				movementDirection(1); // Left
-			}
-			if (validDirections->right)
-			{
-				movementDirection(2); // Right
-			}
-			if ((!validDirections->left && !validDirections->right) && !validDirections->forward)
-			{
-				stopMovement(); // Right
-			}
-			break;
-		case LEFT_TURNING:
-			if ((validDirections->forward) && (validDirections->left))
-			{
-				movementDirection(0); // Straight
-				SetRobotMotionState(LEAVING);
-			}
-			break;
-		case RIGHT_TURNING:
-			if ((validDirections->forward))
-			{
-				movementDirection(0); // Straight
-				SetRobotMotionState(LEAVING);
-			}
-			break;
-		case LEAVING:
-			if (validDirections->forward)
-			{
-				movementDirection(0); // Straight
-			}
-			if (!((validDirections->left) && (validDirections->forward)))
-			{
-				SetRobotMotionState(FOLLOWING);
-			}
-			if (!((validDirections->right) && (validDirections->forward)))
-			{
-				SetRobotMotionState(FOLLOWING);
-			}
-			break;
-		default:
-			;
-		}
-		
-		i++;
-	} 
-	else
+		The robot is driven by its currently sensed path + navagation command
+		Navigation command is a MotionState enum stored in NextRobotMotionState.
+
+		Ideally:
+			Navigation is handled after HandleSensor() (above) before the following 
+			section and a command is produced.
+
+			The following section load the command DEPENDING on the encountered path.
+
+				- A counter may be used to track each path met (and went straight)
+				  on the same following trace.
+
+		Currently, commands to deal with an intersection is fixed.
+
+		If no command is loaded, robot drives automatically in the following priority:
+			
+			Follow a line					-> Straight and automatic line following logic. 
+			Dead-end and floating off-line	-> U-turn (right)
+	*/
+	//}---------------------------------
+	if (GetRobotMotionState() == FOLLOWING)
 	{
-		stopMovement();
-		//currentCarAngle = 180;
+		if (SENSED_CROSS_ROAD)
+		{
+			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+		}
+		else if (SENSED_T)
+		{
+			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+		}
+		else if (SENSED_L_BRANCH_T)
+		{
+			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+		}
+		else if (SENSED_R_BRANCH_T)
+		{
+			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+		}
 	}
+	//}---------------------------------
+
+  /* Update Routine: */
+  
+  // Pass command as current state.
+  HandleCommands(GetNextRobotMotionState());
+  // Perform actuation depending on current RobotMotionState
+  HandleMovement();
+  printf("######################\n");
 #endif // TESTMODE3
-
-#ifdef TESTSENSOR
-	//{------------------------------------
-	// Rudenmentry self aligning system
-	// Alignment sensor located at back for least duration oscillation. 
-	// Prob Need to be fix condition to while the robot is under the travel straight command.
-	// Requires dynamic readjustment magnitude (PID??)
-		// Needs to be fast when center returns to path.
-	// Critical note: **We cannot turn on a dime**.
-	//updat linear and rotational speed based on sensor information
-
-	//static float alignAngularSpeed = 0.0;
-	//static float alignAccAngularSpeed = 2.0;
-
-	//if ((F_SENSOR == SENSE_FALSE) && (C_SENSOR == SENSE_FALSE))
-	//{
-	//	if (LA_SENSOR == SENSE_TRUE)
-	//		setVirtualCarSpeed(virtualCarLinearSpeed_seed, (alignAngularSpeed+=alignAccAngularSpeed));
-	//	else if (RA_SENSOR == SENSE_TRUE)
-	//		setVirtualCarSpeed(virtualCarLinearSpeed_seed, (alignAngularSpeed-=alignAccAngularSpeed));
-	//	else
-	//	{
-	//		setVirtualCarSpeed(virtualCarLinearSpeed_seed, -2*alignAngularSpeed);
-	//		alignAngularSpeed = 0.0;
-	//	}
-	//	printf("Angular Speed: %f\n", virtualCarAngularSpeed_seed);
-	//} 
-
-	//}---------------------------------------
-#endif // TEST_SENSOR
 
 	myTimer.resetTimer();
 
 	return 1;
 }
-
-//------------------------------------------------------------------------------------------
-int virtualCarUpdate0()
-{
-	//{----------------------------------
-	//process sensor state information
-	float halfTiltRange = (num_sensors - 20) / 2.0;
-	float tiltSum = 0.0;
-	float blackSensorCount = 0.0;
-	for (int i = 0; i < num_sensors; i++)
-	{
-		if (virtualCarSensorStates[i] == 0)
-		{
-			float tilt = (float)i - halfTiltRange;
-			tiltSum += tilt;
-			blackSensorCount += 1.0;
-		}
-	}
-	int count = 0;
-	if (count < 3) {
-		setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed);
-		count++;
-	}else{
-		setVirtualCarSpeed(0, 0);
-	}
-	count = 0;
-	
-    //}------------------------------------
-
-	////{------------------------------------
-	////updat linear and rotational speed based on sensor information
-	//if (blackSensorCount > 0.0)
-	//{
-		//setVirtualCarSpeed(virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed*tiltSum);
-		//setVirtualCarSpeed(virtualCarLinearSpeed_seed, 0);
-		//setVirtualCarSpeed(0.5, 0);
-	//}
-	//else
-	//{
-		//setVirtualCarSpeed(0.0, -90);
-	//}
-		//setVirtualCarSpeed(0.0, 10.0);
-	////}---------------------------------------
-
-	//below is optional. just to provid some status report .
-	//{--------------------------------------------------------------
-	
-	if (myTimer.getTimer() > 0.5)
-	{
-		myTimer.resetTimer();
-		cout << "Sensor State: ";
-		for (int i = 0; i < num_sensors; i++)
-		{
-			cout << virtualCarSensorStates[i] << " ";
-		
-		}
-		cout << endl;
-		//for (int i = 0; i < ghostInfoPackList.size(); i++)
-		//	cout << ghostInfoPackList[i].ghostType << " , " << ghostInfoPackList[i].direction << endl;
-		cout << "=====================================" << endl;
-		cout << "current car floor X, Y, theta = " << coordToFloorX(currentCarPosCoord_X) << " , " << coordToFloorY(currentCarPosCoord_Y) << " , " << currentCarAngle << endl;
-		cout << "current Cell X, Y = " << coordToCellX(currentCarPosCoord_X) << " , " << coordToCellY(currentCarPosCoord_Y) << endl;
-		cout << "-----------------------------------------" << endl;
-		cout << " ghost list info:" << endl;
-		for (int i = 0; i < ghostInfoPackList.size(); i++)
-		{
-			cout << "g[" << i << "]: (" << ghostInfoPackList[i].coord_x << ", " << ghostInfoPackList[i].coord_y <<"); [s="<<
-				ghostInfoPackList[i].speed<<"; [d="<< ghostInfoPackList[i].direction << "]; [T=" << ghostInfoPackList[i].ghostType<<"]" << endl;
-		}
-	}
-	
-	//}---------------------------------------------------------------
-	
-	return 1;
-}
-//}=============================================================
 
 int main(int argc, char** argv)
 {

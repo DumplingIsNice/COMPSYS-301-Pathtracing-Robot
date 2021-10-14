@@ -19,18 +19,18 @@ extern "C"
 // Sensor fecthing macro
 #define L_SENSOR    virtualCarSensorStates[0]
 #define R_SENSOR    virtualCarSensorStates[1]
-#define F_SENSOR    virtualCarSensorStates[2]
-#define C_SENSOR    virtualCarSensorStates[3]
-#define LA_SENSOR   virtualCarSensorStates[4]
-#define RA_SENSOR   virtualCarSensorStates[5]
+#define C_SENSOR    virtualCarSensorStates[2]
+#define LA_SENSOR   virtualCarSensorStates[3]
+#define RA_SENSOR   virtualCarSensorStates[4]
 
 #define SENSE_TRUE  0
 #define SENSE_FALSE 1
 
 enum SenseState
 {
-    STRAIGHT, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
-    T_SEC, LEFT_BRANCH_T, RIGHT_BRANCH_T, CROSS_ROAD, NO_PATH
+    STRAIGHT_PATH, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
+    T_SEC, LEFT_BRANCH_T, RIGHT_BRANCH_T, CROSS_ROAD, NO_PATH,
+    PENDING
 };
 
 void InitDirectionSensed();
@@ -39,11 +39,15 @@ Directions*  GetDirectionsSensed();
 // Runs ensor FSM logic
 void SensorFSM();
 
-// Sensor handling example
+// Processes sensor input and populate directionsSensed
 void HandleSensor();
 
 // Debug functions to print infomation to terminal
 void PrintSenseFSMState(SenseState s);
 void PrintSensorStates();
+
+// Get indivisual alignment sensors
+int GetRASensor();
+int GetLASensor();
 
 #endif // SENSOR_H
