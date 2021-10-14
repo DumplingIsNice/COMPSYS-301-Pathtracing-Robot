@@ -40,12 +40,6 @@ void HandleAlignment();
 // Debug info of Robot State
 void PrintRobotState(MotionState m);
 
-void moveStraight(int speed);
-void turnLeft();
-void turnRight();
-void turnBack();
-void stopMovement();
-
 /*Input direction : takes an integer for the directions
 					0 - straight
 					1- left
@@ -62,6 +56,12 @@ by the called. When testing this the turns took two iterations to complete
 
 [we're trying to implement this in here as well]
 */
-void movementDirection(int direction, int speed = 130);
+//void movementDirection(int direction, int speed = 130);
+//
+//void moveStraight(int speed);
+//void turnLeft();
+//void turnRight();
+//void turnBack();
+//void stopMovement();
 
 #endif // CONTROL_H

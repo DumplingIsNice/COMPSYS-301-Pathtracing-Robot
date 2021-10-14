@@ -13,12 +13,6 @@
 //Date 2012~2020
 //=======================================================================
 
-// TESTMODE0: horizonal travel at fixed speed for 10 iterations, display position
-// TESTMODE1: travel in a circle 
-
-//#define TESTMODE0
-//#define TESTMODE1
-
 #define TESTMODE3
 //#define TEST_MODE_MAP
 #define TESTSENSOR
@@ -32,14 +26,18 @@
 //{------------------------------------
 #define NITERATIONS 1000
 #define STARTUPDELAY 2 //sec
+
+// More in 'Project.h'
 //}------------------------------------
 
+/* Do not touch Includes */
+//{------------------------------
 #include "mainFungGLAppEngin.h" //a must
 #include "mazeGen.h" //just include to use radnom number generation function
 #include <vector>
 #include <iostream>
 #include "highPerformanceTimer.h"//just to include if timer function is required by user.
-
+//}------------------------------------
 /* Custom Includes */
 
 extern "C"
@@ -95,7 +93,7 @@ float currentCarPosFloor_X, currentCarPosFloor_Y;
 void LinearForward() { virtualCarLinearSpeed_seed = DEFAULT_LINEAR_SPEED * floorToCoordScaleFactor; }
 void LinearZero() { virtualCarLinearSpeed_seed = 0; }
 void AngularLeft() { virtualCarAngularSpeed_seed = LEFT_TURNING_SPEED; }
-void AngularRight()	{ virtualCarAngularSpeed_seed = RIGHT_TURNING_SPEED; }
+void AngularRight() { virtualCarAngularSpeed_seed = RIGHT_TURNING_SPEED; }
 void AngularZero() { virtualCarAngularSpeed_seed = 0; }
 void AlignLeft() { virtualCarAngularSpeed_seed = LEFT_ALIGN_SPEED; }
 void AlignRight() { virtualCarAngularSpeed_seed = RIGHT_ALIGN_SPEED; }
@@ -170,6 +168,7 @@ void InitSpeedSeed()
 //	}
 //
 //}
+
 //}------------------------------------
 int virtualCarInit()
 {
@@ -193,7 +192,6 @@ int virtualCarInit()
 	//num_sensors = 3;
 	//sensorSeparation = 0.2;
 
-
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//variables below can be initializes in config file,
 	//or you can uncomment them to override config file settings.
@@ -207,15 +205,6 @@ int virtualCarInit()
 	//currentCarAngle = 90;//degree
 	//maxDarkDefValueTH = 20;
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  
-#ifdef TESTMODE0
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(7);
-	currentCarAngle = 0;//degree
-	virtualCarLinearSpeedFloor = 70;
-	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
-	virtualCarAngularSpeed_seed = 0;
-#endif //TESTMODE0
 
 #ifdef TESTMODE3 //turn 180
 	currentCarPosCoord_X = cellToCoordX(3);
@@ -223,7 +212,7 @@ int virtualCarInit()
 	currentCarAngle = 0;//degree
 	virtualCarLinearSpeedFloor = 0; // mm/s
 	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;// coord/s
-	virtualCarAngularSpeed_seed = 180;
+	virtualCarAngularSpeed_seed = 0;
 	cout << "updated virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
 	cout << "updated virtualCarAngularSpeed_seed:" << virtualCarAngularSpeed_seed << endl;
 #endif //TESTMODE3
@@ -233,7 +222,8 @@ int virtualCarInit()
 	currentCarPosCoord_Y = cellToCoordY(8);
 	currentCarAngle = 0;//degree
 	virtualCarLinearSpeedFloor = 0;
-	virtualCarLinearSpeed_seed = 0;//coord
+	virtualCarLinearSpeed_seed = virtualCarLinearSpeedFloor * floorToCoordScaleFactor;//coord
+	virtualCarAngularSpeed_seed = 0;
 #endif //TESTSENSOR
 
 #ifdef TESTALIGN
@@ -250,7 +240,6 @@ int virtualCarInit()
 	currentCarPosCoord_X = cellToCoordX(1);
 	currentCarPosCoord_Y = cellToCoordY(2);
 #endif //TESTMOVELEFT
-
 
 	myTimer.resetTimer();
 	return 1;
@@ -331,26 +320,26 @@ int virtualCarUpdate()
 			Dead-end and floating off-line	-> U-turn (right)
 	*/
 	//}---------------------------------
-  if (GetRobotMotionState() == FOLLOWING)
-  {
-	  if (SENSED_CROSS_ROAD)
-	  {
-		  SetNextRobotMotionState(LEFT_TURNING); // Fixed.
-	  }
-	  else if (SENSED_T)
-	  {
-		  SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
-	  }
-	  else if (SENSED_L_BRANCH_T)
-	  {
-		  SetNextRobotMotionState(LEFT_TURNING); // Fixed.
-	  }
-	  else if (SENSED_R_BRANCH_T)
-	  {
-		  SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
-	  }
-  }
-  //}---------------------------------
+	if (GetRobotMotionState() == FOLLOWING)
+	{
+		if (SENSED_CROSS_ROAD)
+		{
+			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+		}
+		else if (SENSED_T)
+		{
+			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+		}
+		else if (SENSED_L_BRANCH_T)
+		{
+			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+		}
+		else if (SENSED_R_BRANCH_T)
+		{
+			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+		}
+	}
+	//}---------------------------------
 
   /* Update Routine: */
   

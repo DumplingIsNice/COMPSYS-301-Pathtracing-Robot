@@ -55,6 +55,7 @@ void HandleMovement()
 	switch (GetRobotMotionState())
 	{
 	case FOLLOWING:
+		// Dead_end
 		if ((!validDirections->left && !validDirections->right) && !validDirections->forward)
 		{
 			AngularRight();

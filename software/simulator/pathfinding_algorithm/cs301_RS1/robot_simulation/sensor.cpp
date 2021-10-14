@@ -68,11 +68,12 @@ void SensorFSM()
                 currentState = STRAIGHT_PATH;
             }
         }
-        else /* (F_SENSOR == SENSE_FALSE) */ {
+        else /* (GetRASensor()||GetLASensor() == SENSE_FALSE) */ {
             currentState = EXPECT_TURN;
         }
     }
     // Exit descerning for turns
+    // This is the PENDING section
     else {
         switch (GetRobotMotionState())
         {
