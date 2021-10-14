@@ -48,6 +48,7 @@ extern "C"
 
 #include "robot_simulation/control.h"
 #include "robot_simulation/sensor.h"
+#include "robot_simulation/odometer.h"
 
 using namespace std;
 
@@ -62,6 +63,9 @@ int sensorPopulationAlgorithmID;
 float sensorSeparation;
 float num_sensors;
 extern int maxDarkDefValueTH;
+
+float start_time;
+float end_time;
 
 vector<int> virtualCarSensorStates;
 
@@ -105,71 +109,7 @@ void InitSpeedSeed()
 	AngularZero();
 }
 
-///*Input speed : takes in a speed for the robot in mm/s*/
-//void moveStraight(int speed) {
-//
-//	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
-//
-//}
-//
-//
-//void turnLeft() {
-//
-//	setVirtualCarSpeed(0, 180);
-//
-//}
-//
-//void turnRight() {
-//	setVirtualCarSpeed(0, -180);
-//
-//}
-//
-//void turnBack() {
-//	setVirtualCarSpeed(0, 360);
-//
-//}
-//
-//
-//void stopMovement() {
-//	setVirtualCarSpeed(0, 0);
-//}
-//
-//
-///*Input direction : takes an integer for the directions
-//					0 - straight
-//					1- left
-//					2- right
-//					3- back
-//					4 - stop
-//This can be changed to the macros used in the other files for better integration
-//Input speed is an optional parameter used for setting the speed when moving straight
-//If no value is supplied it will assume default of 130 mm/s
-//The turning functions that are called set the linear and angular speed of the car,
-//it doesnt take into account the iterations the turns should be called for, this should be handled,
-//by the called. When testing this the turns took two iterations to complete
-//[we're trying to implement this in here as well]
-//*/
-//void movementDirection(int direction, int speed = 130) {
-//
-//	if (direction == 0) {
-//		moveStraight(speed);
-//	}
-//	else if (direction == 1) {
-//		turnLeft();
-//	}
-//	else if (direction == 2) {
-//		turnRight();
-//	}
-//	else if (direction == 3) {
-//		turnBack();
-//	}
-//	else {
-//		stopMovement();
-//	}
-//
-//}
 
-//}------------------------------------
 int virtualCarInit()
 {
 	cout << "default virtualCarLinearSpeed_seed:" << virtualCarLinearSpeed_seed << endl;
@@ -201,9 +141,6 @@ int virtualCarInit()
 	currentCarPosCoord_Y = cellToCoordY(7);
 	currentCarAngle = 0;
 
-	//virtualCarAngularSpeed_seed = 40;//degree
-	//currentCarAngle = 90;//degree
-	//maxDarkDefValueTH = 20;
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #ifdef TESTMODE3 //turn 180
@@ -249,6 +186,7 @@ int virtualCarInit()
 
 int virtualCarUpdate()
 {
+	start_time = myTimer.getTimer();
 	static int i = 0;
 	static float prev_position = coordToFloorX(currentCarPosCoord_X);
 	static float myspeed = virtualCarLinearSpeed_seed;
@@ -349,9 +287,11 @@ int virtualCarUpdate()
   HandleMovement();
   printf("######################\n");
 #endif // TESTMODE3
-
+	end_time = myTimer.getTimer();
 	myTimer.resetTimer();
-
+	calculateDistance();
+	printf("%f", cellxTravelled());
+	printf("%f", cellyTravelled());
 	return 1;
 }
 

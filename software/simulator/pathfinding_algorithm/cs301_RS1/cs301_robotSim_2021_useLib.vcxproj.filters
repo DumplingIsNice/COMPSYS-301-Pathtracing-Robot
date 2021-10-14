@@ -72,6 +72,9 @@
     <ClInclude Include="robot_simulation\actuation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="robot_simulation\odometer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,6 +117,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="robot_simulation\control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="robot_simulation\odometer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
