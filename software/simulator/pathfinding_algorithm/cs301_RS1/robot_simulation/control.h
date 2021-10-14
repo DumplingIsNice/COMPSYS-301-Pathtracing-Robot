@@ -16,11 +16,19 @@
 #define SENSED_T			(GetDirectionsSensed()->left && GetDirectionsSensed()->right) && !GetDirectionsSensed()->forward
 #define SENSED_L_BRANCH_T	(GetDirectionsSensed()->left && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->right
 #define SENSED_R_BRANCH_T	(GetDirectionsSensed()->right && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->left
+#define SENSED_DEAD_END		(!GetDirectionsSensed()->left && !GetDirectionsSensed()->right) && !GetDirectionsSensed()->forward
 
 enum MotionState
 {
 	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, U_TURN, LEAVING, NO_STATE
 };
+
+enum UturnDir
+{
+	U_RIGHT, U_LEFT, U_NO
+};
+
+static UturnDir tPathUturn = U_NO;
 
 MotionState GetRobotMotionState();
 MotionState GetNextRobotMotionState();
