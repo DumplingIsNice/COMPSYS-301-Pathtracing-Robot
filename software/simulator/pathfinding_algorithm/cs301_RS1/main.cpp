@@ -20,8 +20,10 @@
 /* Starting Position Init */
 //#define TESTMOVELEFT
 //#define TESTMOVERIGHT
-#define TESTALIGN
+//#define TESTALIGN
+#define TESTL1
 
+#define TEST_SHORTEST_PATH
 
  // Simulation parameters
  //{------------------------------------
@@ -41,7 +43,6 @@
 //}------------------------------------
 /* Custom Includes */
 
-#define TEST_SHORTEST_PATH
 extern "C"
 {
 	#include "pathfinding/PathfindingMain.h"
@@ -233,15 +234,12 @@ int virtualCarInit()
 	currentCarPosCoord_Y = cellToCoordY(5);
 #endif //TESTALIGN
 
-#ifdef TESTMOVERIGHT
-	currentCarPosCoord_X = cellToCoordX(4);
-	currentCarPosCoord_Y = cellToCoordY(2);
-#endif //TESTMOVERIGHT
+#ifdef TESTL1
+	currentCarAngle = 0;//degree
+	currentCarPosCoord_X = cellToCoordX(START_X);
+	currentCarPosCoord_Y = cellToCoordY(START_Y);
+#endif // TESTL1
 
-#ifdef TESTMOVELEFT
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(2);
-#endif //TESTMOVELEFT
 
 	myTimer.resetTimer();
 	return 1;
