@@ -18,17 +18,20 @@
 #define SENSED_R_BRANCH_T	(GetDirectionsSensed()->right && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->left
 #define SENSED_DEAD_END		(!GetDirectionsSensed()->left && !GetDirectionsSensed()->right) && !GetDirectionsSensed()->forward
 
-enum MotionState
-{
-	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, U_TURN, LEAVING, NO_STATE
-};
-
+// Intersection U turn indication flag
+//{----------------------------------
 enum UturnDir
 {
 	U_RIGHT, U_LEFT, U_NO
 };
 
 static UturnDir tPathUturn = U_NO;
+//}----------------------------------
+
+enum MotionState
+{
+	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, U_TURN, LEAVING, NO_STATE
+};
 
 MotionState GetRobotMotionState();
 MotionState GetNextRobotMotionState();

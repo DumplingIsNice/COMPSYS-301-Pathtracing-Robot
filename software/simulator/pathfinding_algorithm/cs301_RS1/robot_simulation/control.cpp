@@ -30,6 +30,38 @@ void SetNextRobotMotionState(const MotionState s)
 	NextMotionState = s;
 }
 
+// Private Helper: Turning Logic
+void HandleTurning()
+{
+	static int toExit = 0;
+
+	// Leaving original orientiation indication
+	if (!GetDirectionsSensed()->forward)
+	{
+		toExit = 1;
+	}
+
+	// Ready to exit intersection
+	if (toExit)
+	{
+		// If U turning at intersection, follow through 
+		// (aka make u turn with exit after 2x foward indication)
+		if (tPathUturn != U_NO)
+		{
+			if (GetDirectionsSensed()->forward)
+			{
+				toExit = 0;
+				tPathUturn = U_NO;
+			}
+		}
+		// Finally, enter leaving state when all flag is forfulled.
+		else if (GetDirectionsSensed()->forward) {
+			SetRobotMotionState(LEAVING);
+			toExit = 0;
+		}
+	}
+}
+
 void HandleCommands(MotionState command)
 {
 	printf("Next Robot Motion State is: ");
@@ -41,17 +73,17 @@ void HandleCommands(MotionState command)
 		// Handles intersection U turns 
 		if (command == U_TURN)
 		{
-
 			if (SENSED_L_BRANCH_T)
 			{
-				tPathUturn = U_NO;
-				SetRobotMotionState(RIGHT_TURNING);
+				tPathUturn = U_LEFT;
+				SetRobotMotionState(LEFT_TURNING);
 			}
 			else if (SENSED_R_BRANCH_T)
 			{
-				tPathUturn = U_NO;
-				SetRobotMotionState(LEFT_TURNING);
+				tPathUturn = U_RIGHT;
+				SetRobotMotionState(RIGHT_TURNING);
 			}
+			// T and cross road uses the same default logic
 			else {
 				tPathUturn = U_RIGHT;
 			}
@@ -69,7 +101,6 @@ void HandleMovement()
 
 	Directions* validDirections = GetDirectionsSensed();
 
-	static int toExit = 0;
 	static int leaveCounter = 0;
 	InitSpeedSeed();
 
@@ -99,47 +130,11 @@ void HandleMovement()
 		break;
 	case LEFT_TURNING:
 		AngularLeft();
-		if (!validDirections->forward)
-		{
-			toExit = 1;
-		}
-		if (toExit)
-		{
-			if (tPathUturn != U_NO)
-			{
-				if (validDirections->forward)
-				{
-					toExit = 0;
-					tPathUturn = U_NO;
-				}
-			}
-			else if (validDirections->forward) {
-				SetRobotMotionState(LEAVING);
-				toExit = 0;
-			}
-		}
+		HandleTurning();
 		break;
 	case RIGHT_TURNING:
 		AngularRight();
-		if (!validDirections->forward)
-		{
-			toExit = 1;
-		}
-		if (toExit)
-		{
-			if (tPathUturn != U_NO)
-			{
-				if (validDirections->forward)
-				{
-					toExit = 0;
-					tPathUturn = U_NO;
-				}
-			} 
-			else if (validDirections->forward) {
-				SetRobotMotionState(LEAVING);
-				toExit = 0;
-			}
-		}
+		HandleTurning();
 		break;
 	case LEAVING:
 		HandleAlignment();
