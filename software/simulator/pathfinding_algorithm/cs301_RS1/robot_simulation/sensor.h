@@ -19,10 +19,9 @@ extern "C"
 // Sensor fecthing macro
 #define L_SENSOR    virtualCarSensorStates[0]
 #define R_SENSOR    virtualCarSensorStates[1]
-#define F_SENSOR    virtualCarSensorStates[2]
-#define C_SENSOR    virtualCarSensorStates[3]
-#define LA_SENSOR   virtualCarSensorStates[4]
-#define RA_SENSOR   virtualCarSensorStates[5]
+#define C_SENSOR    virtualCarSensorStates[2]
+#define LA_SENSOR   virtualCarSensorStates[3]
+#define RA_SENSOR   virtualCarSensorStates[4]
 
 #define SENSE_TRUE  0
 #define SENSE_FALSE 1
