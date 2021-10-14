@@ -142,6 +142,7 @@ void SensorFSM()
         nextState = PENDING;
         break;
     case RIGHT_BRANCH_T:
+        d->forward = true;
         d->right = true;
         nextState = PENDING;
         break;
@@ -196,6 +197,9 @@ void PrintSenseFSMState(SenseState s)
         break;
     case CROSS_ROAD:
         printf("CROSS_ROAD\n");
+        break;
+    case PENDING:
+        printf("PENDING\n");
         break;
     default:
         printf("NULL\n");

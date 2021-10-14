@@ -37,12 +37,26 @@ void HandleCommands(MotionState command)
 	if (command != NO_STATE)
 	{
 		SetRobotMotionState(command);
-		
+
 		// Handles intersection U turns 
 		if (command == U_TURN)
 		{
-			tPathUturn = U_RIGHT;
+
+			if (SENSED_L_BRANCH_T)
+			{
+				tPathUturn = U_NO;
+				SetRobotMotionState(RIGHT_TURNING);
+			}
+			else if (SENSED_R_BRANCH_T)
+			{
+				tPathUturn = U_NO;
+				SetRobotMotionState(LEFT_TURNING);
+			}
+			else {
+				tPathUturn = U_RIGHT;
+			}
 		}
+
 
 		SetNextRobotMotionState(NO_STATE);
 	}
@@ -89,10 +103,20 @@ void HandleMovement()
 		{
 			toExit = 1;
 		}
-		if (toExit && validDirections->forward)
+		if (toExit)
 		{
-			SetRobotMotionState(LEAVING);
-			toExit = 0;
+			if (tPathUturn != U_NO)
+			{
+				if (validDirections->forward)
+				{
+					toExit = 0;
+					tPathUturn = U_NO;
+				}
+			}
+			else if (validDirections->forward) {
+				SetRobotMotionState(LEAVING);
+				toExit = 0;
+			}
 		}
 		break;
 	case RIGHT_TURNING:

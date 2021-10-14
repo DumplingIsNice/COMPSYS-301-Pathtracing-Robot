@@ -246,7 +246,7 @@ int virtualCarInit()
 }
 
 
-
+#pragma optimize( "", on )
 int virtualCarUpdate()
 {
 	static int i = 0;
@@ -355,7 +355,7 @@ int virtualCarUpdate()
 
 	return 1;
 }
-
+#pragma optimize( "", off )
 int main(int argc, char** argv)
 {
 
