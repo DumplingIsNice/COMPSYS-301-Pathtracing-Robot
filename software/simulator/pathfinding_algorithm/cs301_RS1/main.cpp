@@ -248,7 +248,6 @@ int virtualCarInit()
 }
 
 
-
 int virtualCarUpdate()
 {
 	static int i = 0;
@@ -322,23 +321,24 @@ int virtualCarUpdate()
 			Dead-end and floating off-line	-> U-turn (right)
 	*/
 	//}---------------------------------
+
 	if (GetRobotMotionState() == FOLLOWING)
 	{
 		if (SENSED_CROSS_ROAD)
 		{
-			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+			SetNextRobotMotionState(U_TURN); // Fixed.
 		}
 		else if (SENSED_T)
 		{
-			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+			SetNextRobotMotionState(U_TURN); // Fixed.
 		}
 		else if (SENSED_L_BRANCH_T)
 		{
-			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+			SetNextRobotMotionState(U_TURN); // Fixed.
 		}
 		else if (SENSED_R_BRANCH_T)
 		{
-			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+			SetNextRobotMotionState(U_TURN); // Fixed.
 		}
 	}
 	//}---------------------------------
