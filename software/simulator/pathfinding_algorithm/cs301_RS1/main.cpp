@@ -23,7 +23,7 @@
 //#define TESTALIGN
 #define TESTL1
 
-//#define TEST_SHORTEST_PATH
+#define TEST_SHORTEST_PATH
 
  // Simulation parameters
  //{------------------------------------
@@ -235,7 +235,7 @@ int virtualCarInit()
 #endif //TESTALIGN
 
 #ifdef TESTL1
-	currentCarAngle = 0;//degree
+	currentCarAngle = 270;//degree
 	currentCarPosCoord_X = cellToCoordX(START_X);
 	currentCarPosCoord_Y = cellToCoordY(START_Y);
 #endif // TESTL1
@@ -297,6 +297,27 @@ int virtualCarUpdate()
 
 #ifdef TESTMODE3
 
+	static MotionState nextCommand = NO_STATE;
+	static ListElement* element = GetListHead(GetDirectionQueue());
+
+	if (nextCommand == NO_STATE)
+	{
+		cout << "Processing DirectionQueue Contents:" << endl;
+		nextCommand = *(MotionState*)(element->node);
+		element = element->tail;
+
+		if (element == NULL)
+		{
+			DestroyDirectionQueueElementsAndContents();
+			// All DirectionQueue element processed.
+		}
+	}
+	cout << "=====================================" << endl;
+	cout << "Next Command is: " << endl;
+	PrintRobotState(nextCommand);
+	cout << "=====================================" << endl;
+
+
 	/*	This is a sample command structure : 
 		
 		The robot is driven by its currently sensed path + navagation command
@@ -324,19 +345,23 @@ int virtualCarUpdate()
 	{
 		if (SENSED_CROSS_ROAD)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
 		}
 		else if (SENSED_T)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
 		}
 		else if (SENSED_L_BRANCH_T)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
 		}
 		else if (SENSED_R_BRANCH_T)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
 		}
 	}
 	//}---------------------------------

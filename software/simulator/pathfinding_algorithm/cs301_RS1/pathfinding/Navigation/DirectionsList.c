@@ -2,6 +2,7 @@
 #define DIRECTIONSLIST_C
 
 #include "DirectionsList.h"
+#include "../../robot_simulation/control.h"
 
 #include "../NodeData/List.h"
 #include "../NodeData/NodeDataOps.h"
@@ -15,15 +16,15 @@ List* GetDirectionQueue()
 	return &DirectionQueue;
 }
 
-Direction* NewDirection(Direction direction)
+MotionState* NewDirection(MotionState direction)
 {
-	Direction* new_direction = malloc(sizeof(Direction));
+	MotionState* new_direction = malloc(sizeof(MotionState));
 	if (new_direction == NULL) { return NULL; }
 	*new_direction = direction;
 	return new_direction;
 }
 
-ListElement* NewDirectionListElement(Direction direction)
+ListElement* NewDirectionListElement(MotionState direction)
 {
 	return NewListElement(NewDirection(direction));
 }
@@ -95,20 +96,20 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 	}
 }
 
-Direction CalculateDirection(const int* direction_delta_x, const int* direction_delta_y)
+MotionState CalculateDirection(const int* direction_delta_x, const int* direction_delta_y)
 {
 	// Assuming movement is only along one axis at a time...
-	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return DEADEND; }
+	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return NO_STATE; }
 
 	if (*direction_delta_x != 0) {
-		if (*direction_delta_x > 0) { return RIGHT; }
-		else { return LEFT; }
+		if (*direction_delta_x > 0) { return RIGHT_TURNING; }
+		else { return LEFT_TURNING; }
 	}
 	else {
-		if (*direction_delta_y > 0) { return DEADEND; }
-		else { return FORWARD; }
+		if (*direction_delta_y > 0) { return NO_STATE; }
+		else { return FOLLOWING; }
 	}
-	return DEADEND;	// should never be reached
+	return NO_STATE;	// should never be reached
 }
 
 void PrintDirectionQueue()
@@ -120,12 +121,12 @@ void PrintDirectionQueue()
 	while (element != NULL) {
 		count++;
 
-		Direction direction = *(Direction*)(element->node);
+		MotionState direction = *(MotionState*)(element->node);
 		switch (direction) {
-		case LEFT:			printf("%d. LEFT\n", count); break;
-		case RIGHT:			printf("%d. RIGHT\n", count); break;
-		case FORWARD:			printf("%d. FORWARD\n", count); break;
-		default:			printf("%d. Warning: DEADEND\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
+		case LEFT_TURNING:			printf("%d. LEFT_TURNING\n", count); break;
+		case RIGHT_TURNING:			printf("%d. RIGHT_TURNING\n", count); break;
+		case FOLLOWING:			printf("%d. FOLLOWING\n", count); break;
+		default:			printf("%d. Warning: NO_STATE\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
 		}
 
 		element = element->tail;
@@ -140,7 +141,7 @@ unsigned long DestroyDirectionQueueElementsAndContents()
 	int direction_instances_destroyed = 0;
 
 	bytes = DestroyListElementsAndImmediateContents(GetDirectionQueue(), &direction_instances_destroyed);
-	bytes = direction_instances_destroyed * sizeof(Direction);
+	bytes = direction_instances_destroyed * sizeof(MotionState);
 
 	return bytes;
 }

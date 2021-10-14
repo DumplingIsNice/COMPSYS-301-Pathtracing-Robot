@@ -31,7 +31,8 @@ void CleanUpFindShortestPath()
 	unsigned long total_nodedata_bytes = NodeMapClear();
 
 	// Free all DirectionQueue elements and their Direction enums.
-	unsigned long direction_queue_bytes = DestroyDirectionQueueElementsAndContents();
+	// unsigned long direction_queue_bytes = DestroyDirectionQueueElementsAndContents();
+	unsigned long direction_queue_bytes = 0;
 
 	printf("NodeQueue Bytes: %ld B\n", node_queue_bytes);
 	printf("Finished FinalQueue Bytes: %ld B\n", final_queue_bytes);
