@@ -110,32 +110,32 @@ void InitSpeedSeed()
 ///*Input speed : takes in a speed for the robot in mm/s*/
 //void moveStraight(int speed) {
 //
-//	virtualCarLinearSpeed_seed = speed * floorToCoordScaleFactor;
+//	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
+//
 //}
 //
-//void moveZero() {
-//	virtualCarLinearSpeed_seed = 0;
-//}
 //
 //void turnLeft() {
-//	
-//	virtualCarLinearSpeed_seed = 0 * floorToCoordScaleFactor;
-//	virtualCarAngularSpeed_seed = LEFT_TURNING_SPEED;
+//
+//	setVirtualCarSpeed(0, 180);
+//
 //}
 //
 //void turnRight() {
-//	virtualCarLinearSpeed_seed = 0 * floorToCoordScaleFactor;
-//	virtualCarAngularSpeed_seed = RIGHT_TURNING_SPEED;
+//	setVirtualCarSpeed(0, -180);
+//
 //}
 //
 //void turnBack() {
-//	virtualCarLinearSpeed_seed = 0 * floorToCoordScaleFactor;
-//	virtualCarAngularSpeed_seed = 360;
+//	setVirtualCarSpeed(0, 360);
+//
 //}
 //
+//
 //void stopMovement() {
-//	InitSpeedSeed();
+//	setVirtualCarSpeed(0, 0);
 //}
+//
 //
 ///*Input direction : takes an integer for the directions
 //					0 - straight
@@ -146,14 +146,12 @@ void InitSpeedSeed()
 //This can be changed to the macros used in the other files for better integration
 //Input speed is an optional parameter used for setting the speed when moving straight
 //If no value is supplied it will assume default of 130 mm/s
-//
 //The turning functions that are called set the linear and angular speed of the car,
 //it doesnt take into account the iterations the turns should be called for, this should be handled,
 //by the called. When testing this the turns took two iterations to complete
-//
 //[we're trying to implement this in here as well]
 //*/
-//void movementDirection(int direction, int speed = DEFAULT_LINEAR_SPEED) {
+//void movementDirection(int direction, int speed = 130) {
 //
 //	if (direction == 0) {
 //		moveStraight(speed);
