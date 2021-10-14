@@ -23,7 +23,7 @@
 //#define TESTALIGN
 #define TESTL1
 
-#define TEST_SHORTEST_PATH
+//#define TEST_SHORTEST_PATH
 
  // Simulation parameters
  //{------------------------------------

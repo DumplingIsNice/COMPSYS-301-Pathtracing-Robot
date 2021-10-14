@@ -1,6 +1,11 @@
 #include "sensor.h"
 #include "control.h"
 
+extern "C"
+{
+#include "../pathfinding/Navigation/DirectionsList.h"
+}
+
 #include "../mainFungGLAppEngin.h"
 #include <stdio.h>
 #include <vector>

@@ -20,18 +20,18 @@
 
 // Intersection U turn indication flag
 //{----------------------------------
-enum UturnDir
+typedef enum UturnDir
 {
 	U_RIGHT, U_LEFT, U_NO
-};
+} UturnDir;
 
 static UturnDir tPathUturn = U_NO;
 //}----------------------------------
 
-enum MotionState
+typedef enum MotionState
 {
 	FOLLOWING, LEFT_TURNING, RIGHT_TURNING, U_TURN, LEAVING, NO_STATE
-};
+} MotionState;
 
 MotionState GetRobotMotionState();
 MotionState GetNextRobotMotionState();

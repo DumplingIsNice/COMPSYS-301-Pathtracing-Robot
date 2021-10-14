@@ -145,4 +145,9 @@ unsigned long DestroyDirectionQueueElementsAndContents()
 	return bytes;
 }
 
+void PrintDirections(Directions* d)
+{
+	printf("left: %d, right: %d, forward %d\n", d->left, d->right, d->forward);
+}
+
 #endif // !DIRECTIONSLIST_C

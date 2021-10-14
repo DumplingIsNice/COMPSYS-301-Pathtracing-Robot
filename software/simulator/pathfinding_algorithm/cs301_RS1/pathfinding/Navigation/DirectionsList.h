@@ -17,8 +17,18 @@
 
 */
 
+/* Enum is used only when specifying a specific direction (i.e. in Navigation). */
 typedef enum Direction {LEFT, RIGHT, FORWARD, DEADEND} Direction;
 
+/* Struct is used for passing infomation on currently valid paths (i.e. SensorFSM->MovementController). */
+typedef struct Directions {
+	int left;
+	int right;
+	int forward;
+} Directions;
+
+// Prints a Directions struct to consol.
+void PrintDirections(Directions* d);
 
 // Get the head of the DirectionQueue
 struct List* GetDirectionQueue();

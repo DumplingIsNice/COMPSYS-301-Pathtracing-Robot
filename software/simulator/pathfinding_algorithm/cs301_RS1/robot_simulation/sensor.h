@@ -13,7 +13,7 @@
 
 extern "C"
 {
-    #include "project.h"
+    #include "../pathfinding/Navigation/DirectionsList.h"
 }
 
 // Sensor fecthing macro
