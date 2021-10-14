@@ -22,13 +22,11 @@
 //#define TESTMOVERIGHT
 #define TESTALIGN
 
-// <<<<<<< HEAD
-// =======
-// // Simulation parameters
-// //{------------------------------------
-// #define NITERATIONS 1000
-// #define STARTUPDELAY 2 //sec
-// >>>>>>> origin/robot-simulation-rev1
+
+ // Simulation parameters
+ //{------------------------------------
+ #define NITERATIONS 1000
+ #define STARTUPDELAY 2 //sec
 
 // More in 'Project.h'
 //}------------------------------------
