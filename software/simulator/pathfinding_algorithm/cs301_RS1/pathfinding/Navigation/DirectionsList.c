@@ -10,6 +10,10 @@
 
 static List DirectionQueue = { .head = NULL, .tail = NULL };
 
+static Direction last_evaluated_global_orientation = INVALID;	// temp value used to store the global orientation values found at AddDirection() time
+static Direction final_global_orientation = INVALID;			// the global orientation of the robot at the time it reaches the end of the path
+static Direction new_starting_orientation = INVALID;			// the global orientation of the robot at the start of the new direction queue
+
 List* GetDirectionQueue()
 {
 	return &DirectionQueue;
@@ -36,16 +40,35 @@ ListElement* NewDirectionListElement(Direction direction)
 
 Direction GetNextDirection()
 {
-	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { return INVALID; }
+	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { UpdateFinalOrientationDirection(); return INVALID; }
 
 	ListElement* element = RemoveListHead(GetDirectionQueue());
 	Direction direction = *((Direction*)(element->node));
 	DestroyDirection((Direction*)(element->node));
 	DestroyListElement(element);
+
+	UpdateFinalOrientationDirection();
+	return direction;
+}
+
+Direction GetDirectionToReorientate()
+{
+	return TakeRelativeDirections(&final_global_orientation, &new_starting_orientation);
+}
+
+void UpdateFinalOrientationDirection()
+{
+	final_global_orientation = last_evaluated_global_orientation;
+}
+
+void UpdateNewStartingOrientationDirection()
+{
+	new_starting_orientation = last_evaluated_global_orientation;
 }
 
 void AddToDirectionQueue(ListElement* element)
 {
+	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { UpdateNewStartingOrientationDirection(); }	// update on first direction
 	AppendToList(GetDirectionQueue(), element);
 }
 
@@ -56,6 +79,8 @@ void AddDirection(const struct NodeData* prev_node, const struct NodeData* curre
 
 	int direction_delta_x = GetNodeDataPosX(next_node) - GetNodeDataPosX(current_node);
 	int direction_delta_y = GetNodeDataPosY(next_node) - GetNodeDataPosY(current_node);
+
+	last_evaluated_global_orientation = CalculateDirection(&current_delta_x, &current_delta_y);		// update each new direction so that only the final direction persists
 
 	//printf("current_d_x = %d, current_d_y = %d || direction_d_x = %d, direction_d_y = %d ||    --->    ", current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
 	TakeRelativeDeltas(&current_delta_x, &current_delta_y, &direction_delta_x, &direction_delta_y);
@@ -69,8 +94,8 @@ void AddDirection(const struct NodeData* prev_node, const struct NodeData* curre
 void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, int* direction_delta_x, int* direction_delta_y)
 {
 	// Assuming movement is only along one axis at a time...
-	if ((*current_delta_x & *current_delta_y) != 0) { printf("Error: movement along two axis.\n"); return; }
-	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return; }
+	if ((*current_delta_x != 0) && (*current_delta_y != 0)) { printf("Error: movement along two or no axis.\n"); return; }
+	if ((*direction_delta_x != 0) && (*direction_delta_y != 0)) { printf("Error: movement along two or no axis.\n"); return; }
 
 	// Automatically return forward if there is no change in direction.
 	// Note that we must do that here otherwise consecutive LEFT and RIGHT are not handled it correctly.
@@ -111,10 +136,35 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 	}
 }
 
+Direction TakeRelativeDirections(const Direction* current_direction, const Direction* next_direction)
+{
+	int current_x = 0;
+	int current_y = 0;
+	int next_x = 0;
+	int next_y = 0;
+
+	switch (*current_direction) {
+	case LEFT:			current_x = -1;	break;
+	case RIGHT:			current_x = 1;	break;
+	case DEADEND:		current_y = 1;	break;
+	default:			current_y = -1;	//default to FORWARD
+	}
+
+	switch (*next_direction) {
+	case LEFT:			next_x = -1;	break;
+	case RIGHT:			next_x = 1;		break;
+	case DEADEND:		next_y = 1;		break;
+	default:			next_y = -1;	//default to FORWARD
+	}
+
+	TakeRelativeDeltas(&current_x, &current_y, &next_x, &next_y);
+	return CalculateDirection(&next_x, &next_y);
+}
+
 Direction CalculateDirection(const int* direction_delta_x, const int* direction_delta_y)
 {
 	// Assuming movement is only along one axis at a time...
-	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return INVALID; }
+	if ((*direction_delta_x != 0) && (*direction_delta_y != 0)) { printf("Error: movement along two or no axis.\n"); return INVALID; } // xor
 
 	if (*direction_delta_x != 0) {
 		if (*direction_delta_x > 0) { return RIGHT; }
@@ -124,7 +174,7 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 		if (*direction_delta_y > 0) { return DEADEND; }
 		else { return FORWARD; }
 	}
-	return DEADEND;	// should never be reached
+	return INVALID;	// should never be reached
 }
 
 void PrintDirectionQueue()
@@ -140,8 +190,9 @@ void PrintDirectionQueue()
 		switch (direction) {
 		case LEFT:			printf("%d. LEFT\n", count); break;
 		case RIGHT:			printf("%d. RIGHT\n", count); break;
-		case FORWARD:			printf("%d. FORWARD\n", count); break;
-		default:			printf("%d. Warning: DEADEND\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
+		case FORWARD:		printf("%d. FORWARD\n", count); break;
+		case DEADEND:		printf("%d. Warning: DEADEND\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
+		default:			printf("%d. Warning: INVALID\n", count);
 		}
 
 		element = element->tail;
