@@ -17,7 +17,7 @@
 
 */
 
-typedef enum Direction {LEFT, RIGHT, FORWARD, DEADEND} Direction;
+typedef enum Direction {LEFT, RIGHT, FORWARD, DEADEND, INVALID} Direction;
 
 
 // Get the head of the DirectionQueue
@@ -26,8 +26,14 @@ struct List* GetDirectionQueue();
 // Instance in memory to use with List.h pointers
 Direction* NewDirection(Direction direction);
 
+// Destroy the Direction instance and return the number of bytes freed.
+unsigned long DestroyDirection(Direction* direction);
+
 //
 struct ListElement* NewDirectionListElement(Direction direction);
+
+// Returns the direction from the top of the DirectionQueue, deleting the ListElement and updating the queue.
+Direction GetNextDirection();
 
 // Append to the DirectionQueue
 void AddToDirectionQueue(struct ListElement* element);

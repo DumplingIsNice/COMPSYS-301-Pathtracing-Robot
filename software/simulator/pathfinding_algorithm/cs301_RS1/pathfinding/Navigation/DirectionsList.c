@@ -23,9 +23,25 @@ Direction* NewDirection(Direction direction)
 	return new_direction;
 }
 
+unsigned long DestroyDirection(Direction* direction)
+{
+	if (direction != NULL) { free(direction); return sizeof(Direction); }
+	return 0;
+}
+
 ListElement* NewDirectionListElement(Direction direction)
 {
 	return NewListElement(NewDirection(direction));
+}
+
+Direction GetNextDirection()
+{
+	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { return INVALID; }
+
+	ListElement* element = RemoveListHead(GetDirectionQueue());
+	Direction direction = *((Direction*)(element->node));
+	DestroyDirection((Direction*)(element->node));
+	DestroyListElement(element);
 }
 
 void AddToDirectionQueue(ListElement* element)
@@ -98,7 +114,7 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 Direction CalculateDirection(const int* direction_delta_x, const int* direction_delta_y)
 {
 	// Assuming movement is only along one axis at a time...
-	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return DEADEND; }
+	if ((*direction_delta_x & *direction_delta_y) != 0) { printf("Error: movement along two axis.\n"); return INVALID; }
 
 	if (*direction_delta_x != 0) {
 		if (*direction_delta_x > 0) { return RIGHT; }
