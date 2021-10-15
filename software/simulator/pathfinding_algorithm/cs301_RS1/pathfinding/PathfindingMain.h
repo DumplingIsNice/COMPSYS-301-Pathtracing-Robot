@@ -11,6 +11,7 @@
 #include "PathfindingUtil.h"
 
 /* Debug Visualization Settings */
+//#define DEBUG
 #define WALKED_PATH 8
 
 /* Static Values for Testing Purposes Only */
@@ -19,14 +20,21 @@
 #define START_X		1
 #define START_Y		1
 
+/* Goal Locations */
+#define NUMBER_OF_GOALS	2
+const static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
+					5, 5,
+					5, 5};
+					//7, 7,
+					//4, 1,
+					//17, 10};	
+
 /* These values should overwrite placeholders in the other files. */
 #define MAP_NAME	"./map/map.txt"
 #define MAP_SIZE_X	19
 #define MAP_SIZE_Y	15
 
-
-//#define DEBUG
-
+/* Algorithm Variations*/
 #define		WEIGHT_REBASING		// allow node weighting to change dynamically when cheaper alternate paths are found
 //#define		ANALYTIC_VARIANT	// use ONLY for DEPTHFIRST and BREADTHFIRST to evaluate all nodes to ensure shortest path is found
 //#define		DEPTHFIRST
@@ -43,7 +51,11 @@ void CleanUpFindShortestPath();
 // Calls FindShortestPath() with the static testing values as arguments.
 void FindShortestPathTest();
 
-//
+// Calls FindShortestPath() for the specified goal (from GoalPositions[]).
+// Start position is used from GetGoalPosX/Y();
+void FindShortestPathForGoal(int goal_number);
+
+// PRIMARY FUNCTION. Evaluates all nodes, finds the shortest path, populates the DirectionQueue, etc.
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y);
 
 // Populate FinalQueue using NodeMap and final_node (node adjacent to the goal node).

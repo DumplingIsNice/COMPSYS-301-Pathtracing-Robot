@@ -307,6 +307,8 @@ int virtualCarUpdate()
 //	}
 
 #ifdef TESTMODE3
+	static int current_goal = 0;				// tracks the goal the robot currently needs to find <-- TODO: shift this to PathfindingUtility?
+
 	if (!GetIsRobotGoalReached())
 	{
 		HandlePosition();
@@ -317,24 +319,33 @@ int virtualCarUpdate()
 		{
 			if (!IsDirectionQueueEmpty())
 			{
+				/* Follow Current Directions to Goal */
 				nextCommand = ConvertDirectionToMotionState(GetNextDirection());	// DirectionQueue automatically free()s memory
 			}
 			else
 			{
 				nextCommand = NO_STATE;
-				//FindShortestPath(...);	// generate new directions
+				
+				/* Prepare Directions to Next Goal */
+				if (current_goal < NUMBER_OF_GOALS-1)	// TODO: Goal tracking and progress should probably be in PathfindingUtility. -1 as increments within if{}
+				{
+					current_goal++;
+					SetStartPos(GoalPositions[current_goal * 2], GoalPositions[current_goal * 2 + 1]);	// <-- TODO: UPDATE!	Temporary example using hacky ideal values; should use ODOMETER?
+					FindShortestPathForGoal(current_goal);
 
-				Direction reorientation_direction = GetDirectionToReorientate();
-				if (reorientation_direction == FORWARD)
-				{
-					// already aligned, no changes required:
-					nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+					Direction reorientation_direction = GetDirectionToReorientate();
+					if (reorientation_direction == FORWARD)
+					{
+						// already aligned, no changes required:
+						nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+					}
+					else
+					{
+						// realign:
+						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
+					}
 				}
-				else
-				{
-					// realign:
-					nextCommand = ConvertDirectionToMotionState(reorientation_direction);
-				}
+				
 			}
 
 			cout << "=====================================" << endl;
@@ -400,12 +411,16 @@ int virtualCarUpdate()
 	}
 	else 
 	{
+		if (current_goal < NUMBER_OF_GOALS) { SetGoalReached(FALSE); }	// Continue until all goals reached <-- TODO: clean up and ideally modularise!
+
 		static int leaveCounter = 0;
 		leaveCounter++;
 		if (leaveCounter > LEAVING_COUNT)
 		{
-			setVirtualCarSpeed(0, 360);
+			//setVirtualCarSpeed(0, 360);
+			setVirtualCarSpeed(12, 0);	// Creep forward once goal reached. Pause while waiting for new instructions.
 		}
+
 	}
 
 	printf("######################\n");
@@ -420,8 +435,11 @@ int main(int argc, char** argv)
 {
 
 #ifdef TEST_SHORTEST_PATH
-	FindShortestPathTest();
+	//FindShortestPathTest();
+	SetStartPos(START_X, START_Y);
+	FindShortestPathForGoal(0);
 #endif
+	
 
 	FungGlAppMainFuction(argc, argv);
 

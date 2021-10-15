@@ -48,6 +48,13 @@ void FindShortestPathTest()
 	FindShortestPath(GOAL_X, GOAL_Y, START_X, START_Y);
 }
 
+void FindShortestPathForGoal(int goal_number)
+{
+	if (goal_number >= NUMBER_OF_GOALS) { printf("ERROR: Invalid goal index!\n"); return; }
+
+	FindShortestPath(GoalPositions[goal_number * 2], GoalPositions[goal_number * 2 + 1], GetStartPosX(), GetStartPosY());
+}
+
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 {
 	clock_t total_time = GetCurrentClockTime();

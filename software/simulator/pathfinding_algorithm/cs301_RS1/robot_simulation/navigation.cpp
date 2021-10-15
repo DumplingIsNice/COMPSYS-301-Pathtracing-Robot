@@ -1,7 +1,12 @@
 #include "navigation.h"
 
 #include "actuation.h"
-#include "../pathfinding/PathfindingMain.h"
+
+extern "C"
+{
+	#include "../pathfinding/PathfindingMain.h"
+}
+
 
 static int IsRobotGoalReached = 0;
 
@@ -17,7 +22,7 @@ void SetIsRobotGoalReached(int val)
 
 void HandlePosition()
 {
-	if (GetCurrentRobotPosX() == GOAL_X && GetCurrentRobotPosY() == GOAL_Y)
+	if (GetCurrentRobotPosX() == GetGoalPosX() && GetCurrentRobotPosY() == GetGoalPosY())
 	{
 		SetIsRobotGoalReached(1);
 	}
