@@ -187,14 +187,13 @@ Direction CalculateDirection(const int* direction_delta_x, const int* direction_
 	if ((*direction_delta_x != 0) && (*direction_delta_y != 0)) { printf("Error: movement along two or no axis.\n"); return INVALID; } // xor
 
 	if (*direction_delta_x != 0) {
-		if (*direction_delta_x > 0) { return RIGHT_TURNING; }
-		else { return LEFT_TURNING; }
+		if (*direction_delta_x > 0) { return RIGHT; }
+		else { return LEFT; }
 	}
 	else {
-		if (*direction_delta_y > 0) { return NO_STATE; }
-		else { return FOLLOWING; }
+		if (*direction_delta_y > 0) { return DEADEND; }
+		else { return FORWARD; }
 	}
-	//return NO_STATE;	// should never be reached
 	return INVALID;	// should never be reached
 }
 
@@ -214,10 +213,10 @@ void PrintDirectionQueue()
 		//case FOLLOWING:			printf("%d. FOLLOWING\n", count); break;
 		//default:			printf("%d. Warning: NO_STATE\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
 
-		case LEFT:			printf("%d. LEFT\n", count); break;
-		case RIGHT:			printf("%d. RIGHT\n", count); break;
-		case FORWARD:		printf("%d. FORWARD\n", count); break;
-		case DEADEND:		printf("%d. Warning: DEADEND\n", count);	// DEADEND should only be reached at the end, or in non-shortest-path situations.
+		case LEFT:			printf("%d. LEFT\n", count);				break;
+		case RIGHT:			printf("%d. RIGHT\n", count);				break;
+		case FORWARD:		printf("%d. FORWARD\n", count);				break;
+		case DEADEND:		printf("%d. Warning: DEADEND\n", count);	break;	// DEADEND should only be reached at the end, or in non-shortest-path situations.
 		default:			printf("%d. Warning: INVALID\n", count);
 		}
 
