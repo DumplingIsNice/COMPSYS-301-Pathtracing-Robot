@@ -36,6 +36,9 @@ typedef enum MotionState
 MotionState GetRobotMotionState();
 MotionState GetNextRobotMotionState();
 
+// Convert directions from DirectionList to MotionState for use in navigation and control logic.
+MotionState ConvertDirectionToMotionState(enum Direction direction);
+
 void SetRobotMotionState(const MotionState s);
 void SetNextRobotMotionState(const MotionState s);
 

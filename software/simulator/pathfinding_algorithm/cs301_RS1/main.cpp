@@ -47,6 +47,7 @@ extern "C"
 {
 	#include "pathfinding/PathfindingMain.h"
 	//#include "robot_simulation/project.h"
+	#include "pathfinding/Navigation/DirectionsList.h"
 }
 
 #include "robot_simulation/control.h"
@@ -310,23 +311,30 @@ int virtualCarUpdate()
 	{
 		HandlePosition();
 
-		static int DirectionQueueDestoried = 0;
 		static MotionState nextCommand = NO_STATE;
-		static ListElement* element = GetListHead(GetDirectionQueue());
 
 		if (nextCommand == NO_STATE)
 		{
-			if (element != NULL)
+			if (!IsDirectionQueueEmpty())
 			{
-				cout << "Processing DirectionQueue Contents:" << endl;
-				nextCommand = *(MotionState*)(element->node);
-				element = element->tail;
+				nextCommand = ConvertDirectionToMotionState(GetNextDirection());	// DirectionQueue automatically free()s memory
 			}
-			// All DirectionQueue element processed.
-			else if (!DirectionQueueDestoried)
+			else
 			{
-				DestroyDirectionQueueElementsAndContents();
-				DirectionQueueDestoried = 1;
+				nextCommand = NO_STATE;
+				//FindShortestPath(...);	// generate new directions
+
+				Direction reorientation_direction = GetDirectionToReorientate();
+				if (reorientation_direction == FORWARD)
+				{
+					// already aligned, no changes required:
+					nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+				}
+				else
+				{
+					// realign:
+					nextCommand = ConvertDirectionToMotionState(reorientation_direction);
+				}
 			}
 
 			cout << "=====================================" << endl;
@@ -337,7 +345,7 @@ int virtualCarUpdate()
 
 		/*	This is a sample command structure :
 
-			The robot is driven by its currently sensed path + navagation command
+			The robot is driven by its currently sensed path + navigation command
 			Navigation command is a MotionState enum stored in NextRobotMotionState.
 
 			Ideally:

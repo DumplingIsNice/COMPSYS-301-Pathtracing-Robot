@@ -4,6 +4,11 @@
 
 #include <cstdio>
 
+extern "C"
+{
+	#include "../pathfinding/Navigation/DirectionsList.h"
+}
+
 static MotionState NextMotionState = NO_STATE;
 static MotionState RobotMotionState = FOLLOWING;
 
@@ -18,6 +23,20 @@ MotionState GetRobotMotionState()
 MotionState GetNextRobotMotionState()
 {
 	return NextMotionState;
+}
+
+MotionState ConvertDirectionToMotionState(Direction direction)
+{
+	MotionState motionstate;
+	switch (direction)
+	{
+	case LEFT:			motionstate = LEFT_TURNING;		break;
+	case RIGHT:			motionstate = RIGHT_TURNING;	break;
+	case FORWARD:		motionstate = FOLLOWING;		break;
+	case DEADEND:		motionstate = U_TURN;			break;
+	default:			motionstate = NO_STATE;
+	}
+	return motionstate;
 }
 
 void SetRobotMotionState(const MotionState s) 

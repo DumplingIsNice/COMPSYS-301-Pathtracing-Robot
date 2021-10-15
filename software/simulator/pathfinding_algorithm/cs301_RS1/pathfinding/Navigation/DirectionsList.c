@@ -20,9 +20,16 @@ List* GetDirectionQueue()
 	return &DirectionQueue;
 }
 
-MotionState* NewDirection(MotionState direction)
+//MotionState* NewDirection(MotionState direction)
+//{
+//	MotionState* new_direction = malloc(sizeof(MotionState));
+//	if (new_direction == NULL) { return NULL; }
+//	*new_direction = direction;
+//	return new_direction;
+//}
+Direction* NewDirection(Direction direction)
 {
-	MotionState* new_direction = malloc(sizeof(MotionState));
+	Direction* new_direction = malloc(sizeof(Direction));
 	if (new_direction == NULL) { return NULL; }
 	*new_direction = direction;
 	return new_direction;
@@ -38,6 +45,16 @@ unsigned long DestroyDirection(Direction* direction)
 ListElement* NewDirectionListElement(Direction direction)
 {
 	return NewListElement(NewDirection(direction));
+}
+
+int IsDirectionQueueEmpty()
+{
+	if (!IsElementValid(GetListHead(GetDirectionQueue()))) {
+		UpdateFinalOrientationDirection();
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 Direction GetNextDirection()

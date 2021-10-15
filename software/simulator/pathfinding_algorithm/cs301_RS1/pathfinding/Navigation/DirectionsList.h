@@ -12,7 +12,7 @@
 	- Usage Guide -
 	Generate the DirectionQueue with AddDirection() for all relevant nodes.
 	Get the next direction with GetNextDirection().
-	Once all directions have been followed call UpdateFinalOrientationDirection().
+	-- repeat until IsDirectionQueueEmpty() returns true --
 	After generating the next set of directions use GetDirectionToReorientate()!
 
 
@@ -30,7 +30,8 @@
 
 	NOTE:
 	UpdateFinalOrientationDirection() must be called externally if GetNextDirection()
-	is never called when DirectionQueue is empty!
+	or IsDirectionQueueEmpty() are never called when DirectionQueue is empty! This is
+	in the case that travelling a path to a goal is terminated early!
 
 */
 
@@ -59,6 +60,10 @@ unsigned long DestroyDirection(Direction* direction);
 
 // Returns new ListElement instance populated with new direction instance.
 struct ListElement* NewDirectionListElement(Direction direction);
+
+// Returns TRUE if empty, false if there is at least one valid element.
+// Calls UpdateFinalOrientationDirection() if empty!
+int IsDirectionQueueEmpty();
 
 // Returns the direction from the top of the DirectionQueue, deleting the ListElement and updating the queue.
 Direction GetNextDirection();
