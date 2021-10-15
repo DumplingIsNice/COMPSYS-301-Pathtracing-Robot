@@ -17,4 +17,7 @@ void AlignLeft();
 void AlignRight();
 void AlignZero();
 
+int GetCurrentRobotPosX();
+int GetCurrentRobotPosY();
+
 #endif // ACTUATION_H

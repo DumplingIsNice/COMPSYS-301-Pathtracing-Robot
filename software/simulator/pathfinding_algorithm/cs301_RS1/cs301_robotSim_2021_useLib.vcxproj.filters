@@ -78,6 +78,9 @@
     <ClInclude Include="pathfinding\RebaseWeights.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="robot_simulation\navigation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="pathfinding\RebaseWeights.c">
       <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="robot_simulation\navigation.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

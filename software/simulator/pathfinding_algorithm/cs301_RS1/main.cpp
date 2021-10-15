@@ -23,7 +23,7 @@
 //#define TESTALIGN
 #define TESTL1
 
-//#define TEST_SHORTEST_PATH
+#define TEST_SHORTEST_PATH
 
  // Simulation parameters
  //{------------------------------------
@@ -46,11 +46,12 @@
 extern "C"
 {
 	#include "pathfinding/PathfindingMain.h"
-	#include "robot_simulation/project.h"
+	//#include "robot_simulation/project.h"
 }
 
 #include "robot_simulation/control.h"
 #include "robot_simulation/sensor.h"
+#include "robot_simulation/navigation.h"
 
 using namespace std;
 
@@ -106,6 +107,15 @@ void InitSpeedSeed()
 {
 	LinearZero();
 	AngularZero();
+}
+
+int GetCurrentRobotPosX()
+{
+	return coordToCellX(currentCarPosCoord_X);
+}
+int GetCurrentRobotPosY()
+{
+	return coordToCellY(currentCarPosCoord_Y);
 }
 
 ///*Input speed : takes in a speed for the robot in mm/s*/
@@ -235,7 +245,7 @@ int virtualCarInit()
 #endif //TESTALIGN
 
 #ifdef TESTL1
-	currentCarAngle = 0;//degree
+	currentCarAngle = 270;//degree
 	currentCarPosCoord_X = cellToCoordX(START_X);
 	currentCarPosCoord_Y = cellToCoordY(START_Y);
 #endif // TESTL1
@@ -296,58 +306,101 @@ int virtualCarUpdate()
 //	}
 
 #ifdef TESTMODE3
-
-	/*	This is a sample command structure : 
-		
-		The robot is driven by its currently sensed path + navagation command
-		Navigation command is a MotionState enum stored in NextRobotMotionState.
-
-		Ideally:
-			Navigation is handled after HandleSensor() (above) before the following 
-			section and a command is produced.
-
-			The following section load the command DEPENDING on the encountered path.
-
-				- A counter may be used to track each path met (and went straight)
-				  on the same following trace.
-
-		Currently, commands to deal with an intersection is fixed.
-
-		If no command is loaded, robot drives automatically in the following priority:
-			
-			Follow a line					-> Straight and automatic line following logic. 
-			Dead-end and floating off-line	-> U-turn (right)
-	*/
-	//}---------------------------------
-
-	if (GetRobotMotionState() == FOLLOWING)
+	if (!GetIsRobotGoalReached())
 	{
-		if (SENSED_CROSS_ROAD)
+		HandlePosition();
+
+		static int DirectionQueueDestoried = 0;
+		static MotionState nextCommand = NO_STATE;
+		static ListElement* element = GetListHead(GetDirectionQueue());
+
+		if (nextCommand == NO_STATE)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			if (element != NULL)
+			{
+				cout << "Processing DirectionQueue Contents:" << endl;
+				nextCommand = *(MotionState*)(element->node);
+				element = element->tail;
+			}
+			// All DirectionQueue element processed.
+			else if (!DirectionQueueDestoried)
+			{
+				DestroyDirectionQueueElementsAndContents();
+				DirectionQueueDestoried = 1;
+			}
+
+			cout << "=====================================" << endl;
+			cout << "Next Command is: " << endl;
+			PrintRobotState(nextCommand);
+			cout << "=====================================" << endl;
 		}
-		else if (SENSED_T)
+
+		/*	This is a sample command structure :
+
+			The robot is driven by its currently sensed path + navagation command
+			Navigation command is a MotionState enum stored in NextRobotMotionState.
+
+			Ideally:
+				Navigation is handled after HandleSensor() (above) before the following
+				section and a command is produced.
+
+				The following section load the command DEPENDING on the encountered path.
+
+					- A counter may be used to track each path met (and went straight)
+					  on the same following trace.
+
+			Currently, commands to deal with an intersection is fixed.
+
+			If no command is loaded, robot drives automatically in the following priority:
+
+				Follow a line					-> Straight and automatic line following logic.
+				Dead-end and floating off-line	-> U-turn (right)
+		*/
+		//}---------------------------------
+
+		if (GetRobotMotionState() == FOLLOWING)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			if (SENSED_CROSS_ROAD)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
+			else if (SENSED_T)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
+			else if (SENSED_L_BRANCH_T)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
+			else if (SENSED_R_BRANCH_T)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
 		}
-		else if (SENSED_L_BRANCH_T)
+		//}---------------------------------
+
+		/* Update Routine: */
+
+		// Pass command as current state.
+		HandleCommands(GetNextRobotMotionState());
+		// Perform actuation depending on current RobotMotionState
+		HandleMovement();
+	}
+	else 
+	{
+		static int leaveCounter = 0;
+		leaveCounter++;
+		if (leaveCounter > LEAVING_COUNT)
 		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
-		}
-		else if (SENSED_R_BRANCH_T)
-		{
-			SetNextRobotMotionState(U_TURN); // Fixed.
+			setVirtualCarSpeed(0, 360);
 		}
 	}
-	//}---------------------------------
 
-  /* Update Routine: */
-  
-  // Pass command as current state.
-  HandleCommands(GetNextRobotMotionState());
-  // Perform actuation depending on current RobotMotionState
-  HandleMovement();
-  printf("######################\n");
+	printf("######################\n");
 #endif // TESTMODE3
 
 	myTimer.resetTimer();
