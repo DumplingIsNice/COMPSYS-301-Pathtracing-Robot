@@ -95,7 +95,8 @@ float currentCarPosFloor_X, currentCarPosFloor_Y;
 
 /* Actuation Functions */
 //{------------------------------------
-void LinearForward() { virtualCarLinearSpeed_seed = DEFAULT_LINEAR_SPEED * floorToCoordScaleFactor; }
+int linearSpeed = DEFAULT_LINEAR_SPEED;
+void LinearForward() { virtualCarLinearSpeed_seed = linearSpeed * floorToCoordScaleFactor; }
 void LinearZero() { virtualCarLinearSpeed_seed = 0; }
 void AngularLeft() { virtualCarAngularSpeed_seed = LEFT_TURNING_SPEED; }
 void AngularRight() { virtualCarAngularSpeed_seed = RIGHT_TURNING_SPEED; }
