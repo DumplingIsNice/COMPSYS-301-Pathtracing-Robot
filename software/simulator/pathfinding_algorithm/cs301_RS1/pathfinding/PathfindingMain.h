@@ -14,8 +14,8 @@
 #define WALKED_PATH 8
 
 /* Static Values for Testing Purposes Only */
-#define GOAL_X		17
-#define GOAL_Y		13
+#define GOAL_X		5
+#define GOAL_Y		5
 #define START_X		1
 #define START_Y		1
 

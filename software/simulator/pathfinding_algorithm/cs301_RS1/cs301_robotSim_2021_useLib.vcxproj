@@ -159,6 +159,7 @@
     <ClInclude Include="pathfinding\Visualization\MapVisual.h" />
     <ClInclude Include="robot_simulation\actuation.h" />
     <ClInclude Include="robot_simulation\control.h" />
+    <ClInclude Include="robot_simulation\navigation.h" />
     <ClInclude Include="robot_simulation\project.h" />
     <ClInclude Include="robot_simulation\sensor.h" />
   </ItemGroup>
@@ -177,6 +178,7 @@
     <ClCompile Include="pathfinding\Timer\CPUTimer.c" />
     <ClCompile Include="pathfinding\Visualization\MapVisual.c" />
     <ClCompile Include="robot_simulation\control.cpp" />
+    <ClCompile Include="robot_simulation\navigation.cpp" />
     <ClCompile Include="robot_simulation\project.c" />
     <ClCompile Include="robot_simulation\sensor.cpp" />
   </ItemGroup>
