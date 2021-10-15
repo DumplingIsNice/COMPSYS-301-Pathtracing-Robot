@@ -3,7 +3,7 @@
 
 extern "C"
 {
-#include "../pathfinding/Navigation/DirectionsList.h"
+    #include "../pathfinding/Navigation/DirectionsList.h"
 }
 
 #include "../mainFungGLAppEngin.h"
@@ -12,6 +12,7 @@ extern "C"
 
 extern float num_sensors;
 extern std::vector<int> virtualCarSensorStates;
+extern int linearSpeed;
 
 static Directions directionsSensed;
 static SenseState currentState = NO_PATH;
@@ -38,6 +39,23 @@ void HandleSensor()
     PrintDirections(GetDirectionsSensed());
 }
 
+void HandleTurningSpeed(SenseState s)
+{
+    switch (s)
+    {
+    case CONFIRM_PATH:
+        linearSpeed = CONFIRMING_SPEED;
+        break;
+        // Necessary for consequtive turns on non-intersections
+    case EXPECT_TURN:
+        linearSpeed = EXPECTING_SPEED;
+        break;
+    default:
+        linearSpeed = DEFAULT_LINEAR_SPEED;
+        break;
+    }
+}
+
 int GetRASensor() {
     return RA_SENSOR == SENSE_TRUE;
 }
@@ -50,6 +68,11 @@ void SensorFSM()
 {
     Directions* d = GetDirectionsSensed();
 
+    static int confirmCounter = 0;
+    static SenseState confirmedState = CONFIRM_PATH;
+    static int flagRSensor = 0;
+    static int flagLSensor = 0;
+
     // Override turning while turning 
     //if ((GetRobotMotionState() == FOLLOWING) && (GetRASensor() || GetLASensor())) {
     //    currentState = STRAIGHT;
@@ -57,7 +80,7 @@ void SensorFSM()
 
     // FSM logic is driven by state of centre and forward sensor, branching 
     // by the relative states of right and left sensor according to truthtable
-    if (nextState == NO_PATH)
+    if (nextState == NO_PATH && currentState != CONFIRM_PATH)
     {
         if (GetRASensor()||GetLASensor()) {
             if ((R_SENSOR == SENSE_TRUE) && (L_SENSOR == SENSE_TRUE)) {
@@ -116,16 +139,82 @@ void SensorFSM()
             nextState = T_SEC;
         }
         else if (R_SENSOR == SENSE_TRUE) {
-            nextState = RIGHT_TURN;
+            currentState = CONFIRM_PATH;
+            flagRSensor = 1;
         }
         else if (L_SENSOR == SENSE_TRUE) {
-            nextState = LEFT_TURN;
+            currentState = CONFIRM_PATH;
+            flagLSensor = 1;
         }
         // Cannot decern dead_end from other turning intersections soley on 
         // f,l,r sensors. Effective dead_end if veered off path, need 
         // reconsideration when implementing alignment logic
         else if (C_SENSOR == SENSE_FALSE && (!GetRASensor() && !GetLASensor())) {
             nextState = DEAD_END;
+        }
+        break;
+    // This state is for handling the edge case where a t, branch 
+    // or cross road is entered at an angle. Where one l/r sensor may
+    // false register early as a exlusive left/right.
+    // This state waits an logs sensors to confirm the path it is on.
+    case CONFIRM_PATH:
+        d->forward = true;
+
+        confirmCounter++;
+
+        // Logging sensors
+        if (R_SENSOR == SENSE_TRUE) {
+            flagRSensor = 1;
+        }
+
+        if (L_SENSOR == SENSE_TRUE) {
+            flagLSensor = 1;
+        }
+        
+        // Wait duration over, analyze logged sensor data
+        if (confirmCounter > 2)
+        {
+            if (GetRASensor() || GetLASensor())
+            {
+                // Confirm cross road
+                if (flagRSensor && flagLSensor)
+                {
+                    confirmedState = CROSS_ROAD;
+                }
+                // Confirm L_branch
+                else if (flagRSensor)
+                {
+                    confirmedState = RIGHT_BRANCH_T;
+                }
+                // Confirm R_branch
+                else if (flagLSensor)
+                {
+                    confirmedState = LEFT_BRANCH_T;
+                }
+            }
+            else
+            {
+                // Confirm T_sec road
+                if (flagRSensor && flagLSensor)
+                {
+                    confirmedState = T_SEC;
+                }
+                // Confirm right following road
+                else if (flagRSensor)
+                {
+                    confirmedState = RIGHT_TURN;
+                }
+                // Confirm left following road
+                else if (flagLSensor)
+                {
+                    confirmedState = LEFT_TURN;
+                }
+            }
+            nextState = confirmedState;
+            confirmedState = CONFIRM_PATH;
+            confirmCounter = 0;
+            flagRSensor = 0;
+            flagLSensor = 0;
         }
         break;
     case LEFT_TURN:
@@ -168,8 +257,13 @@ void SensorFSM()
     PrintSenseFSMState(nextState);
     //PrintSensorStates();
 
+    // Automatic linear speed control for turning
+    HandleTurningSpeed(currentState);
+
     if (nextState != NO_PATH)
+    {
         currentState = nextState;
+    }
 }
 
 void PrintSenseFSMState(SenseState s)
@@ -181,6 +275,9 @@ void PrintSenseFSMState(SenseState s)
         break;
     case EXPECT_TURN:
         printf("EXPECT_TURN\n");
+        break;
+    case CONFIRM_PATH:
+        printf("CONFIRM_PATH\n");
         break;
     case LEFT_TURN:
         printf("LEFT_TURN\n");
