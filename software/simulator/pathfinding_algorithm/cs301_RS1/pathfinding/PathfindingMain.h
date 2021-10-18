@@ -11,7 +11,7 @@
 #include "PathfindingUtil.h"
 
 /* Debug Visualization Settings */
-#define DEBUG
+//#define DEBUG
 #define WALKED_PATH 8
 
 /* Static Values for Testing Purposes Only */
@@ -21,15 +21,24 @@
 #define START_Y		1
 
 /* Goal Locations */
-#define NUMBER_OF_GOALS	2
+#define NUMBER_OF_GOALS	4
 const static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
+					5, 5,
+					17, 10,
+					4, 1,
+					7, 7 };
+
+					// Intersection buffer example (need padding FORWARD, or to ignore the intersection goal is on?)
 					//5, 5,
 					//7, 7,
-					4, 1,
-					17, 10};
+					//17, 10,
+					//4, 1 };
+	
+					// U-turn issue example (only when travelling L->R? Or influenced by turn prior?):
+					//5, 5,
 					//7, 7,
 					//4, 1,
-					//17, 10};	
+					//17, 10};
 
 /* These values should overwrite placeholders in the other files. */
 #define MAP_NAME	"./map/map.txt"

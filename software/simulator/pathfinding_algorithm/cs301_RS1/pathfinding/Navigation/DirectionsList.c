@@ -12,6 +12,7 @@
 static List DirectionQueue = { .head = NULL, .tail = NULL };
 
 static Direction last_evaluated_global_orientation = INVALID;	// temp value used to store the global orientation values found at AddDirection() time
+static Direction temp_final_global_orientation = INVALID;		// 
 static Direction final_global_orientation = INVALID;			// the global orientation of the robot at the time it reaches the end of the path
 static Direction new_starting_orientation = INVALID;			// the global orientation of the robot at the start of the new direction queue
 
@@ -49,24 +50,25 @@ ListElement* NewDirectionListElement(Direction direction)
 
 int IsDirectionQueueEmpty()
 {
-	if (!IsElementValid(GetListHead(GetDirectionQueue()))) {
-		UpdateFinalOrientationDirection();
-		return TRUE;
-	} else {
-		return FALSE;
+	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { return TRUE; }
+
+	// Perform UpdateFinalOrientationDirection() here since it shoul be called before every GetNextDirection()...
+	if (!IsElementValid(GetListHead(GetDirectionQueue())->tail)) {
+		UpdateFinalOrientationDirection(*(Direction*)(GetListHead(GetDirectionQueue())->node));
 	}
+
+	return FALSE;
 }
 
 Direction GetNextDirection()
 {
-	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { UpdateFinalOrientationDirection(); return INVALID; }
+	if (!IsElementValid(GetListHead(GetDirectionQueue()))) { return INVALID; }
 
 	ListElement* element = RemoveListHead(GetDirectionQueue());
 	Direction direction = *((Direction*)(element->node));
 	DestroyDirection((Direction*)(element->node));
 	DestroyListElement(element);
 
-	UpdateFinalOrientationDirection();
 	return direction;
 }
 
@@ -75,9 +77,15 @@ Direction GetDirectionToReorientate()
 	return TakeRelativeDirections(&final_global_orientation, &new_starting_orientation);
 }
 
-void UpdateFinalOrientationDirection()
+void  DirectionQueueGenerationFinished()
 {
-	final_global_orientation = last_evaluated_global_orientation;
+	temp_final_global_orientation = last_evaluated_global_orientation;	// store value for processing in CalculateFinalOrientationDirection() later
+}
+
+void UpdateFinalOrientationDirection(Direction final_relative_direction)
+{
+	// Use final global orientation (before last direction) and final relative direction to get the final global orientation once all directions have been followed.
+	final_global_orientation = TakeRelativeDirections(&temp_final_global_orientation, &final_relative_direction);
 }
 
 void UpdateNewStartingOrientationDirection()
@@ -104,7 +112,7 @@ void AddDirection(const struct NodeData* prev_node, const struct NodeData* curre
 	//printf("current_d_x = %d, current_d_y = %d || direction_d_x = %d, direction_d_y = %d ||    --->    ", current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
 	TakeRelativeDeltas(&current_delta_x, &current_delta_y, &direction_delta_x, &direction_delta_y);
 	//printf("relative direction_d_x = %d, relative direction_d_y = %d\n", direction_delta_x, direction_delta_y);
-	
+
 	ListElement* element = NewDirectionListElement(CalculateDirection(&direction_delta_x, &direction_delta_y));
 	if (element == NULL) { return; }
 	AddToDirectionQueue(element);
@@ -157,6 +165,8 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 
 Direction TakeRelativeDirections(const Direction* current_direction, const Direction* next_direction)
 {
+	//PrintDirections()
+
 	int current_x = 0;
 	int current_y = 0;
 	int next_x = 0;
@@ -206,7 +216,8 @@ void PrintDirectionQueue()
 	while (element != NULL) {
 		count++;
 
-		MotionState direction = *(MotionState*)(element->node);
+		//MotionState direction = *(MotionState*)(element->node);
+		Direction direction = *(Direction*)(element->node);
 		switch (direction) {
 		//case LEFT_TURNING:			printf("%d. LEFT_TURNING\n", count); break;
 		//case RIGHT_TURNING:			printf("%d. RIGHT_TURNING\n", count); break;

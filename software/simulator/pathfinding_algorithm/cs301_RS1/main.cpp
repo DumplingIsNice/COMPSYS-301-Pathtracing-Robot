@@ -344,11 +344,14 @@ int virtualCarUpdate()
 					{
 						// already aligned, no changes required:
 						nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+						//nextCommand = FOLLOWING; // insert a 'forward' command as buffer for goal at an intersection? this messes up non-instersection though
+						printf("No realignment, next command: "); PrintRobotState(nextCommand);
 					}
 					else
 					{
 						// realign:
 						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
+						printf("Inserted realign direction: "); PrintRobotState(nextCommand);
 					}
 				}
 			}
@@ -411,16 +414,20 @@ int virtualCarUpdate()
 	}
 	else 
 	{
-		if (current_goal < NUMBER_OF_GOALS-1) { SetGoalReached(FALSE); }	// Continue until all goals reached <-- TODO: clean up and ideally modularise!
-
-		static int leaveCounter = 0;
-		leaveCounter++;
-		if (leaveCounter > LEAVING_COUNT)
+		if (GetRobotMotionState() != FOLLOWING)
 		{
-			//setVirtualCarSpeed(0, 360);
-			setVirtualCarSpeed(0, 0);	// Creep forward once goal reached. Pause while waiting for new instructions.
-		}
+			// If the robot is currently performing a turn, do not interrupt it.
 
+			if (current_goal < NUMBER_OF_GOALS - 1) { SetGoalReached(FALSE); }	// Continue until all goals reached <-- TODO: clean up and ideally modularise!
+
+			static int leaveCounter = 0;
+			leaveCounter++;
+			if (leaveCounter > LEAVING_COUNT)
+			{
+				//setVirtualCarSpeed(0, 360);
+				setVirtualCarSpeed(0, 0);	// Creep forward once goal reached. Pause while waiting for new instructions.
+			}
+		}
 	}
 
 	//printf("######################\n");

@@ -11,6 +11,7 @@
 
 	- Usage Guide -
 	Generate the DirectionQueue with AddDirection() for all relevant nodes.
+	Once all nodes are processed, call DirectionQueueGenerationFinished().
 	Get the next direction with GetNextDirection().
 	-- repeat until IsDirectionQueueEmpty() returns true --
 	After generating the next set of directions use GetDirectionToReorientate()!
@@ -30,8 +31,8 @@
 
 	NOTE:
 	UpdateFinalOrientationDirection() must be called externally if GetNextDirection()
-	or IsDirectionQueueEmpty() are never called when DirectionQueue is empty! This is
-	in the case that travelling a path to a goal is terminated early!
+	is never called when DirectionQueue is empty! This is in the case that travelling
+	a path to a goal is terminated early!
 
 */
 
@@ -49,7 +50,7 @@ typedef struct Directions {
 // Prints a Directions struct to consol.
 void PrintDirections(Directions* d);
 
-// Get the head of the DirectionQueue
+// Get the List DirectionQueue
 struct List* GetDirectionQueue();
 
 // Instance in memory to use with List.h pointers
@@ -62,7 +63,8 @@ unsigned long DestroyDirection(Direction* direction);
 struct ListElement* NewDirectionListElement(Direction direction);
 
 // Returns TRUE if empty, false if there is at least one valid element.
-// Calls UpdateFinalOrientationDirection() if empty!
+// Handles UpdateFinalOrientationDirection()!
+// WARNING: IF THIS IS NOT USED, MUST MANUALLY CALL UpdateFinalOrientationDirection(...)!
 int IsDirectionQueueEmpty();
 
 // Returns the direction from the top of the DirectionQueue, deleting the ListElement and updating the queue.
@@ -73,9 +75,15 @@ Direction GetNextDirection();
 // Returns FORWARD if no change is required (i.e. same orientation).
 Direction GetDirectionToReorientate();
 
+// Call externally once all directions have been generated (i.e., all nodes processed).
+// - Stores the current value of last_evaluated_global_orientation to final_global_orientation, for further processing in UpdateFinalOrientationDirection()
+// WARNING: MUST CALL EXTERNALLY!
+void DirectionQueueGenerationFinished();
+
 // Used internally, called when the final direction in the DirectionQueue has been taken or all directions for the current path have been created.
-// MUST CALL EXTERNALLY IF GetNextDirection() IS NOT CALLED WHEN DirectionQueue IS EMPTY!
-void UpdateFinalOrientationDirection();
+// Use final_global_orientation (orientation prior to last direction) and final_relative_direction to get the final global orientation for once all directions have been followed.
+// MUST CALL EXTERNALLY IF GetNextDirection() IS NOT CALLED!
+void UpdateFinalOrientationDirection(Direction final_relative_direction);
 
 // Used internally, called when the first in a new list of directions has been created. 
 void UpdateNewStartingOrientationDirection();
