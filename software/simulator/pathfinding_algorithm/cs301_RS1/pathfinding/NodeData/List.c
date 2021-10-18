@@ -141,6 +141,10 @@ unsigned long DestroyListElements(List* list)
 		bytes += sizeof(*prev_element);
 		free(prev_element);
 	}
+
+	list->head = NULL;
+	list->tail = NULL;
+
 	return bytes;
 }
 
@@ -162,11 +166,18 @@ unsigned long DestroyListElementsAndImmediateContents(List* list, int* count_des
 		bytes += sizeof(*prev_element);
 		free(prev_element);
 	}
+
+	list->head = NULL;
+	list->tail = NULL;
+
 	return bytes;
 }
 
 unsigned long DestroyList(List* list)
 {
+	list->head = NULL;
+	list->tail = NULL;
+
 	if (IsListValid(list)) { free(list); return sizeof(struct List); }
 	return 0;
 }

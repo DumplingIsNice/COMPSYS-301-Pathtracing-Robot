@@ -39,6 +39,8 @@ unsigned long NodeMapClear()
         for (int y = 0; y < (MAP_SIZE_Y); y++) {
             NodeData* node = NodeMapGet(NodeMapGenKey(x, y));
             if (IsNodeDataValid(node)) { bytes += DestroyNodeDataAndContents(node);}
+
+            NodeMapDel(NodeMapGenKey(x, y));    // remove invalid reference
         }
     }
     return bytes;
