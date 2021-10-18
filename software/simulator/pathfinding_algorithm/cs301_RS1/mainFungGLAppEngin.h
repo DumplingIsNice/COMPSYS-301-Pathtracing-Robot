@@ -49,7 +49,7 @@ extern float pixelToFloorScaleFactor;
 extern float floorToPixelScaleFactor;
 extern float floorToCoordScaleFactor;
 
-extern float currentCarPosFloor_X, currentCarPosFloor_Y, virtualCarLinearSpeedFloor, virtualCarAngularSpeed_seed, currentCarAngle;
+extern float currentCarPosFloor_X, currentCarPosFloor_Y, virtualCarLinearSpeedFloor, virtualCarLinearSpeed_seed, virtualCarAngularSpeed_seed, currentCarAngle;
 
 class ghostInfoPack
 {

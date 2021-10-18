@@ -4,42 +4,35 @@
 
 //Update cycle = 1ms
 
-float start_time;
+float start_time = -1;
 float current_time;
-float time;
-float floorDistance;
-float speed;
-extern bool reset;
+float cell_distance = 0;
+
 
 highPerformanceTimer myTimer;
 
 
-float calculateDistance() 
-{	
-	start_time = myTimer.getTimer();
+void OdometerTick()
+{
+	current_time = myTimer.getTimer();
 	
-	while (!reset)
-	{
-		current_time = myTimer.getTimer();
-		time += (current_time - start_time);
-		speed = virtualCarLinearSpeedFloor
-	} 
-
-	floorDistance = time * speed;
-
-	if (reset)
-	{
-		time = 0;
-		floorDistance = 0;
+	//For very first time calling function - should be no distance travelled
+	if (start_time == -1) {
+		start_time = current_time;
 	}
+
+	float tick_distance = virtualCarLinearSpeed_seed * (current_time - start_time);
+
+	cell_distance += floorToCellX(tick_distance);
+
 }
 
-int cellxTravelled(float floorDistance)
+float GetCellDistance()
 {
-	return floorToCellX(floorDistance);
+	return cell_distance;
 }
 
-int cellyTravelled(float floorDistance)
+void OdometerReset()
 {
-	return floorToCellY(floorDistance);
+	cell_distance = 0;
 }
