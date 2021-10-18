@@ -64,9 +64,6 @@ float sensorSeparation;
 float num_sensors;
 extern int maxDarkDefValueTH;
 
-float start_time;
-float end_time;
-
 vector<int> virtualCarSensorStates;
 
 vector<ghostInfoPack> ghostInfoPackList;

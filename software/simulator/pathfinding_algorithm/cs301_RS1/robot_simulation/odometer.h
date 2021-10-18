@@ -1,10 +1,11 @@
 #ifndef ODOMETER_H
 #define ODOMETER_H
 
-void calculateDistance(int travellingStraight);
+//reads an exten flag to determine whether the robot is moving straight, takes the time and converts into a floor distance
+float calculateDistance();
 
-int cellxTravelled();
+int cellxTravelled(float floorDistance);
 
-int cellyTravelled();
+int cellyTravelled(float floorDistance);
 
 #endif //ODOMETER_H
