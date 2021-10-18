@@ -11,7 +11,7 @@
 #include "PathfindingUtil.h"
 
 /* Debug Visualization Settings */
-//#define DEBUG
+#define DEBUG
 #define WALKED_PATH 8
 
 /* Static Values for Testing Purposes Only */
@@ -23,8 +23,10 @@
 /* Goal Locations */
 #define NUMBER_OF_GOALS	2
 const static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
-					5, 5,
-					5, 5};
+					//5, 5,
+					//7, 7,
+					4, 1,
+					17, 10};
 					//7, 7,
 					//4, 1,
 					//17, 10};	

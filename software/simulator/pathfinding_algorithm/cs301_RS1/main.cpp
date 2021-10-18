@@ -318,6 +318,11 @@ int virtualCarUpdate()
 
 		if (nextCommand == NO_STATE)
 		{
+			/* L1 */
+			// Turn left at every intersection to explore all paths of the maze...
+			// nextCommand = LEFT_TURNING;	// TODO: modularise so that IsGoalReached() does not conflict
+
+			/* L2 */
 			if (!IsDirectionQueueEmpty())
 			{
 				/* Follow Current Directions to Goal */
@@ -326,9 +331,9 @@ int virtualCarUpdate()
 			else
 			{
 				nextCommand = NO_STATE;
-				
+
 				/* Prepare Directions to Next Goal */
-				if (current_goal < NUMBER_OF_GOALS-1)	// TODO: Goal tracking and progress should probably be in PathfindingUtility. -1 as increments within if{}
+				if (current_goal < NUMBER_OF_GOALS - 1)	// TODO: Goal tracking and progress should probably be in PathfindingUtility. -1 as increments within if{}
 				{
 					current_goal++;
 					SetStartPos(GoalPositions[current_goal * 2], GoalPositions[current_goal * 2 + 1]);	// <-- TODO: UPDATE!	Temporary example using hacky ideal values; should use ODOMETER?
@@ -346,8 +351,8 @@ int virtualCarUpdate()
 						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
 					}
 				}
-				
 			}
+
 
 			cout << "=====================================" << endl;
 			cout << "Next Command is: " << endl;
@@ -412,14 +417,14 @@ int virtualCarUpdate()
 	}
 	else 
 	{
-		if (current_goal < NUMBER_OF_GOALS) { SetGoalReached(FALSE); }	// Continue until all goals reached <-- TODO: clean up and ideally modularise!
+		if (current_goal < NUMBER_OF_GOALS-1) { SetGoalReached(FALSE); }	// Continue until all goals reached <-- TODO: clean up and ideally modularise!
 
 		static int leaveCounter = 0;
 		leaveCounter++;
 		if (leaveCounter > LEAVING_COUNT)
 		{
 			//setVirtualCarSpeed(0, 360);
-			setVirtualCarSpeed(12, 0);	// Creep forward once goal reached. Pause while waiting for new instructions.
+			setVirtualCarSpeed(0, 0);	// Creep forward once goal reached. Pause while waiting for new instructions.
 		}
 
 	}

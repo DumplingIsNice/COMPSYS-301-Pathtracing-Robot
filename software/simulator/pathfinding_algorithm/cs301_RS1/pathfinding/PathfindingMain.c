@@ -52,7 +52,20 @@ void FindShortestPathForGoal(int goal_number)
 {
 	if (goal_number >= NUMBER_OF_GOALS) { printf("ERROR: Invalid goal index!\n"); return; }
 
-	FindShortestPath(GoalPositions[goal_number * 2], GoalPositions[goal_number * 2 + 1], GetStartPosX(), GetStartPosY());
+
+	int temp_start_x = 0;
+	int temp_start_y = 0;
+
+	if (goal_number <= 0) {
+		temp_start_x = GetStartPosX();	// use default values for start
+		temp_start_y = GetStartPosY();
+	}
+	else {
+		temp_start_x = GoalPositions[(goal_number - 1) * 2];	// otherwise use previous goal values (assuming exact!)
+		temp_start_y = GoalPositions[(goal_number - 1) * 2 + 1];
+	}
+
+	FindShortestPath(GoalPositions[goal_number * 2], GoalPositions[goal_number * 2 + 1], temp_start_x , temp_start_y);
 }
 
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
