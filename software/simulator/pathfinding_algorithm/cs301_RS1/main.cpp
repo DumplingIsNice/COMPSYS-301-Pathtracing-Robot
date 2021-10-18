@@ -186,7 +186,6 @@ int virtualCarInit()
 
 int virtualCarUpdate()
 {
-	start_time = myTimer.getTimer();
 	static int i = 0;
 	static float prev_position = coordToFloorX(currentCarPosCoord_X);
 	static float myspeed = virtualCarLinearSpeed_seed;
@@ -287,11 +286,7 @@ int virtualCarUpdate()
   HandleMovement();
   printf("######################\n");
 #endif // TESTMODE3
-	end_time = myTimer.getTimer();
 	myTimer.resetTimer();
-	calculateDistance();
-	printf("%f", cellxTravelled());
-	printf("%f", cellyTravelled());
 	return 1;
 }
 

@@ -4,18 +4,25 @@
 
 //Update cycle = 1ms
 
-extern float start_time;
-extern float end_time;
+float start_time;
+float end_time;
 float floorDistance = 0;
+
+highPerformanceTimer myTimer;
 
 //Based on update time
 float time = 0.1;
 //For more accurate update time
 //float time = start_time - end_time;
 
-void calculateDistance() 
+void calculateDistance(int travellingStraight) 
 {
-	floorDistance = time * virtualCarLinearSpeedFloor;
+	start_time = myTimer.getTimer();
+	while (travellingStraight) {
+
+	}
+	end_time = myTimer.getTimer();
+	floorDistance = (start_time-end_time) * virtualCarLinearSpeedFloor;
 }
 
 int cellxTravelled()
