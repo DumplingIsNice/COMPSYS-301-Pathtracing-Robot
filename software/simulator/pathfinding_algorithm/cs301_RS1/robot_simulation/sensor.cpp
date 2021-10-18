@@ -35,8 +35,10 @@ void HandleSensor()
 {
     SensorFSM();
 
-    // Debug information
-    PrintDirections(GetDirectionsSensed());
+
+    #ifdef SENSOR_DEBUG
+        PrintDirections(GetDirectionsSensed());
+    #endif // SENSOR_DEBUG
 }
 
 void HandleTurningSpeed(SenseState s)
@@ -146,7 +148,7 @@ void SensorFSM()
             currentState = CONFIRM_PATH;
             flagLSensor = 1;
         }
-        // Cannot decern dead_end from other turning intersections soley on 
+        // Cannot discern dead_end from other turning intersections solely on 
         // f,l,r sensors. Effective dead_end if veered off path, need 
         // reconsideration when implementing alignment logic
         else if (C_SENSOR == SENSE_FALSE && (!GetRASensor() && !GetLASensor())) {
@@ -250,12 +252,13 @@ void SensorFSM()
         ;
     }
 
-    // Debug information
-    printf("Current State is: ");
-    PrintSenseFSMState(currentState);
-    printf("Next State is: ");
-    PrintSenseFSMState(nextState);
-    //PrintSensorStates();
+    #ifdef SENSOR_DEBUG
+        // Debug information
+        printf("Current State is: ");
+        PrintSenseFSMState(currentState);
+        printf("Next State is: ");
+        PrintSenseFSMState(nextState);
+    #endif // SENSOR_DEBUG
 
     // Automatic linear speed control for turning
     HandleTurningSpeed(currentState);

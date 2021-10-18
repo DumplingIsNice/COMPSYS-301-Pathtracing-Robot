@@ -83,8 +83,11 @@ void HandleTurning()
 
 void HandleCommands(MotionState command)
 {
-	printf("Next Robot Motion State is: ");
-	PrintRobotState(GetNextRobotMotionState());
+	#ifdef CONTROL_DEBUG
+		printf("Next Robot Motion State is: ");
+		PrintRobotState(GetNextRobotMotionState());
+	#endif // CONTROL_DEBUG	
+
 	if (command != NO_STATE)
 	{
 		SetRobotMotionState(command);
@@ -115,8 +118,10 @@ void HandleCommands(MotionState command)
 
 void HandleMovement()
 {
-	printf("Current Robot Motion State is: ");
-	PrintRobotState(GetRobotMotionState());
+	#ifdef CONTROL_DEBUG
+		printf("Current Robot Motion State is: ");
+		PrintRobotState(GetRobotMotionState());
+	#endif // CONTROL_DEBUG		
 
 	Directions* validDirections = GetDirectionsSensed();
 

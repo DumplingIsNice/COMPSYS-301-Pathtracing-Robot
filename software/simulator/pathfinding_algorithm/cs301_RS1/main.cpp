@@ -352,12 +352,6 @@ int virtualCarUpdate()
 					}
 				}
 			}
-
-
-			cout << "=====================================" << endl;
-			cout << "Next Command is: " << endl;
-			PrintRobotState(nextCommand);
-			cout << "=====================================" << endl;
 		}
 
 		/*	This is a sample command structure :
@@ -429,7 +423,7 @@ int virtualCarUpdate()
 
 	}
 
-	printf("######################\n");
+	//printf("######################\n");
 #endif // TESTMODE3
 
 	myTimer.resetTimer();

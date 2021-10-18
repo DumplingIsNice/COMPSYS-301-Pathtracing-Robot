@@ -20,6 +20,8 @@
 #define SENSED_R_BRANCH_T	(GetDirectionsSensed()->right && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->left
 #define SENSED_DEAD_END		(!GetDirectionsSensed()->left && !GetDirectionsSensed()->right) && !GetDirectionsSensed()->forward
 
+//#define CONTROL_DEBUG
+
 // Intersection U turn indication flag
 //{----------------------------------
 typedef enum UturnDir

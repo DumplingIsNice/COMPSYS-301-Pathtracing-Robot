@@ -21,6 +21,8 @@ void SetMapParameters(int goal_x, int goal_y, int start_x, int start_y)
 
 void CleanUpFindShortestPath()
 {
+	SetGoalReached(FALSE);
+
 	// Free the last of the NodeQueue elements (but not their NodeData!):
 	unsigned long node_queue_bytes = DestroyListElements(GetNodeQueue());
 
@@ -70,38 +72,41 @@ void FindShortestPathForGoal(int goal_number)
 
 void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 {
+	/* Performance Counters */
+	clock_t time_error = GetCurrentClockTime();
+	time_error = GetCurrentClockTime() - time_error;
+
 	clock_t total_time = GetCurrentClockTime();
 	clock_t node_queue_time = 0;
 	clock_t shortest_path_time = 0;
 	clock_t direction_queue_time = 0;
 
-	clock_t time_error = GetCurrentClockTime();
-	time_error = GetCurrentClockTime() - time_error;
+	int nodes_evaluated_count = 0;
+	int final_path_length = 0;
 
+
+	/* 
+		Setup 
+		
+		Clean up values from previous iterations, read the map file,
+		and set the start and goal positions.
+	*/
 	CleanUpFindShortestPath(); // ensure no pre-existing values remain
-
-
-	// Read map and set up goal location:
-	ReadMapFile(MAP_NAME);
+	ReadMapFile(MAP_NAME);		// read map and set start/goal locations
 	SetMapParameters(goal_x, goal_y, start_x, start_y);
 
-	// Create the starting node and add it to NodeQueue:
-	EvaluateCell(NULL, GetStartPosX(), GetStartPosY());
-	
-	// Performance counters:
-	int nodes_evaluated_count	= 0;
-	int final_path_length		= 0;
-
-	// Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells) 
-	// until goal is reached:
-	//ListElement* current_node_element = NULL;
-	//NodeData* current_node = NULL;
-	NodeData* final_node = NULL;
 
 	/*
 		Evaluate Nodes
+
+		Evaluate nodes from NodeQueue (populated by EvaluateAdjacentCells)
+		until goal is reached:
 	*/
 	node_queue_time = GetCurrentClockTime();
+
+	EvaluateCell(NULL, GetStartPosX(), GetStartPosY());	// Create the starting node and add it to NodeQueue
+	NodeData* final_node = NULL;
+
 	while (!IsNodeQueueEmpty())
 	{
 		ListElement* current_node_element = ExtractNextInNodeQueue();
@@ -136,6 +141,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	}
 	node_queue_time = GetCurrentClockTime() - node_queue_time;
 
+
 	/*
 		Determine Shortest Path
 	*/
@@ -144,6 +150,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	NodeData* next_node = final_node;
 	final_path_length = PopulateFinalQueue(final_node);
 	shortest_path_time = GetCurrentClockTime() - shortest_path_time;
+
 
 	/*
 		Print Debug Info
@@ -166,6 +173,7 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 		CreateFinalMap();
 	#endif // DEBUG
 
+
 	/*
 		Generate Direction Queue
 	*/
@@ -173,10 +181,13 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	GenerateDirectionQueue();
 	direction_queue_time = GetCurrentClockTime() - direction_queue_time;
 
+
 	/*
 		Performance Overview
 	*/
 	total_time = GetCurrentClockTime() - total_time;	// note that total_time is bloated by debug and timing overhead
+
+	printf("SHORTEST PATH FROM START (%d, %d) TO GOAL (%d, %d):\n\n", GetStartPosX(), GetStartPosY(), GetGoalPosX(), GetGoalPosY());
 
 	printf("Total number of nodes evaluated: %d\n", nodes_evaluated_count);
 	printf("Length of final path: %d\n", final_path_length);
@@ -188,10 +199,11 @@ void FindShortestPath(int goal_x, int goal_y, int start_x, int start_y)
 	printf("Time to generate DirectionQueue: %ds %dms\n", ConvertToMilliSeconds(direction_queue_time, time_error) / 1000, ConvertToMilliSeconds(direction_queue_time, time_error) % 1000);
 	printf("\n");
 
+
 	/*
 		Cleanup
 	*/
-	CleanUpFindShortestPath(); // prevent memory leaks
+	CleanUpFindShortestPath(); // prevent memory leaks and reset important parameters
 
 	return;
 }

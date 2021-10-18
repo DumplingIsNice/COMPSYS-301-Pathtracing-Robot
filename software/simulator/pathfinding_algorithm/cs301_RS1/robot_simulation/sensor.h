@@ -26,6 +26,8 @@ extern "C"
 #define SENSE_TRUE  0
 #define SENSE_FALSE 1
 
+//#define SENSOR_DEBUG
+
 typedef enum SenseState
 {
     STRAIGHT_PATH, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
