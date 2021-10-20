@@ -9,7 +9,7 @@ void NodeMapSet(const int key, const void* val)
 
 NodeData* NodeMapGet(const int key)
 {
-    return nodeMap[key];
+    return (NodeData*)nodeMap[key];
 }
 
 void NodeMapDel(const int key)
@@ -32,14 +32,18 @@ int IsPtrValid(void* ptr)
     }
 }
 
-void NodeMapClear()
+unsigned long NodeMapClear()
 {
+    unsigned long bytes = 0;
     for (int x = 0; x < (MAP_SIZE_X); x++) {
         for (int y = 0; y < (MAP_SIZE_Y); y++) {
             NodeData* node = NodeMapGet(NodeMapGenKey(x, y));
-            if (IsNodeDataValid(node)) { DestroyNodeDataAndContents(node); }
+            if (IsNodeDataValid(node)) { bytes += DestroyNodeDataAndContents(node);}
+
+            NodeMapDel(NodeMapGenKey(x, y));    // remove invalid reference
         }
     }
+    return bytes;
 }
 
 /* Debug Functions */ 

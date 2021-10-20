@@ -20,12 +20,15 @@
 /* Starting Position Init */
 //#define TESTMOVELEFT
 //#define TESTMOVERIGHT
-#define TESTALIGN
+//#define TESTALIGN
+#define TESTL1
 
-// Simulation parameters
-//{------------------------------------
-#define NITERATIONS 1000
-#define STARTUPDELAY 2 //sec
+#define TEST_SHORTEST_PATH
+
+ // Simulation parameters
+ //{------------------------------------
+ #define NITERATIONS 1000
+ #define STARTUPDELAY 2 //sec
 
 // More in 'Project.h'
 //}------------------------------------
@@ -43,12 +46,14 @@
 extern "C"
 {
 	#include "pathfinding/PathfindingMain.h"
-	#include "robot_simulation/project.h"
+	//#include "robot_simulation/project.h"
+	#include "pathfinding/Navigation/DirectionsList.h"
 }
 
 #include "robot_simulation/control.h"
 #include "robot_simulation/sensor.h"
 #include "robot_simulation/odometer.h"
+#include "robot_simulation/navigation.h"
 
 using namespace std;
 
@@ -91,7 +96,8 @@ float currentCarPosFloor_X, currentCarPosFloor_Y;
 
 /* Actuation Functions */
 //{------------------------------------
-void LinearForward() { virtualCarLinearSpeed_seed = DEFAULT_LINEAR_SPEED * floorToCoordScaleFactor; }
+int linearSpeed = DEFAULT_LINEAR_SPEED;
+void LinearForward() { virtualCarLinearSpeed_seed = linearSpeed * floorToCoordScaleFactor; }
 void LinearZero() { virtualCarLinearSpeed_seed = 0; }
 void AngularLeft() { virtualCarAngularSpeed_seed = LEFT_TURNING_SPEED; }
 void AngularRight() { virtualCarAngularSpeed_seed = RIGHT_TURNING_SPEED; }
@@ -104,6 +110,15 @@ void InitSpeedSeed()
 {
 	LinearZero();
 	AngularZero();
+}
+
+int GetCurrentRobotPosX()
+{
+	return coordToCellX(currentCarPosCoord_X);
+}
+int GetCurrentRobotPosY()
+{
+	return coordToCellY(currentCarPosCoord_Y);
 }
 
 
@@ -165,20 +180,16 @@ int virtualCarInit()
 	currentCarPosCoord_Y = cellToCoordY(5);
 #endif //TESTALIGN
 
-#ifdef TESTMOVERIGHT
-	currentCarPosCoord_X = cellToCoordX(4);
-	currentCarPosCoord_Y = cellToCoordY(2);
-#endif //TESTMOVERIGHT
+#ifdef TESTL1
+	currentCarAngle = 270;//degree
+	currentCarPosCoord_X = cellToCoordX(START_X);
+	currentCarPosCoord_Y = cellToCoordY(START_Y);
+#endif // TESTL1
 
-#ifdef TESTMOVELEFT
-	currentCarPosCoord_X = cellToCoordX(1);
-	currentCarPosCoord_Y = cellToCoordY(2);
-#endif //TESTMOVELEFT
 
 	myTimer.resetTimer();
 	return 1;
 }
-
 
 
 int virtualCarUpdate()
@@ -231,57 +242,129 @@ int virtualCarUpdate()
 //	}
 
 #ifdef TESTMODE3
+	static int current_goal = 0;				// tracks the goal the robot currently needs to find <-- TODO: shift this to PathfindingUtility?
 
-	/*	This is a sample command structure : 
-		
-		The robot is driven by its currently sensed path + navagation command
-		Navigation command is a MotionState enum stored in NextRobotMotionState.
-
-		Ideally:
-			Navigation is handled after HandleSensor() (above) before the following 
-			section and a command is produced.
-
-			The following section load the command DEPENDING on the encountered path.
-
-				- A counter may be used to track each path met (and went straight)
-				  on the same following trace.
-
-		Currently, commands to deal with an intersection is fixed.
-
-		If no command is loaded, robot drives automatically in the following priority:
-			
-			Follow a line					-> Straight and automatic line following logic. 
-			Dead-end and floating off-line	-> U-turn (right)
-	*/
-	//}---------------------------------
-	if (GetRobotMotionState() == FOLLOWING)
+	if (!GetIsRobotGoalReached())
 	{
-		if (SENSED_CROSS_ROAD)
+		HandlePosition();
+
+		static MotionState nextCommand = NO_STATE;
+
+		if (nextCommand == NO_STATE)
 		{
-			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
+			/* L1 */
+			// Turn left at every intersection to explore all paths of the maze...
+			// nextCommand = LEFT_TURNING;	// TODO: modularise so that IsGoalReached() does not conflict
+
+			/* L2 */
+			if (!IsDirectionQueueEmpty())
+			{
+				/* Follow Current Directions to Goal */
+				nextCommand = ConvertDirectionToMotionState(GetNextDirection());	// DirectionQueue automatically free()s memory
+			}
+			else
+			{
+				nextCommand = NO_STATE;
+
+				/* Prepare Directions to Next Goal */
+				if (current_goal < NUMBER_OF_GOALS - 1)	// TODO: Goal tracking and progress should probably be in PathfindingUtility. -1 as increments within if{}
+				{
+					current_goal++;
+					SetStartPos(GoalPositions[current_goal * 2], GoalPositions[current_goal * 2 + 1]);	// <-- TODO: UPDATE!	Temporary example using hacky ideal values; should use ODOMETER?
+					FindShortestPathForGoal(current_goal);
+
+					Direction reorientation_direction = GetDirectionToReorientate();
+					if (reorientation_direction == FORWARD)
+					{
+						// already aligned, no changes required:
+						nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+						//nextCommand = FOLLOWING; // insert a 'forward' command as buffer for goal at an intersection? this messes up non-instersection though
+						printf("No realignment, next command: "); PrintRobotState(nextCommand);
+					}
+					else
+					{
+						// realign:
+						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
+						printf("Inserted realign direction: "); PrintRobotState(nextCommand);
+					}
+				}
+			}
 		}
-		else if (SENSED_T)
+
+		/*	This is a sample command structure :
+
+			The robot is driven by its currently sensed path + navigation command
+			Navigation command is a MotionState enum stored in NextRobotMotionState.
+
+			Ideally:
+				Navigation is handled after HandleSensor() (above) before the following
+				section and a command is produced.
+
+				The following section load the command DEPENDING on the encountered path.
+
+					- A counter may be used to track each path met (and went straight)
+					  on the same following trace.
+
+			Currently, commands to deal with an intersection is fixed.
+
+			If no command is loaded, robot drives automatically in the following priority:
+
+				Follow a line					-> Straight and automatic line following logic.
+				Dead-end and floating off-line	-> U-turn (right)
+		*/
+		//}---------------------------------
+
+		if (GetRobotMotionState() == FOLLOWING)
 		{
-			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+			if (SENSED_CROSS_ROAD)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
+			else if (SENSED_T)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
+			else if (SENSED_L_BRANCH_T)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
+			else if (SENSED_R_BRANCH_T)
+			{
+				SetNextRobotMotionState(nextCommand); // Fixed.
+				nextCommand = NO_STATE;
+			}
 		}
-		else if (SENSED_L_BRANCH_T)
+		//}---------------------------------
+
+		/* Update Routine: */
+
+		// Pass command as current state.
+		HandleCommands(GetNextRobotMotionState());
+		// Perform actuation depending on current RobotMotionState
+		HandleMovement();
+	}
+	else 
+	{
+		if (GetRobotMotionState() != FOLLOWING)
 		{
-			SetNextRobotMotionState(LEFT_TURNING); // Fixed.
-		}
-		else if (SENSED_R_BRANCH_T)
-		{
-			SetNextRobotMotionState(RIGHT_TURNING); // Fixed.
+			// If the robot is currently performing a turn, do not interrupt it.
+
+			if (current_goal < NUMBER_OF_GOALS - 1) { SetGoalReached(FALSE); }	// Continue until all goals reached <-- TODO: clean up and ideally modularise!
+
+			static int leaveCounter = 0;
+			leaveCounter++;
+			if (leaveCounter > LEAVING_COUNT)
+			{
+				//setVirtualCarSpeed(0, 360);
+				setVirtualCarSpeed(0, 0);	// Creep forward once goal reached. Pause while waiting for new instructions.
+			}
 		}
 	}
-	//}---------------------------------
 
-  /* Update Routine: */
-  
-  // Pass command as current state.
-  HandleCommands(GetNextRobotMotionState());
-  // Perform actuation depending on current RobotMotionState
-  HandleMovement();
-  printf("######################\n");
+	//printf("######################\n");
 #endif // TESTMODE3
 	myTimer.resetTimer();
 	return 1;
@@ -290,13 +373,12 @@ int virtualCarUpdate()
 int main(int argc, char** argv)
 {
 
-#ifdef TEST_MODE_MAP
-	//FindShortestPath();
-	//PrintOutputMap();
-	//PrintFinalMap();
-	//CreateFinalMap();
-	
+#ifdef TEST_SHORTEST_PATH
+	//FindShortestPathTest();
+	SetStartPos(START_X, START_Y);
+	FindShortestPathForGoal(0);
 #endif
+	
 
 	FungGlAppMainFuction(argc, argv);
 

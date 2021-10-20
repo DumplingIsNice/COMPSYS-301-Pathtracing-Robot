@@ -16,16 +16,16 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-/* Enum is used only when specifying a specific direction (i.e. in Navigation). */
-enum Direction {LEFT, RIGHT, FORWARD};
-
-/* Struct is used for passing infomation on currently valid paths (i.e. SensorFSM->MovementController). */
-typedef struct Directions {
-    int left;
-    int right;
-    int forward;
-} Directions;
-
-// Prints a Directions struct to consol.
-void PrintDirections(Directions* d);
+///* Enum is used only when specifying a specific direction (i.e. in Navigation). */
+//enum Direction {LEFT, RIGHT, FORWARD};
+//
+///* Struct is used for passing infomation on currently valid paths (i.e. SensorFSM->MovementController). */
+//typedef struct Directions {
+//    int left;
+//    int right;
+//    int forward;
+//} Directions;
+//
+//// Prints a Directions struct to consol.
+//void PrintDirections(Directions* d);
 #endif // PROJECT_H

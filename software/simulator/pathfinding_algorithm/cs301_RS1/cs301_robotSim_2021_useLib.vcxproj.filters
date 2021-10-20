@@ -14,38 +14,53 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\pathfinding">
-      <UniqueIdentifier>{97c5bb7d-ce3a-4112-8de4-b84e9bc46770}</UniqueIdentifier>
+      <UniqueIdentifier>{0ca419c5-58f4-42cd-80f9-463bbbc939ad}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\pathfinding">
-      <UniqueIdentifier>{34be00b7-cb79-46ec-9af3-0d5b86d24709}</UniqueIdentifier>
+      <UniqueIdentifier>{1f76bddd-d4bc-4762-b7dc-31cfbc338421}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pathfinding\RebaseWeights.h">
-      <Filter>Header Files\pathfinding</Filter>
-    </ClInclude>
     <ClInclude Include="highPerformanceTimer.h">
-      <Filter>Header Files\pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mainFungGLAppEngin.h">
-      <Filter>Header Files\pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\Visualization\MapVisual.h">
-      <Filter>Header Files\pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mazeGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\NodeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\Visualization\MapVisual.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="robot_simulation\actuation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="robot_simulation\control.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="robot_simulation\project.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="robot_simulation\sensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\Timer\CPUTimer.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\Navigation\DirectionsList.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfinding\NodeData\List.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="pathfinding\NodeData\NodeData.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="pathfinding\NodeData\NodeDataOps.h">
-      <Filter>Header Files\pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\NodeData\NodeList.h">
-      <Filter>Header Files\pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="pathfinding\NodeData\NodeMap.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="pathfinding\PathfindingAlgorithm.h">
@@ -60,16 +75,10 @@
     <ClInclude Include="pathfinding\FileUtility\ReadMap.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
-    <ClInclude Include="robot_simulation\project.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="pathfinding\RebaseWeights.h">
+      <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
-    <ClInclude Include="robot_simulation\sensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="robot_simulation\control.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="robot_simulation\actuation.h">
+    <ClInclude Include="robot_simulation\navigation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="robot_simulation\odometer.h">
@@ -80,6 +89,24 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="robot_simulation\control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="robot_simulation\project.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="robot_simulation\sensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\Timer\CPUTimer.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\Navigation\DirectionsList.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfinding\NodeData\List.c">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
     <ClCompile Include="pathfinding\Visualization\MapVisual.c">
       <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
@@ -87,9 +114,6 @@
       <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\NodeData\NodeDataOps.c">
-      <Filter>Source Files\pathfinding</Filter>
-    </ClCompile>
-    <ClCompile Include="pathfinding\NodeData\NodeList.c">
       <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="pathfinding\NodeData\NodeMap.c">
@@ -110,13 +134,7 @@
     <ClCompile Include="pathfinding\RebaseWeights.c">
       <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
-    <ClCompile Include="robot_simulation\sensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="robot_simulation\project.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="robot_simulation\control.cpp">
+    <ClCompile Include="robot_simulation\navigation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="robot_simulation\odometer.cpp">

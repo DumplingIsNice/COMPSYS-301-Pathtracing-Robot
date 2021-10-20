@@ -14,21 +14,23 @@
 	DO NOT ACCESS EXPLICITLY!
 */
 
-// Destroy NodeData and the NodeListElements in adjacent_nodes (but NOT their contents)
-void DestroyNodeDataAndContents(NodeData* node);
+// Destroy NodeData and the adjacent_nodes elements.
+// Return the number of bytes freed.
+unsigned long DestroyNodeDataAndContents(NodeData* node);
 
-int GetNodeDataPosX(NodeData* node);
-int GetNodeDataPosY(NodeData* node);
-int GetNodeDataIsChecked(NodeData* node);
-int GetNodeDataAdjacentPaths(NodeData* node);
-int GetNodeDataWeight(NodeData* node);
-struct NodeListElement* GetNodeDataAdjacentNodeListElement(NodeData* node);
+int GetNodeDataPosX(const NodeData* node);
+int GetNodeDataPosY(const NodeData* node);
+int GetNodeDataIsChecked(const NodeData* node);
+int GetNodeDataAdjacentPaths(const NodeData* node);
+int GetNodeDataWeight(const NodeData* node);
+struct ListElement* GetNodeDataAdjacentNodeListElement(const NodeData* node);
 
 void SetNodeDataPosX(NodeData* node, int pos_x);
 void SetNodeDataPosY(NodeData* node, int pos_y);
 void SetNodeDataIsChecked(NodeData* node, int isChecked);
 void SetNodeDataAdjacentPaths(NodeData* node, int adj_paths);
+void IncrementNodeDataAdjacentpaths(NodeData* node);
 void SetNodeDataWeight(NodeData* node, int weight);
-void AddToNodeDataAdjacentNode(NodeData* node, NodeData* node_to_add);
+void AddToNodeDataAdjacentNode(NodeData* node, const NodeData* node_to_add);
 
 #endif // !NODEDATA_H

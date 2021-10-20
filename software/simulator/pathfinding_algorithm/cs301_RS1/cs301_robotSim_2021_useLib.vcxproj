@@ -146,35 +146,41 @@
     <ClInclude Include="mainFungGLAppEngin.h" />
     <ClInclude Include="mazeGen.h" />
     <ClInclude Include="pathfinding\FileUtility\ReadMap.h" />
+    <ClInclude Include="pathfinding\Navigation\DirectionsList.h" />
+    <ClInclude Include="pathfinding\NodeData\List.h" />
     <ClInclude Include="pathfinding\NodeData\NodeData.h" />
     <ClInclude Include="pathfinding\NodeData\NodeDataOps.h" />
-    <ClInclude Include="pathfinding\NodeData\NodeList.h" />
     <ClInclude Include="pathfinding\NodeData\NodeMap.h" />
     <ClInclude Include="pathfinding\PathfindingAlgorithm.h" />
     <ClInclude Include="pathfinding\PathfindingMain.h" />
     <ClInclude Include="pathfinding\PathfindingUtil.h" />
     <ClInclude Include="pathfinding\RebaseWeights.h" />
+    <ClInclude Include="pathfinding\Timer\CPUTimer.h" />
     <ClInclude Include="pathfinding\Visualization\MapVisual.h" />
     <ClInclude Include="robot_simulation\actuation.h" />
     <ClInclude Include="robot_simulation\control.h" />
     <ClInclude Include="robot_simulation\odometer.h" />
+    <ClInclude Include="robot_simulation\navigation.h" />
     <ClInclude Include="robot_simulation\project.h" />
     <ClInclude Include="robot_simulation\sensor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pathfinding\FileUtility\ReadMap.c" />
+    <ClCompile Include="pathfinding\Navigation\DirectionsList.c" />
+    <ClCompile Include="pathfinding\NodeData\List.c" />
     <ClCompile Include="pathfinding\NodeData\NodeData.c" />
     <ClCompile Include="pathfinding\NodeData\NodeDataOps.c" />
-    <ClCompile Include="pathfinding\NodeData\NodeList.c" />
     <ClCompile Include="pathfinding\NodeData\NodeMap.c" />
     <ClCompile Include="pathfinding\PathfindingAlgorithm.c" />
     <ClCompile Include="pathfinding\PathfindingMain.c" />
     <ClCompile Include="pathfinding\PathfindingUtil.c" />
     <ClCompile Include="pathfinding\RebaseWeights.c" />
+    <ClCompile Include="pathfinding\Timer\CPUTimer.c" />
     <ClCompile Include="pathfinding\Visualization\MapVisual.c" />
     <ClCompile Include="robot_simulation\control.cpp" />
     <ClCompile Include="robot_simulation\odometer.cpp" />
+    <ClCompile Include="robot_simulation\navigation.cpp" />
     <ClCompile Include="robot_simulation\project.c" />
     <ClCompile Include="robot_simulation\sensor.cpp" />
   </ItemGroup>

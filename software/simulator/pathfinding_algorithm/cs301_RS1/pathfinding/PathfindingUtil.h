@@ -1,10 +1,8 @@
 #ifndef PATHFINDING_UTIL_H
 #define PATHFINDING_UTIL_H
 
-#include "NodeData/NodeList.h"
-
+#include "NodeData/List.h"
 #include "NodeData/NodeData.h"	// only required in PathfindingUtil.c, but added for convenience of the typedef
-
 #include "NodeData/NodeMap.h"
 
 /*
@@ -43,8 +41,7 @@
 
 typedef enum CellType {EMPTY, PATH, GOAL} CellType;
 
-/* IsPosChecked */
-void SetNodeChecked(NodeData* nodeData, int is_checked);
+/* IsChecked */
 int IsCheckedNode(int posx, int posy);
 
 /* Goal Cell */
@@ -58,12 +55,12 @@ void SetGoalReached(int is_reached);
 void SetStartPos(int posx, int posy);
 int GetStartPosX();
 int GetStartPosY();
-int IsStartReached(NodeData* node);
+int IsStartReached(const NodeData* node);
 
 /* Pathfinding Algorithm Functions */
 
 // Return a reference to the NodeQueue list.
-NodeList* GetNodeQueue();
+List* GetNodeQueue();
 
 // Classify and return the CellType of the cell at the given coords.
 CellType GetCellType(int posx, int posy);
@@ -85,34 +82,34 @@ void EvaluatePathCell(NodeData* instigating_node, int posx, int posy);
 
 // Populate NodeData contextually. Uses PathfindingAlgorithm functions for calculating
 // weight.
-NodeData* PopulateNodeData(NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked);
+NodeData* PopulateNodeData(const NodeData* instigating_node, NodeData* node, int posx, int posy, int isChecked);
 
 
 
 /* Pathfinding Algorithm Functions */
 
 // Insert a node in the NodeQueue. Wrapper for functionality in PathfindingAlgorithm.
-void AddToNodeQueue(NodeData* node);
+void AddToNodeQueue(const NodeData* node);
 
 // Detach the NodeListElement from the top of the NodeQueue, and return it.
-NodeListElement* ExtractNextInNodeQueue();
+ListElement* ExtractNextInNodeQueue();
 
 // Returns true if no NodeListElements left in NodeQueue.
 int IsNodeQueueEmpty();
 
 // Return a reference to the FinalQueue.
-NodeList* GetFinalQueue();
+List* GetFinalQueue();
 
 // Insert a node element in the final Queue.
-void AddToFinalQueue(NodeData* node);
+void AddToFinalQueue(const NodeData* node);
 
-NodeListElement* ExtractNextInFinalQueue();
+ListElement* ExtractNextInFinalQueue();
 
 // Returns true if no NodeListElements left in FinalQueue.
 int IsFinalQueueEmpty();
 
 // Debug function to visualize nodeData contents
-void PrintNodeData(NodeData* n);
+void PrintNodeData(const NodeData* n);
 
 // Debug function to visualize a node list element and its linked elements
 // Unfinished

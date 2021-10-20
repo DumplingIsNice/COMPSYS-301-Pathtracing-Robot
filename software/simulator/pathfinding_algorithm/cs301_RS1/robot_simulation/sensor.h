@@ -13,7 +13,7 @@
 
 extern "C"
 {
-    #include "project.h"
+    #include "../pathfinding/Navigation/DirectionsList.h"
 }
 
 // Sensor fecthing macro
@@ -26,12 +26,14 @@ extern "C"
 #define SENSE_TRUE  0
 #define SENSE_FALSE 1
 
-enum SenseState
+//#define SENSOR_DEBUG
+
+typedef enum SenseState
 {
     STRAIGHT_PATH, EXPECT_TURN, LEFT_TURN, RIGHT_TURN, DEAD_END,
     T_SEC, LEFT_BRANCH_T, RIGHT_BRANCH_T, CROSS_ROAD, NO_PATH,
-    PENDING
-};
+    CONFIRM_PATH, PENDING
+} SenseState;
 
 void InitDirectionSensed();
 Directions*  GetDirectionsSensed();

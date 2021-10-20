@@ -14,29 +14,29 @@
 	dependents.
 */
 
-typedef struct RebaseListElement {
-	struct RebaseListElement* tail;
+typedef struct RebaseData {
 	struct NodeData* rebased;
 	struct NodeData* to_rebase;
-} RebaseListElement;
+} RebaseData;
 
+struct RebaseData* NewRebaseData(struct NodeData* rebased, struct NodeData* to_rebase);
 
-RebaseListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeData* to_rebase);
+struct ListElement* NewRebaseListElement(struct NodeData* rebased, struct NodeData* to_rebase);
 
-void DestroyRebaseListElement(RebaseListElement* element);
+void DestroyRebaseListElement(struct ListElement* element);
 
 // Begin rebasing weights, where 'alternate' is a node with an alternate
 // path to, and lower weight than, the 'instigating' node.
 void StartRebase(struct NodeData* alternate, struct NodeData* instigating);
 
 // Evaluate the given cell, and rebase it and queue adjacent nodes if applicable.
-void RebaseWeight(RebaseListElement* element);
+void RebaseWeight(struct ListElement* element);
 
 // Append to RebaseWeightQueue
-void AddToRebaseWeightQueue(RebaseListElement* element);
+void AddToRebaseWeightQueue(struct ListElement* element);
 
 // Detach and return the head of the RebaseWeightQueue.
-RebaseListElement* GetNextinRebaseWeightQueue();
+struct ListElement* GetNextinRebaseWeightQueue();
 
 // Returns true if the RebaseWeightQueue is empty.
 int IsRebaseWeightQueueEmpty();
