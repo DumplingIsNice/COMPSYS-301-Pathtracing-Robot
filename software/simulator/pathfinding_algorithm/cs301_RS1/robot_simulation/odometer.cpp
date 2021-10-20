@@ -1,33 +1,34 @@
 #include "odometer.h"
 #include "../mainFungGLAppEngin.h"
 #include "../highPerformanceTimer.h"
+#include "../pathfinding/Timer/CPUTimer.h"
+#include <stdio.h>
 
-//Update cycle = 1ms
-
-float start_time = -1;
-float current_time;
+double current_time;
 float cell_distance = 0;
+float tick_distance = 0;
 
-
-highPerformanceTimer distanceTimer;
+extern float virtualCarLinearSpeed_seed;
+extern highPerformanceTimer myTimer;
 
 void OdometerTick()
 {
-	current_time = distanceTimer.getTimer();
+	current_time = myTimer.getTimer();
+
+	//For very first time calling function - should be no distance travelled - myTimer is reset every tick so no start_time required
 	
-	//For very first time calling function - should be no distance travelled
-	if (start_time == -1) {
-		start_time = current_time;
-	}
+	tick_distance = virtualCarLinearSpeed_seed * (float)current_time;
 
-	float tick_distance = virtualCarLinearSpeed_seed * (current_time - start_time);
-
-	cell_distance += floorToCellX(tick_distance);
-
+	cell_distance += coordToCellX(tick_distance);
+	//cell_distance += coordToCellY(tick_distance);
+	
 }
 
 float GetCellDistance()
 {
+	//printf("Linear speed: %f\n", virtualCarLinearSpeed_seed);
+//	printf("Time per tick: %f\n", current_time);
+	printf("Tick distance is: %f\n Cell distance is: %f\n", tick_distance, cell_distance);
 	return cell_distance;
 }
 

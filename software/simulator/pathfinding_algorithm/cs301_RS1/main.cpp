@@ -68,6 +68,7 @@ int sensorPopulationAlgorithmID;
 float sensorSeparation;
 float num_sensors;
 extern int maxDarkDefValueTH;
+extern double start_time;
 
 vector<int> virtualCarSensorStates;
 
@@ -208,6 +209,7 @@ int virtualCarUpdate()
 	}
 
 	HandleSensor();
+	OdometerTick();
 
 //	if (i < NITERATIONS)
 //	{
@@ -363,7 +365,7 @@ int virtualCarUpdate()
 			}
 		}
 	}
-
+	GetCellDistance();
 	//printf("######################\n");
 #endif // TESTMODE3
 	myTimer.resetTimer();
