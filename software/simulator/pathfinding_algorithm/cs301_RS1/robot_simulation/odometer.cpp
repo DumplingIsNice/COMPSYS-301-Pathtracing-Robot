@@ -9,11 +9,11 @@ float current_time;
 float cell_distance = 0;
 
 
-extern highPerformanceTimer myTimer;
+highPerformanceTimer distanceTimer;
 
 void OdometerTick()
 {
-	current_time = myTimer.getTimer();
+	current_time = distanceTimer.getTimer();
 	
 	//For very first time calling function - should be no distance travelled
 	if (start_time == -1) {
