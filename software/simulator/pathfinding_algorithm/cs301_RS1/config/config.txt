@@ -65,7 +65,7 @@ student_practice_mode 0
 writeLogFlag 1
 numDummyGhostInfo 3
 
-gameLevel 0
+gameLevel 1
 simulateRobot 1
 drawFood 1
 drawGhost 1
