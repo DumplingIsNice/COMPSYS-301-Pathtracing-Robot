@@ -338,16 +338,26 @@ int virtualCarUpdate()
 					Direction reorientation_direction = GetDirectionToReorientate();
 					if (reorientation_direction == FORWARD)
 					{
-						// already aligned, no changes required:
-						nextCommand = ConvertDirectionToMotionState(GetNextDirection());
-						//nextCommand = FOLLOWING; // insert a 'forward' command as buffer for goal at an intersection? this messes up non-instersection though
-						printf("--- No realignment, next command: "); PrintRobotState(nextCommand);
+						if (IsDirectionStartAtIntersection())
+						{
+							// Insert a buffer so the starting intersection is not incorrectly interpreted as part of the direction path
+							nextCommand = FOLLOWING;
+							printf("--- BUFFER inserted\n");
+						}
+						else
+						{
+							// already aligned, no changes required:
+							nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+							printf("--- No realignment, next command: "); PrintRobotState(nextCommand); printf("\n");
+						}
+
+						
 					}
 					else
 					{
 						// realign:
 						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
-						printf("--- Inserted realign direction: "); PrintRobotState(nextCommand);
+						printf("--- Inserted realign direction: "); PrintRobotState(nextCommand); printf("\n");
 					}
 				}
 			}

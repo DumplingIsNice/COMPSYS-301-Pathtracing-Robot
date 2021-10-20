@@ -75,6 +75,10 @@ Direction GetNextDirection();
 // Returns FORWARD if no change is required (i.e. same orientation).
 Direction GetDirectionToReorientate();
 
+// Call externally for checking if we should expect the starting node of the next path to be an intersection.
+// Used for tolerances and handling avoiding falsely reading the starting node as the first path intersection.
+int IsDirectionStartAtIntersection();
+
 // Call externally once all directions have been generated (i.e., all nodes processed).
 // - Stores the current value of last_evaluated_global_orientation to final_global_orientation, for further processing in UpdateFinalOrientationDirection()
 // WARNING: MUST CALL EXTERNALLY!

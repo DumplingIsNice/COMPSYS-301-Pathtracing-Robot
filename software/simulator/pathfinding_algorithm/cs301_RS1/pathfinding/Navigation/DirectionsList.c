@@ -11,7 +11,8 @@
 
 static List DirectionQueue = { .head = NULL, .tail = NULL };
 
-static int last_evaluated_node_is_intersection	= FALSE;
+static int is_first_direction = TRUE;							// hacky bool that is reset between direction lists and turns false after the first node (intersection or not) has had AddDirection() called on it
+
 static int start_is_at_intersection				= FALSE;
 static Direction last_evaluated_global_orientation = INVALID;	// temp value used to store the global orientation values found at AddDirection() time
 static Direction temp_final_global_orientation = INVALID;		// 
@@ -79,10 +80,15 @@ Direction GetDirectionToReorientate()
 	return TakeRelativeDirections(&final_global_orientation, &new_starting_orientation);
 }
 
+int IsDirectionStartAtIntersection()
+{
+	return start_is_at_intersection;
+}
+
 void  DirectionQueueGenerationFinished()
 {
 	temp_final_global_orientation = last_evaluated_global_orientation;	// store value for processing in CalculateFinalOrientationDirection() later
-	start_is_at_intersection = last_evaluated_node_is_intersection;
+	is_first_direction = TRUE;
 }
 
 void UpdateFinalOrientationDirection(Direction final_relative_direction)
@@ -104,12 +110,16 @@ void AddToDirectionQueue(ListElement* element)
 
 void AddDirection(const struct NodeData* prev_node, const struct NodeData* current_node, const struct NodeData* next_node)
 {
+	if (is_first_direction) { // cannnot use IsDirectionQueueEmpty() because it will update final orientation... shoddy code I know, but this whole thing should be rewritten anyway
+		start_is_at_intersection = (GetNodeDataAdjacentPaths(prev_node) > 2);
+		is_first_direction = FALSE;
+	}
+	//last_evaluated_node_is_intersection = (GetNodeDataAdjacentPaths(current_node) > 2); // goal node does not have adjacent nodes calculated!
+
 	if (!(GetNodeDataAdjacentPaths(current_node) > 2)) {
 		// non-intersection node, no direction required
-		last_evaluated_node_is_intersection = FALSE;
 		return;
 	}
-	last_evaluated_node_is_intersection = TRUE;
 
 	int current_delta_x = GetNodeDataPosX(current_node) - GetNodeDataPosX(prev_node);		// +right, -left
 	int current_delta_y = GetNodeDataPosY(current_node) - GetNodeDataPosY(prev_node);		// +down, -up
