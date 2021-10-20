@@ -127,8 +127,18 @@ int GetCurrentRobotPosY()
 		l - starting column index
 		n - ending column index
 		i - iterator
-	*/
-void spiralPrint(int m, int n, int a[MAP_SIZE_Y][MAP_SIZE_X], int c, int*x, int*y)
+
+ Code retrieved from: https://www.geeksforgeeks.org/print-kth-element-spiral-form-matrix/
+
+Author(s):  andrew1234
+shivanisinghss2110
+divyeshrabadiya07
+divyesh072019
+mukesh07
+sravankumar8128
+
+*/
+void spiralArray(int m, int n, int a[MAP_SIZE_Y][MAP_SIZE_X], int c, int*x, int*y)
 {
 	int i, k = 0, l = 0;
 	int count = 0;
@@ -201,6 +211,7 @@ void spiralPrint(int m, int n, int a[MAP_SIZE_Y][MAP_SIZE_X], int c, int*x, int*
 	}
 }
 
+// Call in virtual car init
 void map2Init() {
 
 	ReadMapFile("map.txt");
@@ -214,7 +225,7 @@ void map2Init() {
 }
 
 /* Driver program to test above functions */
-void testSpiral(int*posx, int*posy)
+void handleNextGoal(int*posx, int*posy)
 {	
 	int k = 0; // the node in the matrix that we want to check
 
@@ -223,7 +234,7 @@ void testSpiral(int*posx, int*posy)
 
 	//loop through the matrix
 	while (k < (MAP_SIZE_Y * MAP_SIZE_X - 1)) {
-		spiralPrint(MAP_SIZE_Y, MAP_SIZE_X, map2, k, &x, &y);
+		spiralArray(MAP_SIZE_Y, MAP_SIZE_X, map2, k, &x, &y);
 		k++;
 		if (map2[x][y] == 0) {
 			(*posx) = x;
@@ -511,7 +522,7 @@ int main(int argc, char** argv)
 #endif
 
 	//FungGlAppMainFuction(argc, argv);
-	testSpiral();
+	//handleNextGoal( ); takes x and y pointers to check as next goal node
 
 	return 0;
 }
