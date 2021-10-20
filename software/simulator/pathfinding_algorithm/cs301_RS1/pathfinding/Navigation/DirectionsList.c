@@ -77,7 +77,7 @@ Direction GetNextDirection()
 
 Direction GetDirectionToReorientate()
 {
-	return TakeRelativeDirections(&final_global_orientation, &new_starting_orientation);
+	return TakeRelativeDirections(&final_global_orientation, &new_starting_orientation, FALSE);
 }
 
 int IsDirectionStartAtIntersection()
@@ -94,7 +94,7 @@ void  DirectionQueueGenerationFinished()
 void UpdateFinalOrientationDirection(Direction final_relative_direction)
 {
 	// Use final global orientation (before last direction) and final relative direction to get the final global orientation once all directions have been followed.
-	final_global_orientation = TakeRelativeDirections(&temp_final_global_orientation, &final_relative_direction);
+	final_global_orientation = TakeRelativeDirections(&temp_final_global_orientation, &final_relative_direction, TRUE);
 }
 
 void UpdateNewStartingOrientationDirection()
@@ -127,7 +127,13 @@ void AddDirection(const struct NodeData* prev_node, const struct NodeData* curre
 	int direction_delta_x = GetNodeDataPosX(next_node) - GetNodeDataPosX(current_node);
 	int direction_delta_y = GetNodeDataPosY(next_node) - GetNodeDataPosY(current_node);
 
-	last_evaluated_global_orientation = CalculateDirection(&current_delta_x, &current_delta_y);		// update each new direction so that only the final direction persists
+	//int current_global_x = current_delta_x;
+	//int current_global_y = current_delta_y;
+	//int global_x = 0;
+	//int global_y = -1;
+	//TakeRelativeDeltas(&global_x, &global_y, &current_global_x, &current_global_y);	// align to global coords!
+	//last_evaluated_global_orientation = CalculateDirection(&current_global_x, &current_global_y);		// update each new direction so that only the final direction persists
+	last_evaluated_global_orientation = CalculateDirection(&current_delta_x, &current_delta_y);
 
 	//printf("current_d_x = %d, current_d_y = %d || direction_d_x = %d, direction_d_y = %d ||    --->    ", current_delta_x, current_delta_y, direction_delta_x, direction_delta_y);
 	TakeRelativeDeltas(&current_delta_x, &current_delta_y, &direction_delta_x, &direction_delta_y);
@@ -154,13 +160,6 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 	}
 
 	if (*current_delta_x != 0) {
-		if (*current_delta_x == -(*direction_delta_x)) {
-			// opposed ... deadend/u-turn!
-			*direction_delta_x = 0;
-			*direction_delta_y = 1;
-			return;
-		}
-
 		if (*current_delta_x > 0) {
 			// right ... swap
 			int temp = *direction_delta_x;
@@ -177,13 +176,6 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 		}
 	}
 	else {
-		if (*current_delta_y == -(*direction_delta_y)) {
-			// opposed ... deadend/u-turn!
-			*direction_delta_x = 0;
-			*direction_delta_y = 1;
-			return;
-		}
-
 		if (*current_delta_y > 0) {
 			// down ... invert
 			*direction_delta_x = -1 * (*direction_delta_x);
@@ -197,7 +189,7 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 	}
 }
 
-Direction TakeRelativeDirections(const Direction* current_direction, const Direction* next_direction)
+Direction TakeRelativeDirections(const Direction* current_direction, const Direction* next_direction, int is_next_direction_relative)
 {
 	//PrintDirections()
 
@@ -218,6 +210,19 @@ Direction TakeRelativeDirections(const Direction* current_direction, const Direc
 	case RIGHT:			next_x = 1;		break;
 	case DEADEND:		next_y = 1;		break;
 	default:			next_y = -1;	//default to FORWARD
+	}
+
+	if (!is_next_direction_relative)
+	{
+		// If global orientations are opposed then return U-TURN!
+		if ((current_x == -(next_x)) && (current_x != 0)) {
+			// opposed ... deadend/u-turn!
+			return DEADEND;
+		}
+		if ((current_y == -(next_y)) && (current_y != 0)) {
+			// opposed ... deadend/u-turn!
+			return DEADEND;
+		}
 	}
 
 	TakeRelativeDeltas(&current_x, &current_y, &next_x, &next_y);

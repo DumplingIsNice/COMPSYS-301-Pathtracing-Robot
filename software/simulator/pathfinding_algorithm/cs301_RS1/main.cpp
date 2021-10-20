@@ -326,8 +326,6 @@ int virtualCarUpdate()
 			}
 			else
 			{
-				nextCommand = NO_STATE;
-
 				/* Prepare Directions to Next Goal */
 				if (current_goal < NUMBER_OF_GOALS - 1)	// TODO: Goal tracking and progress should probably be in PathfindingUtility. -1 as increments within if{}
 				{

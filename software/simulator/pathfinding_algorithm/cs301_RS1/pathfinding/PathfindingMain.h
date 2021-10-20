@@ -17,8 +17,8 @@
 /* Static Values for Testing Purposes Only */
 #define GOAL_X		5 //17
 #define GOAL_Y		5 //13
-#define START_X		1
-#define START_Y		1
+#define START_X		11 //2
+#define START_Y		13 //11
 
 /* Goal Locations */
 #define NUMBER_OF_GOALS	4
@@ -30,17 +30,17 @@ const static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, g
 
 					// Intersection buffer example (need padding FORWARD, or to ignore the intersection goal is on?)
 					// Semi-FIXED (doesn't account for deadends causing U-turns; thus the car does an extra U-turn)
-					5, 5,
-					7, 7,
-					17, 10,
-					4, 1 };
-	
-					// U-turn issue example (only when travelling L->R? Or influenced by turn prior?):
-					// FIXED!
 					//5, 5,
 					//7, 7,
-					//4, 1,
-					//17, 10};
+					//17, 10,
+					//4, 1 };
+	// works as all reorientation are global, global.
+	
+					// U-turn issue example (only when travelling L->R? Or influenced by turn prior?):
+					5, 5,
+					7, 7,
+					4, 1,
+					17, 10};
 
 /* These values should overwrite placeholders in the other files. */
 #define MAP_NAME	"./map/map.txt"

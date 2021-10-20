@@ -107,7 +107,7 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 
 // Return the direction relative to the difference between the current and the next direction.
 // Note that this is very inneficient, use only when absolutely required.
-Direction TakeRelativeDirections(const Direction* current_direction, const Direction* next_direction);
+Direction TakeRelativeDirections(const Direction* current_direction, const Direction* next_direction, int is_next_direction_relative);
 
 // Find the direction from the change in axis.
 Direction CalculateDirection(const int* direction_delta_x, const int* direction_delta_y);
