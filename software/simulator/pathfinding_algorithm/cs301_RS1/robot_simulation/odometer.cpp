@@ -9,8 +9,7 @@ float current_time;
 float cell_distance = 0;
 
 
-highPerformanceTimer myTimer;
-
+extern highPerformanceTimer myTimer;
 
 void OdometerTick()
 {
