@@ -41,11 +41,15 @@ void InitFoodList() {
     {
     case 1:
         printf("Opened food file!\n");
+        PrintFoodList();
         break;
     default:
         printf("Failed to open food file!\n");
         break;
     }
+    static int Positions[2 * NUMBER_OF_GOALS];
+
+    LoadFoodMapToArray(Positions);
 }
 
 // Declaration drawn from fileUtility.h
@@ -133,6 +137,22 @@ void PrintFoodList()
     }
 }
 
-void LoadFoodMapToGoalList() {
-
+void LoadFoodMapToArray(static int a[]) {
+    int food, k;
+    k = 0;
+    for (int i = 0; i < MAP_SIZE_Y; i++) {
+        for (int j = 0; j < MAP_SIZE_X; j++) {
+            food = foodMap[i][j];
+            if (food == 1)
+            {
+                //printf("Pair is x = %d, y = %d\n", j, i);
+                a[k] = j;
+                a[k+1] = i;
+                k+=2;
+            }
+        }
+    }
+    for (int i = 0; i < (2*NUMBER_OF_GOALS)+1; i+=2) {
+        printf("Pair %d is x = %d, y = %d\n", i/2, a[i], a[i + 1]);
+    }
 }

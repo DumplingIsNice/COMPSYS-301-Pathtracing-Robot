@@ -446,14 +446,13 @@ int virtualCarUpdate()
 
 int main(int argc, char** argv)
 {
+	InitFoodList();
 
 #ifdef TEST_SHORTEST_PATH
 	//FindShortestPathTest();
 	SetStartPos(START_X, START_Y);
 	FindShortestPathForGoal(0);
 #endif
-	InitFoodList();
-	PrintFoodList();
 
 	FungGlAppMainFuction(argc, argv);
 

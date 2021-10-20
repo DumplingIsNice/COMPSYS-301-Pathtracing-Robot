@@ -24,5 +24,5 @@ int LoadFoodFile(const char* file_name);
 void PrintFoodList();
 // Loads the values in the food map into an array in alternating
 // x1, y1, x2, y2...
-void LoadFoodMapToArray(int A[]);
+void LoadFoodMapToArray(static int a[]);
 #endif // NAVIGATION_H
