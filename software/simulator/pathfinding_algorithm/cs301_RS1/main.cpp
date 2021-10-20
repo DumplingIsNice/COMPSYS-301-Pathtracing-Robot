@@ -93,6 +93,8 @@ float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in de
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
 
+static int map2[MAP_SIZE_Y][MAP_SIZE_X]; // copy of static variable that is in readmap file
+
 /* Actuation Functions */
 //{------------------------------------
 int linearSpeed = DEFAULT_LINEAR_SPEED;
@@ -120,69 +122,121 @@ int GetCurrentRobotPosY()
 	return coordToCellY(currentCarPosCoord_Y);
 }
 
-///*Input speed : takes in a speed for the robot in mm/s*/
-//void moveStraight(int speed) {
-//
-//	setVirtualCarSpeed(speed * floorToCoordScaleFactor, 0);
-//
-//}
-//
-//
-//void turnLeft() {
-//
-//	setVirtualCarSpeed(0, 180);
-//
-//}
-//
-//void turnRight() {
-//	setVirtualCarSpeed(0, -180);
-//
-//}
-//
-//void turnBack() {
-//	setVirtualCarSpeed(0, 360);
-//
-//}
-//
-//
-//void stopMovement() {
-//	setVirtualCarSpeed(0, 0);
-//}
-//
-//
-///*Input direction : takes an integer for the directions
-//					0 - straight
-//					1- left
-//					2- right
-//					3- back
-//					4 - stop
-//This can be changed to the macros used in the other files for better integration
-//Input speed is an optional parameter used for setting the speed when moving straight
-//If no value is supplied it will assume default of 130 mm/s
-//The turning functions that are called set the linear and angular speed of the car,
-//it doesnt take into account the iterations the turns should be called for, this should be handled,
-//by the called. When testing this the turns took two iterations to complete
-//[we're trying to implement this in here as well]
-//*/
-//void movementDirection(int direction, int speed = 130) {
-//
-//	if (direction == 0) {
-//		moveStraight(speed);
-//	}
-//	else if (direction == 1) {
-//		turnLeft();
-//	}
-//	else if (direction == 2) {
-//		turnRight();
-//	}
-//	else if (direction == 3) {
-//		turnBack();
-//	}
-//	else {
-//		stopMovement();
-//	}
-//
-//}
+/* k - starting row index
+		m - ending row index
+		l - starting column index
+		n - ending column index
+		i - iterator
+	*/
+void spiralPrint(int m, int n, int a[MAP_SIZE_Y][MAP_SIZE_X], int c, int*x, int*y)
+{
+	int i, k = 0, l = 0;
+	int count = 0;
+
+	
+
+	while (k < m && l < n) {
+		/* check the first row from
+			the remaining rows */
+		for (i = l; i < n; ++i) {
+			count++;
+
+			if (count == c) {
+				(*x) = k;
+				(*y) = i;
+				printf("%d , %d \n", k, i);
+			}
+				//cout << a[k][i] << " ";
+			
+		}
+		k++;
+
+		/* check the last column
+		from the remaining columns */
+		for (i = k; i < m; ++i) {
+			count++;
+
+			if (count == c) {
+				(*x) = i;
+				(*y) = n-1;
+				printf("%d , %d \n", i, n-1);
+			}
+				
+		}
+		n--;
+
+		/* check the last row from
+				the remaining rows */
+		if (k < m) {
+			for (i = n - 1; i >= l; --i) {
+				count++;
+
+				if (count == c) {
+					(*x) = m-1;
+					(*y) = i;
+					printf("%d , %d \n", m-1, i);
+				}
+					
+			}
+			m--;
+		}
+
+		/* check the first column from
+				the remaining columns */
+		if (l < n) {
+			for (i = m - 1; i >= k; --i) {
+				count++;
+
+				if (count == c) {
+					(*x) = i;
+					(*y) = l;
+					printf("%d , %d \n", i, l);
+
+				}
+					
+					
+			}
+			l++;
+		}
+	}
+}
+
+void map2Init() {
+
+	ReadMapFile("map.txt");
+
+	for (int row = 0; row < MAP_SIZE_Y; row++) {
+		for (int col = 0; col < MAP_SIZE_X; col++) {
+			map2[row][col] = GetMapValue(row, col);
+		}
+	}
+
+}
+
+/* Driver program to test above functions */
+void testSpiral(int*posx, int*posy)
+{	
+	int k = 0; // the node in the matrix that we want to check
+
+	int x;
+	int y;
+
+	//loop through the matrix
+	while (k < (MAP_SIZE_Y * MAP_SIZE_X - 1)) {
+		spiralPrint(MAP_SIZE_Y, MAP_SIZE_X, map2, k, &x, &y);
+		k++;
+		if (map2[x][y] == 0) {
+			(*posx) = x;
+			(*posy) =y;
+
+			map2[x][y] = 1;
+			return;
+		}
+
+	}
+
+	return;
+}
 
 //}------------------------------------
 int virtualCarInit()
@@ -193,6 +247,8 @@ int virtualCarInit()
 	cout << endl;
 
 	InitDirectionSensed();
+
+	map2Init();
 
 	// Three options for robot's sensor placement
 	// Custom - read in ../config/sensorPos.txt
@@ -446,15 +502,16 @@ int virtualCarUpdate()
 
 int main(int argc, char** argv)
 {
-	InitFoodList();
+	//InitFoodList();
 
 #ifdef TEST_SHORTEST_PATH
 	//FindShortestPathTest();
-	SetStartPos(START_X, START_Y);
-	FindShortestPathForGoal(0);
+	//SetStartPos(START_X, START_Y);
+	//FindShortestPathForGoal(0);
 #endif
 
-	FungGlAppMainFuction(argc, argv);
+	//FungGlAppMainFuction(argc, argv);
+	testSpiral();
 
 	return 0;
 }
