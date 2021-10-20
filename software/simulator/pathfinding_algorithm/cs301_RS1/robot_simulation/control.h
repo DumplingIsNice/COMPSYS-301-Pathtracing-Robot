@@ -20,6 +20,7 @@
 #define SENSED_R_BRANCH_T	(GetDirectionsSensed()->right && GetDirectionsSensed()->forward) && !GetDirectionsSensed()->left
 #define SENSED_DEAD_END		(!GetDirectionsSensed()->left && !GetDirectionsSensed()->right) && !GetDirectionsSensed()->forward
 
+#define SENSED_INTERSECTION (SENSED_CROSS_ROAD)||(SENSED_T)||(SENSED_L_BRANCH_T)||(SENSED_R_BRANCH_T)
 //#define CONTROL_DEBUG
 
 // Intersection U turn indication flag

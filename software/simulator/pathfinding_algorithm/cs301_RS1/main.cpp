@@ -409,24 +409,10 @@ int virtualCarUpdate()
 
 		if (GetRobotMotionState() == FOLLOWING)
 		{
-			if (SENSED_CROSS_ROAD)
+			if (SENSED_INTERSECTION)
 			{
-				SetNextRobotMotionState(nextCommand); // Fixed.
-				nextCommand = NO_STATE;
-			}
-			else if (SENSED_T)
-			{
-				SetNextRobotMotionState(nextCommand); // Fixed.
-				nextCommand = NO_STATE;
-			}
-			else if (SENSED_L_BRANCH_T)
-			{
-				SetNextRobotMotionState(nextCommand); // Fixed.
-				nextCommand = NO_STATE;
-			}
-			else if (SENSED_R_BRANCH_T)
-			{
-				SetNextRobotMotionState(nextCommand); // Fixed.
+				PrintRobotState(nextCommand);
+				SetNextRobotMotionState(nextCommand);
 				nextCommand = NO_STATE;
 			}
 		}
