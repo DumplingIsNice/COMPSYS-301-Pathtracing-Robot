@@ -22,7 +22,7 @@
 
 /* Goal Locations */
 #define NUMBER_OF_GOALS	4
-const static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
+static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
 					//5, 5,
 					//17, 10,
 					//4, 1,
