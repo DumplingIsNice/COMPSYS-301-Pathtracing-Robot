@@ -13,6 +13,10 @@
 //Date 2012~2020
 //=======================================================================
 
+//#define LEVEL_1
+#define LEVEL_2
+
+
 #define TESTMODE3
 //#define TEST_MODE_MAP
 #define TESTSENSOR
@@ -308,6 +312,85 @@ int virtualCarUpdate()
 //	}
 
 #ifdef TESTMODE3
+
+#ifdef LEVEL_1
+	static MotionState nextCommand = FOLLOWING;
+
+	static int intersection_count = 2;
+	static MotionState prevCommand = FOLLOWING;
+
+	if (nextCommand == NO_STATE)
+	{
+		intersection_count--;
+
+		if (intersection_count > 0)
+		{
+			/*Directions* routes = GetDirectionsSensed();
+			if (routes->left) {
+				nextCommand = RIGHT_TURNING;
+			}
+			else if (routes->forward) {
+				nextCommand = FOLLOWING;
+			}
+			else {
+				nextCommand = LEFT_TURNING;
+			}*/
+			nextCommand = prevCommand;
+		}
+		else
+		{
+			switch (prevCommand)
+			{
+			case FOLLOWING:
+				nextCommand = LEFT_TURNING;
+				prevCommand = LEFT_TURNING;
+				intersection_count = 1 + rand() % 4;
+				break;
+			case LEFT_TURNING:
+				nextCommand = RIGHT_TURNING;
+				prevCommand = RIGHT_TURNING;
+				intersection_count = 1 + rand() % 3;
+				break;
+			default:
+				nextCommand = FOLLOWING;
+				prevCommand = FOLLOWING;
+				intersection_count = 1 + rand() % 4;
+				break;
+			}
+		}
+	}
+
+	if (GetRobotMotionState() == FOLLOWING)
+	{
+		if (SENSED_CROSS_ROAD)
+		{
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
+		}
+		else if (SENSED_T)
+		{
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
+		}
+		else if (SENSED_L_BRANCH_T)
+		{
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
+		}
+		else if (SENSED_R_BRANCH_T)
+		{
+			SetNextRobotMotionState(nextCommand); // Fixed.
+			nextCommand = NO_STATE;
+		}
+	}
+
+	// Pass command as current state.
+	HandleCommands(GetNextRobotMotionState());
+	// Perform actuation depending on current RobotMotionState
+	HandleMovement();
+#endif
+
+#ifdef LEVEL_2
 	static int current_goal = 0;				// tracks the goal the robot currently needs to find <-- TODO: shift this to PathfindingUtility?
 
 	if (!GetIsRobotGoalReached())
@@ -318,6 +401,10 @@ int virtualCarUpdate()
 
 		if (nextCommand == NO_STATE)
 		{
+
+		
+
+		
 			/* L2 */
 			if (!IsDirectionQueueEmpty())
 			{
@@ -359,30 +446,8 @@ int virtualCarUpdate()
 					}
 				}
 			}
+		
 		}
-
-		/*	This is a sample command structure :
-
-			The robot is driven by its currently sensed path + navigation command
-			Navigation command is a MotionState enum stored in NextRobotMotionState.
-
-			Ideally:
-				Navigation is handled after HandleSensor() (above) before the following
-				section and a command is produced.
-
-				The following section load the command DEPENDING on the encountered path.
-
-					- A counter may be used to track each path met (and went straight)
-					  on the same following trace.
-
-			Currently, commands to deal with an intersection is fixed.
-
-			If no command is loaded, robot drives automatically in the following priority:
-
-				Follow a line					-> Straight and automatic line following logic.
-				Dead-end and floating off-line	-> U-turn (right)
-		*/
-		//}---------------------------------
 
 		if (GetRobotMotionState() == FOLLOWING)
 		{
@@ -433,6 +498,7 @@ int virtualCarUpdate()
 			}
 		}
 	}
+#endif // LEVEL_2
 
 	//printf("######################\n");
 #endif // TESTMODE3

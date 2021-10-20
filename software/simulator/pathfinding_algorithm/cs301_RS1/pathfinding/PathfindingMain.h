@@ -17,8 +17,8 @@
 /* Static Values for Testing Purposes Only */
 #define GOAL_X		5 //17
 #define GOAL_Y		5 //13
-#define START_X		11 //2
-#define START_Y		13 //11
+#define START_X		1 //2
+#define START_Y		1 //11
 
 /* Goal Locations */
 #define NUMBER_OF_GOALS	4
