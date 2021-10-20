@@ -440,7 +440,8 @@ int main(int argc, char** argv)
 	SetStartPos(START_X, START_Y);
 	FindShortestPathForGoal(0);
 #endif
-	
+	InitFoodList();
+	PrintFoodList();
 
 	FungGlAppMainFuction(argc, argv);
 
