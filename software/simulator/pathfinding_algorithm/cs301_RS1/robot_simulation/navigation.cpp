@@ -32,6 +32,8 @@ void HandlePosition()
 	}
 }
 
+/* FoodList Functionality */
+
 void InitFoodList() {
     int status = 0;
 	status = LoadFoodFile(FOOD_FILE_PATH);
@@ -46,9 +48,9 @@ void InitFoodList() {
     }
 }
 
+// Declaration drawn from fileUtility.h
 int ASCIIToInt(char c);
 
-#pragma optimize( "", off )
 int LoadFoodFile(const char* file_name)
 {
 	FILE* file;
@@ -119,7 +121,6 @@ int LoadFoodFile(const char* file_name)
     fclose(file);
     return 1;
 }
-#pragma optimize( "", on )
 
 void PrintFoodList()
 {
@@ -130,4 +131,8 @@ void PrintFoodList()
         }
         putchar('\n');
     }
+}
+
+void LoadFoodMapToGoalList() {
+
 }
