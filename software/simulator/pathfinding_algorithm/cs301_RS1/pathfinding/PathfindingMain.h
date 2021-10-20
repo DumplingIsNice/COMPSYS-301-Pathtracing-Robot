@@ -22,25 +22,7 @@
 
 /* Goal Locations */
 #define NUMBER_OF_GOALS	4
-static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
-					//5, 5,
-					//17, 10,
-					//4, 1,
-					//7, 7 };
-
-					// Intersection buffer example (need padding FORWARD, or to ignore the intersection goal is on?)
-					// Semi-FIXED (doesn't account for deadends causing U-turns; thus the car does an extra U-turn)
-					5, 5,
-					7, 7,
-					17, 10,
-					4, 1 };
-	
-					// U-turn issue example (only when travelling L->R? Or influenced by turn prior?):
-					// FIXED!
-					//5, 5,
-					//7, 7,
-					//4, 1,
-					//17, 10};
+extern int GoalPositions[];
 
 /* These values should overwrite placeholders in the other files. */
 #define MAP_NAME	"./map/map.txt"

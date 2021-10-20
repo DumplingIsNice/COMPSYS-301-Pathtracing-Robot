@@ -24,6 +24,7 @@
 #define TESTL1
 
 #define TEST_SHORTEST_PATH
+#define TEST_FOOD_LIST
 
  // Simulation parameters
  //{------------------------------------
@@ -92,6 +93,26 @@ float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in de
 //added2021_2_22
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
+
+int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
+					//5, 5,
+					//17, 10,
+					//4, 1,
+					//7, 7 };
+
+					// Intersection buffer example (need padding FORWARD, or to ignore the intersection goal is on?)
+					// Semi-FIXED (doesn't account for deadends causing U-turns; thus the car does an extra U-turn)
+					5, 5,
+					7, 7,
+					17, 10,
+					4, 1 };
+
+// U-turn issue example (only when travelling L->R? Or influenced by turn prior?):
+// FIXED!
+//5, 5,
+//7, 7,
+//4, 1,
+//17, 10};
 
 /* Actuation Functions */
 //{------------------------------------
@@ -412,7 +433,6 @@ int virtualCarUpdate()
 		//}---------------------------------
 
 		/* Update Routine: */
-
 		// Pass command as current state.
 		HandleCommands(GetNextRobotMotionState());
 		// Perform actuation depending on current RobotMotionState
@@ -446,8 +466,10 @@ int virtualCarUpdate()
 
 int main(int argc, char** argv)
 {
+#ifdef TEST_FOOD_LIST
 	InitFoodList();
-
+	PrintGoalPosition();
+#endif
 #ifdef TEST_SHORTEST_PATH
 	//FindShortestPathTest();
 	SetStartPos(START_X, START_Y);

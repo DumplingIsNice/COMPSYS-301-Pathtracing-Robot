@@ -14,6 +14,8 @@ extern "C"
 static int foodMap[MAP_SIZE_Y][MAP_SIZE_X];
 static int IsRobotGoalReached = 0;
 
+extern int GoalPositions[2 * NUMBER_OF_GOALS];
+
 int GetIsRobotGoalReached()
 {
 	return IsRobotGoalReached;
@@ -144,7 +146,7 @@ void PrintFoodList()
     }
 }
 
-void LoadFoodMapToArray(static int a[]) {
+void LoadFoodMapToArray(int a[]) {
     int food, k;
     k = 0;
     for (int i = 0; i < MAP_SIZE_Y; i++) {
