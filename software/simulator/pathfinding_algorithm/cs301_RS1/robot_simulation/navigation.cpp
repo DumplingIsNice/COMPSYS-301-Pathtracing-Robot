@@ -14,6 +14,8 @@ extern "C"
 static int foodMap[MAP_SIZE_Y][MAP_SIZE_X];
 static int IsRobotGoalReached = 0;
 
+extern int GoalPositions[2 * NUMBER_OF_GOALS];
+
 int GetIsRobotGoalReached()
 {
 	return IsRobotGoalReached;
@@ -26,10 +28,26 @@ void SetIsRobotGoalReached(int val)
 
 void HandlePosition()
 {
-	if (GetCurrentRobotPosX() == GetGoalPosX() && GetCurrentRobotPosY() == GetGoalPosY())
+    int roboX = GetCurrentRobotPosX();
+    int roboy = GetCurrentRobotPosY();
+
+    static int i = 0;
+
+	if (roboX == GetGoalPosX() && roboy == GetGoalPosY())
 	{
 		SetIsRobotGoalReached(1);
 	}
+
+    printf("###Handled Position!###\n");
+    printf("Before Visits map at (%d, %d) = %d\n", roboX, roboy, GetVisitsMap(roboX, roboy));
+    SetVisitsMap(roboX, roboy, 1);
+    printf("Visits map at (%d, %d) = %d\n", roboX, roboy, GetVisitsMap(roboX, roboy));
+    if (i > 10)
+    {
+        PrintVisitsMap();
+        i = 0;
+    }
+    i++;
 }
 
 /* FoodList Functionality */
@@ -144,7 +162,7 @@ void PrintFoodList()
     }
 }
 
-void LoadFoodMapToArray(static int a[]) {
+void LoadFoodMapToArray(int a[]) {
     int food, k;
     k = 0;
     for (int i = 0; i < MAP_SIZE_Y; i++) {
@@ -160,3 +178,143 @@ void LoadFoodMapToArray(static int a[]) {
         }
     }
 }
+
+int VisitsMap[MAP_SIZE_Y][MAP_SIZE_X]; // copy of static variable that is in readmap file
+
+int GetVisitsMap(const int x, const int y)
+{
+    return VisitsMap[y][x];
+}
+
+void SetVisitsMap(int x, int y, int val)
+{
+    VisitsMap[y][x] = val;
+}
+
+void PrintVisitsMap()
+{
+    PrintMap(VisitsMap);
+}
+#pragma optimize("", off)
+/* k - starting row index
+        m - ending row index
+        l - starting column index
+        n - ending column index
+        i - iterator
+
+ Code retrieved from: https://www.geeksforgeeks.org/print-kth-element-spiral-form-matrix/
+
+    Author(s):  andrew1234
+    shivanisinghss2110
+    divyeshrabadiya07
+    divyesh072019
+    mukesh07
+    sravankumar8128
+
+*/
+void spiralArray(int m, int n, int a[MAP_SIZE_Y][MAP_SIZE_X], int c, int* x, int* y)
+{
+    int i, k = 0, l = 0;
+    int count = 0;
+
+    while (k < m && l < n) {
+        /* check the first row from
+            the remaining rows */
+        for (i = l; i < n; ++i) {
+            count++;
+
+            if (count == c) {
+                (*x) = k;
+                (*y) = i;
+                printf("%d , %d \n", k, i);
+            }
+            //cout << a[k][i] << " ";
+
+        }
+        k++;
+
+        /* check the last column
+        from the remaining columns */
+        for (i = k; i < m; ++i) {
+            count++;
+
+            if (count == c) {
+                (*x) = i;
+                (*y) = n - 1;
+                printf("%d , %d \n", i, n - 1);
+            }
+
+        }
+        n--;
+
+        /* check the last row from
+                the remaining rows */
+        if (k < m) {
+            for (i = n - 1; i >= l; --i) {
+                count++;
+
+                if (count == c) {
+                    (*x) = m - 1;
+                    (*y) = i;
+                    printf("%d , %d \n", m - 1, i);
+                }
+
+            }
+            m--;
+        }
+
+        /* check the first column from
+                the remaining columns */
+        if (l < n) {
+            for (i = m - 1; i >= k; --i) {
+                count++;
+
+                if (count == c) {
+                    (*x) = i;
+                    (*y) = l;
+                    printf("%d , %d \n", i, l);
+
+                }
+            }
+            l++;
+        }
+    }
+}
+
+// Call in virtual car init
+void VisitsMapInit() {
+
+    ReadMapFile(MAP_NAME);
+
+    for (int row = 0; row < MAP_SIZE_Y; row++) {
+        for (int col = 0; col < MAP_SIZE_X; col++) {
+            VisitsMap[row][col] = GetMapValue(row, col);
+        }
+    }
+    PrintVisitsMap();
+}
+
+/* Driver program to test above functions */
+void handleNextGoal(int* posx, int* posy)
+{
+    int k = 0; // the node in the matrix that we want to check
+
+    int x = 0;
+    int y = 0;
+
+    //loop through the matrix
+    while (k < (MAP_SIZE_Y * MAP_SIZE_X - 1)) {
+        spiralArray(MAP_SIZE_Y, MAP_SIZE_X, VisitsMap, k, &x, &y);
+        k++;
+        if (VisitsMap[x][y] == 0) {
+            (*posx) = x;
+            (*posy) = y;
+            SetIsRobotGoalReached(0);
+            VisitsMap[x][y] = 1;
+            return;
+        }
+    }
+
+    return;
+}
+#pragma optimize("", on)

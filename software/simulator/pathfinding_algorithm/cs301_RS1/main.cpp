@@ -24,6 +24,7 @@
 #define TESTL1
 
 #define TEST_SHORTEST_PATH
+#define L1_MODE
 
  // Simulation parameters
  //{------------------------------------
@@ -93,8 +94,6 @@ float virtualCarAngularSpeed_seed;		// maximum angular speed of your robot in de
 float virtualCarLinearSpeedFloor;
 float currentCarPosFloor_X, currentCarPosFloor_Y;
 
-static int map2[MAP_SIZE_Y][MAP_SIZE_X]; // copy of static variable that is in readmap file
-
 /* Actuation Functions */
 //{------------------------------------
 int linearSpeed = DEFAULT_LINEAR_SPEED;
@@ -122,133 +121,6 @@ int GetCurrentRobotPosY()
 	return coordToCellY(currentCarPosCoord_Y);
 }
 
-/* k - starting row index
-		m - ending row index
-		l - starting column index
-		n - ending column index
-		i - iterator
-
- Code retrieved from: https://www.geeksforgeeks.org/print-kth-element-spiral-form-matrix/
-
-Author(s):  andrew1234
-shivanisinghss2110
-divyeshrabadiya07
-divyesh072019
-mukesh07
-sravankumar8128
-
-*/
-void spiralArray(int m, int n, int a[MAP_SIZE_Y][MAP_SIZE_X], int c, int*x, int*y)
-{
-	int i, k = 0, l = 0;
-	int count = 0;
-
-	
-
-	while (k < m && l < n) {
-		/* check the first row from
-			the remaining rows */
-		for (i = l; i < n; ++i) {
-			count++;
-
-			if (count == c) {
-				(*x) = k;
-				(*y) = i;
-				printf("%d , %d \n", k, i);
-			}
-				//cout << a[k][i] << " ";
-			
-		}
-		k++;
-
-		/* check the last column
-		from the remaining columns */
-		for (i = k; i < m; ++i) {
-			count++;
-
-			if (count == c) {
-				(*x) = i;
-				(*y) = n-1;
-				printf("%d , %d \n", i, n-1);
-			}
-				
-		}
-		n--;
-
-		/* check the last row from
-				the remaining rows */
-		if (k < m) {
-			for (i = n - 1; i >= l; --i) {
-				count++;
-
-				if (count == c) {
-					(*x) = m-1;
-					(*y) = i;
-					printf("%d , %d \n", m-1, i);
-				}
-					
-			}
-			m--;
-		}
-
-		/* check the first column from
-				the remaining columns */
-		if (l < n) {
-			for (i = m - 1; i >= k; --i) {
-				count++;
-
-				if (count == c) {
-					(*x) = i;
-					(*y) = l;
-					printf("%d , %d \n", i, l);
-
-				}
-					
-					
-			}
-			l++;
-		}
-	}
-}
-
-// Call in virtual car init
-void map2Init() {
-
-	ReadMapFile("map.txt");
-
-	for (int row = 0; row < MAP_SIZE_Y; row++) {
-		for (int col = 0; col < MAP_SIZE_X; col++) {
-			map2[row][col] = GetMapValue(row, col);
-		}
-	}
-
-}
-
-/* Driver program to test above functions */
-void handleNextGoal(int*posx, int*posy)
-{	
-	int k = 0; // the node in the matrix that we want to check
-
-	int x;
-	int y;
-
-	//loop through the matrix
-	while (k < (MAP_SIZE_Y * MAP_SIZE_X - 1)) {
-		spiralArray(MAP_SIZE_Y, MAP_SIZE_X, map2, k, &x, &y);
-		k++;
-		if (map2[x][y] == 0) {
-			(*posx) = x;
-			(*posy) =y;
-
-			map2[x][y] = 1;
-			return;
-		}
-
-	}
-
-	return;
-}
-
 //}------------------------------------
 int virtualCarInit()
 {
@@ -259,7 +131,7 @@ int virtualCarInit()
 
 	InitDirectionSensed();
 
-	map2Init();
+	VisitsMapInit();
 
 	// Three options for robot's sensor placement
 	// Custom - read in ../config/sensorPos.txt
@@ -324,7 +196,10 @@ int virtualCarInit()
 	return 1;
 }
 
+int nextGoalX = -1;
+int nextGoalY = -1;
 
+#pragma optimize("", on)
 int virtualCarUpdate()
 {
 	static int i = 0;
@@ -377,6 +252,14 @@ int virtualCarUpdate()
 #ifdef TESTMODE3
 	static int current_goal = 0;				// tracks the goal the robot currently needs to find <-- TODO: shift this to PathfindingUtility?
 
+	if (GetIsRobotGoalReached)
+	{
+#ifdef L1_MODE
+		SetStartPos(GetGoalPosX(), GetGoalPosX());
+		handleNextGoal(&nextGoalX, &nextGoalY); //takes xand y pointers to check as next goal node
+		SetGoalPos(nextGoalX, nextGoalY);
+#endif // L1_MODE
+	}
 	if (!GetIsRobotGoalReached())
 	{
 		HandlePosition();
@@ -385,6 +268,7 @@ int virtualCarUpdate()
 
 		if (nextCommand == NO_STATE)
 		{
+#ifndef L1_MODE
 			/* L2 */
 			if (!IsDirectionQueueEmpty())
 			{
@@ -427,6 +311,43 @@ int virtualCarUpdate()
 						printf("--- Inserted realign direction: "); PrintRobotState(nextCommand); printf("\n");
 					}
 				}
+#else
+			/* L1 */
+			if (!IsDirectionQueueEmpty())
+			{
+				/* Follow Current Directions to Goal */
+				nextCommand = ConvertDirectionToMotionState(GetNextDirection());	// DirectionQueue automatically free()s memory
+			}
+			else
+			{
+				nextCommand = NO_STATE;
+
+				/* Prepare Directions to Next Goal */
+				FindShortestPath(GetGoalPosX(), GetGoalPosY(), GetStartPosX(), GetStartPosY());
+
+					Direction reorientation_direction = GetDirectionToReorientate();
+					if (reorientation_direction == FORWARD)
+					{
+						if (IsDirectionStartAtIntersection())
+						{
+							// Insert a buffer so the starting intersection is not incorrectly interpreted as part of the direction path
+							nextCommand = FOLLOWING;
+							printf("--- BUFFER inserted\n");
+						}
+						else
+						{
+							// already aligned, no changes required:
+							nextCommand = ConvertDirectionToMotionState(GetNextDirection());
+							printf("--- No realignment, next command: "); PrintRobotState(nextCommand); printf("\n");
+						}
+					}
+					else
+					{
+						// realign:
+						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
+						printf("--- Inserted realign direction: "); PrintRobotState(nextCommand); printf("\n");
+					}
+#endif // L1_MODE
 			}
 		}
 
@@ -510,10 +431,13 @@ int virtualCarUpdate()
 
 	return 1;
 }
+#pragma optimize("", off)
 
 int main(int argc, char** argv)
 {
 	//InitFoodList();
+
+	VisitsMapInit();
 
 #ifdef TEST_SHORTEST_PATH
 	//FindShortestPathTest();
@@ -521,8 +445,7 @@ int main(int argc, char** argv)
 	//FindShortestPathForGoal(0);
 #endif
 
-	//FungGlAppMainFuction(argc, argv);
-	//handleNextGoal( ); takes x and y pointers to check as next goal node
+	FungGlAppMainFuction(argc, argv);
 
 	return 0;
 }

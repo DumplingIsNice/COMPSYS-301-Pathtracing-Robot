@@ -54,7 +54,6 @@ void FindShortestPathForGoal(int goal_number)
 {
 	if (goal_number >= NUMBER_OF_GOALS) { printf("ERROR: Invalid goal index!\n"); return; }
 
-
 	int temp_start_x = 0;
 	int temp_start_y = 0;
 
