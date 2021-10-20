@@ -11,6 +11,8 @@
 
 static List DirectionQueue = { .head = NULL, .tail = NULL };
 
+static int last_evaluated_node_is_intersection	= FALSE;
+static int start_is_at_intersection				= FALSE;
 static Direction last_evaluated_global_orientation = INVALID;	// temp value used to store the global orientation values found at AddDirection() time
 static Direction temp_final_global_orientation = INVALID;		// 
 static Direction final_global_orientation = INVALID;			// the global orientation of the robot at the time it reaches the end of the path
@@ -80,6 +82,7 @@ Direction GetDirectionToReorientate()
 void  DirectionQueueGenerationFinished()
 {
 	temp_final_global_orientation = last_evaluated_global_orientation;	// store value for processing in CalculateFinalOrientationDirection() later
+	start_is_at_intersection = last_evaluated_node_is_intersection;
 }
 
 void UpdateFinalOrientationDirection(Direction final_relative_direction)
@@ -101,6 +104,13 @@ void AddToDirectionQueue(ListElement* element)
 
 void AddDirection(const struct NodeData* prev_node, const struct NodeData* current_node, const struct NodeData* next_node)
 {
+	if (!(GetNodeDataAdjacentPaths(current_node) > 2)) {
+		// non-intersection node, no direction required
+		last_evaluated_node_is_intersection = FALSE;
+		return;
+	}
+	last_evaluated_node_is_intersection = TRUE;
+
 	int current_delta_x = GetNodeDataPosX(current_node) - GetNodeDataPosX(prev_node);		// +right, -left
 	int current_delta_y = GetNodeDataPosY(current_node) - GetNodeDataPosY(prev_node);		// +down, -up
 
@@ -134,6 +144,13 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 	}
 
 	if (*current_delta_x != 0) {
+		if (*current_delta_x == -(*direction_delta_x)) {
+			// opposed ... deadend/u-turn!
+			*direction_delta_x = 0;
+			*direction_delta_y = 1;
+			return;
+		}
+
 		if (*current_delta_x > 0) {
 			// right ... swap
 			int temp = *direction_delta_x;
@@ -150,6 +167,13 @@ void TakeRelativeDeltas(const int* current_delta_x, const int* current_delta_y, 
 		}
 	}
 	else {
+		if (*current_delta_y == -(*direction_delta_y)) {
+			// opposed ... deadend/u-turn!
+			*direction_delta_x = 0;
+			*direction_delta_y = 1;
+			return;
+		}
+
 		if (*current_delta_y > 0) {
 			// down ... invert
 			*direction_delta_x = -1 * (*direction_delta_x);

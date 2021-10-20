@@ -318,10 +318,6 @@ int virtualCarUpdate()
 
 		if (nextCommand == NO_STATE)
 		{
-			/* L1 */
-			// Turn left at every intersection to explore all paths of the maze...
-			// nextCommand = LEFT_TURNING;	// TODO: modularise so that IsGoalReached() does not conflict
-
 			/* L2 */
 			if (!IsDirectionQueueEmpty())
 			{
@@ -345,13 +341,13 @@ int virtualCarUpdate()
 						// already aligned, no changes required:
 						nextCommand = ConvertDirectionToMotionState(GetNextDirection());
 						//nextCommand = FOLLOWING; // insert a 'forward' command as buffer for goal at an intersection? this messes up non-instersection though
-						printf("No realignment, next command: "); PrintRobotState(nextCommand);
+						printf("--- No realignment, next command: "); PrintRobotState(nextCommand);
 					}
 					else
 					{
 						// realign:
 						nextCommand = ConvertDirectionToMotionState(reorientation_direction);
-						printf("Inserted realign direction: "); PrintRobotState(nextCommand);
+						printf("--- Inserted realign direction: "); PrintRobotState(nextCommand);
 					}
 				}
 			}

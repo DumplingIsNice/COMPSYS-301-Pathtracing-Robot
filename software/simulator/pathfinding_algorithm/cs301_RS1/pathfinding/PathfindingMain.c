@@ -250,7 +250,7 @@ void GenerateDirectionQueue()
 		current = next;
 		next = next->tail;
 
-		if (GetNodeDataAdjacentPaths(current->node) > 2) { AddDirection(prev->node, current->node, next->node); } // only find for intersection nodes (where there must be more than 2 prev/next nodes)
+		AddDirection(prev->node, current->node, next->node);
 	}
 	DirectionQueueGenerationFinished(); // all directions for this path generated so must call this
 

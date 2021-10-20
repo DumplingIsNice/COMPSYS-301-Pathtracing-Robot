@@ -23,18 +23,18 @@
 /* Goal Locations */
 #define NUMBER_OF_GOALS	4
 const static int GoalPositions[2 * NUMBER_OF_GOALS] = {		// {goal1_x, goal1_y, goal2_x, goal2_y, ...};
-					5, 5,
+					/*5, 5,
 					17, 10,
 					4, 1,
-					7, 7 };
+					7, 7 };*/
 
 					// Intersection buffer example (need padding FORWARD, or to ignore the intersection goal is on?)
-					//5, 5,
-					//7, 7,
-					//17, 10,
-					//4, 1 };
+					5, 5,
+					7, 7,
+					17, 10,
+					4, 1 };
 	
-					// U-turn issue example (only when travelling L->R? Or influenced by turn prior?):
+					// U-turn issue example (only when travelling L->R? Or influenced by turn prior?): FIXED!
 					//5, 5,
 					//7, 7,
 					//4, 1,
